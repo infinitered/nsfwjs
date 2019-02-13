@@ -1,0 +1,40 @@
+{
+  "name": "nsfwjs",
+  "version": "0.0.1",
+  "description": "Detect NSFW content client side",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "tslint -p . -t verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/infinitered/nsfwjs.git"
+  },
+  "peerDependencies": {
+    "@tensorflow/tfjs": "^0.12.0"
+  },
+  "devDependencies": {
+    "@tensorflow/tfjs": "^0.12.0",
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-runtime": "~6.23.0",
+    "ts-node": "~5.0.0",
+    "tslint": "~5.8.0",
+    "typescript": "2.9.2"
+  },
+  "keywords": [
+    "NSFW",
+    "JavaScript",
+    "ML",
+    "Machine",
+    "Learning",
+    "Tensorflow",
+    "JS"
+  ],
+  "author": "Gant Laborde",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/infinitered/nsfwjs/issues"
+  },
+  "homepage": "https://github.com/infinitered/nsfwjs#readme"
+}
