@@ -1,10 +1,10 @@
 import * as tf from '@tensorflow/tfjs'
 import { NSFW_CLASSES } from './nsfw_classes'
 
-const BASE_PATH = 'https://s3.amazonaws.com/nsfwdetector/nsfwjs_model'
+const BASE_PATH = 'https://s3.amazonaws.com/nsfwdetector/nsfwjs_model/'
 const IMAGE_SIZE = 299
 
-export async function load() {
+export async function load(base = BASE_PATH) {
   if (tf == null) {
     throw new Error(
       `Cannot find TensorFlow.js. If you are using a <script> tag, please ` +
@@ -12,7 +12,7 @@ export async function load() {
     )
   }
 
-  const nsfwnet = new NSFWJS()
+  const nsfwnet = new NSFWJS(base)
   await nsfwnet.load()
   return nsfwnet
 }
@@ -26,9 +26,9 @@ export class NSFWJS {
 
   private normalizationOffset: tf.Scalar
 
-  constructor() {
-    this.path = `${BASE_PATH}/model.json`
-    this.normalizationOffset = tf.scalar(127.5)
+  constructor(base: string) {
+    this.path = `${base}model.json`
+    this.normalizationOffset = tf.scalar(255)
   }
 
   async load() {
@@ -73,10 +73,9 @@ export class NSFWJS {
         img = tf.fromPixels(img)
       }
 
-      // Normalize the image from [0, 255] to [-1, 1].
+      // Normalize the image from [0, 255] to [0, 1].
       const normalized = img
         .toFloat()
-        .sub(this.normalizationOffset)
         .div(this.normalizationOffset) as tf.Tensor3D
 
       // Resize the image to
