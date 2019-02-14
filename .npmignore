@@ -12,3 +12,4 @@ dist/**/*.js.map
 .npmignore
 tslint.json
 yarn.lock
+example/
