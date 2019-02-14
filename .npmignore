@@ -13,3 +13,4 @@ dist/**/*.js.map
 tslint.json
 yarn.lock
 example/
+_art/
