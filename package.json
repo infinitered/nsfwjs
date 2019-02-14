@@ -1,6 +1,6 @@
 {
   "name": "nsfwjs",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Detect NSFW content client side",
   "main": "dist/index.js",
   "scripts": {
