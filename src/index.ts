@@ -1,55 +1,46 @@
-import * as tf from '@tensorflow/tfjs';
-import {NSFW_CLASSES} from './nsfw_classes';
+import * as tf from '@tensorflow/tfjs'
+import { NSFW_CLASSES } from './nsfw_classes'
 
-const BASE_PATH = 'https://storage.googleapis.com/tfjs-models/tfjs/';
-const IMAGE_SIZE = 299;
-
-export type MobileNetVersion = 1;
-export type MobileNetAlpha = 0.25|0.50|0.75|1.0;
+const BASE_PATH = 'https://s3.amazonaws.com/nsfwdetector/nsfwjs_model/'
+const IMAGE_SIZE = 299
 
 export async function load() {
   if (tf == null) {
     throw new Error(
-        `Cannot find TensorFlow.js. If you are using a <script> tag, please ` +
-        `also include @tensorflow/tfjs on the page before using this model.`);
+      `Cannot find TensorFlow.js. If you are using a <script> tag, please ` +
+        `also include @tensorflow/tfjs on the page before using this model.`
+    )
   }
 
-  const nsfwnet = new NSFWJS();
-  await nsfwnet.load();
-  return nsfwnet;
+  const nsfwnet = new NSFWJS()
+  await nsfwnet.load()
+  return nsfwnet
 }
 
 export class NSFWJS {
-  public endpoints: string[];
+  public endpoints: string[]
 
-  private path: string;
-  private model: tf.Model;
-  private intermediateModels: {[layerName: string]: tf.Model} = {};
+  private path: string
+  private model: tf.Model
+  private intermediateModels: { [layerName: string]: tf.Model } = {}
 
-  private normalizationOffset: tf.Scalar;
+  private normalizationOffset: tf.Scalar
 
   constructor() {
-
+    this.path = `${BASE_PATH}/model.json`
+    this.normalizationOffset = tf.scalar(127.5)
   }
-  // constructor(version: MobileNetVersion, alpha: MobileNetAlpha) {
-  //   const multiplierStr =
-  //       ({0.25: '0.25', 0.50: '0.50', 0.75: '0.75', 1.0: '1.0'})[alpha];
-  //   this.path =
-  //       `${BASE_PATH}mobilenet_v${version}_${multiplierStr}_${IMAGE_SIZE}/` +
-  //       `model.json`;
-  //   this.normalizationOffset = tf.scalar(127.5);
-  // }
 
   async load() {
-    this.model = await tf.loadModel(this.path);
-    this.endpoints = this.model.layers.map(l => l.name);
+    this.model = await tf.loadModel(this.path)
+    this.endpoints = this.model.layers.map(l => l.name)
 
     // Warmup the model.
-    const result = tf.tidy(
-                       () => this.model.predict(tf.zeros(
-                           [1, IMAGE_SIZE, IMAGE_SIZE, 3]))) as tf.Tensor;
-    await result.data();
-    result.dispose();
+    const result = tf.tidy(() =>
+      this.model.predict(tf.zeros([1, IMAGE_SIZE, IMAGE_SIZE, 3]))
+    ) as tf.Tensor
+    await result.data()
+    result.dispose()
   }
 
   /**
@@ -62,54 +53,66 @@ export class NSFWJS {
    * logits.
    */
   infer(
-      img: tf.Tensor3D|ImageData|HTMLImageElement|HTMLCanvasElement|
-      HTMLVideoElement,
-      endpoint?: string): tf.Tensor {
+    img:
+      | tf.Tensor3D
+      | ImageData
+      | HTMLImageElement
+      | HTMLCanvasElement
+      | HTMLVideoElement,
+    endpoint?: string
+  ): tf.Tensor {
     if (endpoint != null && this.endpoints.indexOf(endpoint) === -1) {
       throw new Error(
-          `Unknown endpoint ${endpoint}. Available endpoints: ` +
-          `${this.endpoints}.`);
+        `Unknown endpoint ${endpoint}. Available endpoints: ` +
+          `${this.endpoints}.`
+      )
     }
 
     return tf.tidy(() => {
       if (!(img instanceof tf.Tensor)) {
-        img = tf.fromPixels(img);
+        img = tf.fromPixels(img)
       }
 
       // Normalize the image from [0, 255] to [-1, 1].
-      const normalized = img.toFloat()
-                             .sub(this.normalizationOffset)
-                             .div(this.normalizationOffset) as tf.Tensor3D;
+      const normalized = img
+        .toFloat()
+        .sub(this.normalizationOffset)
+        .div(this.normalizationOffset) as tf.Tensor3D
 
       // Resize the image to
-      let resized = normalized;
+      let resized = normalized
       if (img.shape[0] !== IMAGE_SIZE || img.shape[1] !== IMAGE_SIZE) {
-        const alignCorners = true;
+        const alignCorners = true
         resized = tf.image.resizeBilinear(
-            normalized, [IMAGE_SIZE, IMAGE_SIZE], alignCorners);
+          normalized,
+          [IMAGE_SIZE, IMAGE_SIZE],
+          alignCorners
+        )
       }
 
       // Reshape to a single-element batch so we can pass it to predict.
-      const batched = resized.reshape([1, IMAGE_SIZE, IMAGE_SIZE, 3]);
+      const batched = resized.reshape([1, IMAGE_SIZE, IMAGE_SIZE, 3])
 
-      let model: tf.Model;
+      let model: tf.Model
       if (endpoint == null) {
-        model = this.model;
+        model = this.model
       } else {
         if (this.intermediateModels[endpoint] == null) {
-          const layer = this.model.layers.find(l => l.name === endpoint);
-          this.intermediateModels[endpoint] =
-              tf.model({inputs: this.model.inputs, outputs: layer.output});
+          const layer = this.model.layers.find(l => l.name === endpoint)
+          this.intermediateModels[endpoint] = tf.model({
+            inputs: this.model.inputs,
+            outputs: layer.output
+          })
         }
-        model = this.intermediateModels[endpoint];
+        model = this.intermediateModels[endpoint]
       }
 
-      return model.predict(batched) as tf.Tensor2D;
-    });
+      return model.predict(batched) as tf.Tensor2D
+    })
   }
 
   /**
-   * Classifies an image from the 1000 ImageNet classes returning a map of
+   * Classifies an image from the 5 classes returning a map of
    * the most likely class names to their probability.
    *
    * @param img The image to classify. Can be a tensor or a DOM element image,
@@ -117,43 +120,50 @@ export class NSFWJS {
    * @param topk How many top values to use. Defaults to 3.
    */
   async classify(
-      img: tf.Tensor3D|ImageData|HTMLImageElement|HTMLCanvasElement|
-      HTMLVideoElement,
-      topk = 3): Promise<Array<{className: string, probability: number}>> {
-    const logits = this.infer(img) as tf.Tensor2D;
+    img:
+      | tf.Tensor3D
+      | ImageData
+      | HTMLImageElement
+      | HTMLCanvasElement
+      | HTMLVideoElement,
+    topk = 3
+  ): Promise<Array<{ className: string; probability: number }>> {
+    const logits = this.infer(img) as tf.Tensor2D
 
-    const classes = await getTopKClasses(logits, topk);
+    const classes = await getTopKClasses(logits, topk)
 
-    logits.dispose();
+    logits.dispose()
 
-    return classes;
+    return classes
   }
 }
 
-async function getTopKClasses(logits: tf.Tensor2D, topK: number):
-    Promise<Array<{className: string, probability: number}>> {
-  const values = await logits.data();
+async function getTopKClasses(
+  logits: tf.Tensor2D,
+  topK: number
+): Promise<Array<{ className: string; probability: number }>> {
+  const values = await logits.data()
 
-  const valuesAndIndices = [];
+  const valuesAndIndices = []
   for (let i = 0; i < values.length; i++) {
-    valuesAndIndices.push({value: values[i], index: i});
+    valuesAndIndices.push({ value: values[i], index: i })
   }
   valuesAndIndices.sort((a, b) => {
-    return b.value - a.value;
-  });
-  const topkValues = new Float32Array(topK);
-  const topkIndices = new Int32Array(topK);
+    return b.value - a.value
+  })
+  const topkValues = new Float32Array(topK)
+  const topkIndices = new Int32Array(topK)
   for (let i = 0; i < topK; i++) {
-    topkValues[i] = valuesAndIndices[i].value;
-    topkIndices[i] = valuesAndIndices[i].index;
+    topkValues[i] = valuesAndIndices[i].value
+    topkIndices[i] = valuesAndIndices[i].index
   }
 
-  const topClassesAndProbs = [];
+  const topClassesAndProbs = []
   for (let i = 0; i < topkIndices.length; i++) {
     topClassesAndProbs.push({
       className: NSFW_CLASSES[topkIndices[i]],
       probability: topkValues[i]
-    });
+    })
   }
-  return topClassesAndProbs;
+  return topClassesAndProbs
 }
