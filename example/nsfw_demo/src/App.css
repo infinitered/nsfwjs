@@ -1,17 +1,37 @@
+body {
+  background: #000;
+}
+
 .App {
   text-align: center;
+  background-color: #282c34;
+  height: 100vmin;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.menu {
+  display: flex;
+  background-color: #000;
+  color: #fff;
+  align-items: center;
+}
+
+.menu h1 {
+  margin-left: 3%;
+  font-style: italic;
+  font-size: 2em;
+  justify-self: flex-end;
 }
 
 .App-logo {
-  animation: App-logo-spin infinite 20s linear;
   height: 40vmin;
-  max-height: 120px;
+  max-height: 150px;
   pointer-events: none;
+  padding-left: 3%;
 }
 
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -20,15 +40,54 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.snippet {
+  display: flex;
+  flex-direction: column;
+  margin-right: 2%;
+  flex: 1;
+  justify-content: flex-end;
+  color: #e79f23;
+  text-align: right;
+  font-weight: bold;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.snippet p {
+  margin-right: 30px;
+}
+
+.snippet a {
+  display: flex;
+  justify-content: flex-end;
+}
+
+#tflogo {
+  width: auto;
+  height: 80px;
+}
+
+.App-link {
+  color: #e79f23;
+}
+
+footer {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  height: 60px;
+  background: #000;
+  color: #FFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+footer ul li {
+  display: inline;
+  padding: 0 40px;
+}
+
+footer a {
+  color: #FFF;
+  text-decoration: none;
 }
