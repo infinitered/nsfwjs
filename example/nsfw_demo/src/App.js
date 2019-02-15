@@ -4,21 +4,64 @@ import ir from './ir.svg'
 import tflogo from './tflogo.jpg'
 import './App.css'
 import * as nsfwjs from 'nsfwjs'
+import Dropzone from 'react-dropzone'
 
 class App extends Component {
   state = {
-    topMessage: 'Open Dev/Inspect Menu to Assure Success',
-    bottomMessage: 'Loading model and checking image!'
+    model: null,
+    graphic: logo,
+    titleMessage: 'Please hold, the model is loading...',
+    topMessage: '',
+    bottomMessage: ''
   }
-  async componentDidMount() {
-    const img = document.getElementById('img')
-    const model = await nsfwjs.load('/model/')
-    const predictions = await model.classify(img)
+  componentDidMount() {
+    // Load model!
+    nsfwjs.load('/model/').then((model) => {
+      this.setState({
+        model,
+        titleMessage: "Please drag and drop an image to check!"
+      })
+    })
+  }
+
+  checkContent = async () => {
+    const img = this.refs.dropped
+    const predictions = await this.state.model.classify(img)
     this.setState({
       topMessage: `This is ${predictions[0].className}`,
       bottomMessage: `NSFWJS is ${(predictions[0].probability * 100).toFixed(2)}% sure`
     })
     console.log(predictions)
+  }
+
+  setFile = file => {
+    if (typeof file === 'string') {
+      // using a sample
+      this.setState({ graphic: file }, this.checkContent)
+    } else {
+      // drag and dropped
+      const reader = new FileReader()
+      reader.onload = e => {
+        this.setState(
+          { graphic: e.target.result },
+          this.checkContent
+        )
+      }
+
+      reader.readAsDataURL(file)
+    }
+  }
+
+  onDrop = (accepted, rejected) => {
+    if (rejected.length > 0) {
+      window.alert('JPG, PNG, GIF only plz')
+    } else {
+      this.setState({
+        topMessage: 'Processing',
+        bottomMessage: ''
+      })
+      this.setFile(accepted[0])
+    }
   }
 
   render() {
@@ -32,13 +75,26 @@ class App extends Component {
           <div className="snippet">
               <p>Powered by</p>
             <a href="https://js.tensorflow.org/" targe="_blank">
-              <img src={tflogo} id="tflogo" />
+              <img src={tflogo} id="tflogo" alt="TensorflowJS Logo" />
             </a>
           </div>
         </div>
         <header className="App-header">
-
-          <img src="https://i.imgur.com/6ixnTIj.gif" id="img" crossOrigin="anonymous" alt="thing to check"/>
+          <p>
+            { this.state.titleMessage }
+          </p>
+          <Dropzone
+              accept="image/jpeg, image/png, image/gif"
+              className="photo-box"
+              onDrop={this.onDrop.bind(this)}
+          >
+            <img
+              src={this.state.graphic}
+              alt="drop your file here"
+              className="dropped-photo"
+              ref="dropped"
+            />
+          </Dropzone>
           <p>
             {this.state.topMessage}
           </p>

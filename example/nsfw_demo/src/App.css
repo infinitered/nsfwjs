@@ -69,6 +69,17 @@ body {
   color: #e79f23;
 }
 
+.photo-box {
+  padding: 20px;
+  border-width: 5px;
+  border-color: #02bbd7;
+  border-style: dashed;
+}
+
+.dropped-photo {
+  height: 400px;
+}
+
 footer {
   position: absolute;
   width: 100%;
