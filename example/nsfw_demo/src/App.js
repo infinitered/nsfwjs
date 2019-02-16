@@ -11,8 +11,8 @@ class App extends Component {
     model: null,
     graphic: logo,
     titleMessage: 'Please hold, the model is loading...',
-    topMessage: '',
-    bottomMessage: ''
+    message: '',
+    predictions: []
   }
   componentDidMount() {
     // Load model!
@@ -35,10 +35,9 @@ class App extends Component {
     const img = this.refs.dropped
     const predictions = await this.state.model.classify(img)
     this.setState({
-      topMessage: `This is ${predictions[0].className}`,
-      bottomMessage: `${(predictions[0].probability * 100).toFixed(2)}% sure`
+      message: `Identified as ${predictions[0].className}`,
+      predictions
     })
-    console.log(predictions)
   }
 
   setFile = file => {
@@ -61,11 +60,27 @@ class App extends Component {
       window.alert('JPG, PNG, GIF only plz')
     } else {
       this.setState({
-        topMessage: 'Processing',
-        bottomMessage: ''
+        message: 'Processing'
       })
       this.setFile(accepted[0])
     }
+  }
+
+  _renderPredictions = () => {
+    return (
+      <div id="predictions">
+        <ul>
+          {
+            this.state.predictions.map((prediction) =>
+              <li>
+                {prediction.className} - {(prediction.probability * 100).toFixed(2)}%
+              </li>
+            )
+          }
+        </ul>
+      </div>
+
+    )
   }
 
   render() {
@@ -95,14 +110,16 @@ class App extends Component {
               ref="dropped"
             />
           </Dropzone>
-          <p>{this.state.topMessage}</p>
-          <p>{this.state.bottomMessage}</p>
+          <div id="results">
+            <p>{this.state.message}</p>
+            {this._renderPredictions()}
+          </div>
         </header>
         <footer>
           <ul>
             <li>Copyright Now(ish)</li>
             <li>
-              <a href="https://github.com/infinitered/nsfwjs">GitHub</a>
+              <a href="https://github.com/infinitered/nsfwjs">NSFWJS GitHub</a>
             </li>
             <li>
               <a href="https://github.com/gantman/nsfw_model">Model Repo</a>
