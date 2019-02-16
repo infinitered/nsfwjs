@@ -5,7 +5,7 @@
 
 A simple JavaScript library to help you quickly identify unseemly images; all in the client's browser.  NSFWJS isn't perfect, but it's pretty accurate (~90% from our test set of 15,000 test images)... and it's getting more accurate all the time.
 
-![example gif](./_art/example.gif)
+<img src="https://github.com/infinitered/nsfwjs/raw/master/_art/example.gif" alt="demo example" width="400" />
 
 The library categorizes image probabilities in the following 5 classes:
 - `drawings` - safe for work drawings (including anime)
