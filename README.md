@@ -23,9 +23,8 @@ import * as nsfwjs from 'nsfwjs'
 
 const img = document.getElementById('img')
 
-// Load the model.  This pulls from my S3
-// please only use this for testing
-// See the section on setting up your own model for details
+// Load model from my S3.
+// See the section hosting the model files on your site.
 const model = await nsfwjs.load()
 
 // Classify the image
