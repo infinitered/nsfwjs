@@ -16,20 +16,27 @@ class App extends Component {
   }
   componentDidMount() {
     // Load model!
-    nsfwjs.load('/model/').then((model) => {
+    nsfwjs.load('/model/').then(model => {
       this.setState({
         model,
-        titleMessage: "Please drag and drop an image to check!"
+        titleMessage: 'Please drag and drop an image to check!'
       })
     })
   }
 
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+  }
+
   checkContent = async () => {
+    // Strange race condition grabbing image before it's rendered
+    // Not really a problem of this library, more so react silliness
+    await this.sleep(100)
     const img = this.refs.dropped
     const predictions = await this.state.model.classify(img)
     this.setState({
       topMessage: `This is ${predictions[0].className}`,
-      bottomMessage: `NSFWJS is ${(predictions[0].probability * 100).toFixed(2)}% sure`
+      bottomMessage: `${(predictions[0].probability * 100).toFixed(2)}% sure`
     })
     console.log(predictions)
   }
@@ -42,10 +49,7 @@ class App extends Component {
       // drag and dropped
       const reader = new FileReader()
       reader.onload = e => {
-        this.setState(
-          { graphic: e.target.result },
-          this.checkContent
-        )
+        this.setState({ graphic: e.target.result }, this.checkContent)
       }
 
       reader.readAsDataURL(file)
@@ -69,24 +73,20 @@ class App extends Component {
       <div className="App">
         <div className="menu">
           <img src={logo} className="App-logo" alt="logo" />
-          <h1>
-            Client-side indecent content checking
-          </h1>
+          <h1>Client-side indecent content checking</h1>
           <div className="snippet">
-              <p>Powered by</p>
+            <p>Powered by</p>
             <a href="https://js.tensorflow.org/" targe="_blank">
               <img src={tflogo} id="tflogo" alt="TensorflowJS Logo" />
             </a>
           </div>
         </div>
         <header className="App-header">
-          <p>
-            { this.state.titleMessage }
-          </p>
+          <p>{this.state.titleMessage}</p>
           <Dropzone
-              accept="image/jpeg, image/png, image/gif"
-              className="photo-box"
-              onDrop={this.onDrop.bind(this)}
+            accept="image/jpeg, image/png, image/gif"
+            className="photo-box"
+            onDrop={this.onDrop.bind(this)}
           >
             <img
               src={this.state.graphic}
@@ -95,34 +95,28 @@ class App extends Component {
               ref="dropped"
             />
           </Dropzone>
-          <p>
-            {this.state.topMessage}
-          </p>
-          <p>
-            {this.state.bottomMessage}
-          </p>
+          <p>{this.state.topMessage}</p>
+          <p>{this.state.bottomMessage}</p>
         </header>
         <footer>
           <ul>
-              <li>Copyright Now(ish)</li>
-              <li>
-                <a href="https://github.com/infinitered/nsfwjs">
-                  GitHub
-                </a>
-              </li>
-              <li>
-                <a href="https://github.com/gantman/nsfw_model">Model Repo</a>
-              </li>
-              <li>
-                <a href="https://infinite.red">
-                  <img src={ir} />
-                </a>
-              </li>
-            </ul>
+            <li>Copyright Now(ish)</li>
+            <li>
+              <a href="https://github.com/infinitered/nsfwjs">GitHub</a>
+            </li>
+            <li>
+              <a href="https://github.com/gantman/nsfw_model">Model Repo</a>
+            </li>
+            <li>
+              <a href="https://infinite.red">
+                <img src={ir} alt="infinite red logo" />
+              </a>
+            </li>
+          </ul>
         </footer>
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App
