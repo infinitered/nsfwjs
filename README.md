@@ -23,17 +23,9 @@ const predictions = await model.classify(img)
 console.log('Predictions: ', predictions)
 ```
 
-### Run the Demo
+### Run the Example
 
-The demo that powers http://nsfwjs.com/ is available here.
+The demo that powers https://nsfwjs.com/ is available in the example folder.
 
-To run the demo, pull the project down, and then run the following commands.
+To run the demo, run `yarn prep` which will copy the latest code into the demo.  After that's done, you can `cd` into the demo folder and run with `yarn start`.
 
-```
-cd nsfwjs
-yarn
-yarn build
-cd example/nsfw_demo
-yarn
-yarn start
-```

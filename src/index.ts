@@ -116,7 +116,7 @@ export class NSFWJS {
    *
    * @param img The image to classify. Can be a tensor or a DOM element image,
    * video, or canvas.
-   * @param topk How many top values to use. Defaults to 3.
+   * @param topk How many top values to use. Defaults to 5
    */
   async classify(
     img:
@@ -125,7 +125,7 @@ export class NSFWJS {
       | HTMLImageElement
       | HTMLCanvasElement
       | HTMLVideoElement,
-    topk = 3
+    topk = 5
   ): Promise<Array<{ className: string; probability: number }>> {
     const logits = this.infer(img) as tf.Tensor2D
 

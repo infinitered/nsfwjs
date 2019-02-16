@@ -80,6 +80,16 @@ body {
   height: 400px;
 }
 
+#predictions ul {
+  list-style-type: none;
+}
+
+#predictions ul li {
+  margin-right: 10%;
+  font-size: 0.8em;
+  color: #e79f23;
+}
+
 footer {
   position: absolute;
   width: 100%;
