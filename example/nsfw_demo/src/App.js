@@ -5,6 +5,10 @@ import tflogo from './tflogo.jpg'
 import './App.css'
 import * as nsfwjs from 'nsfwjs'
 import Dropzone from 'react-dropzone'
+import Switch from 'react-switch'
+
+const blurred = { filter: 'blur(30px)', WebkitFilter: 'blur(30px)' }
+const clean = {}
 
 class App extends Component {
   state = {
@@ -12,31 +16,49 @@ class App extends Component {
     graphic: logo,
     titleMessage: 'Please hold, the model is loading...',
     message: '',
-    predictions: []
+    predictions: [],
+    droppedImageStyle: clean,
+    blurNSFW: true
   }
   componentDidMount() {
-    // Load model!
+    // Load model from public
     nsfwjs.load('/model/').then(model => {
       this.setState({
         model,
-        titleMessage: 'Please drag and drop an image to check!'
+        titleMessage: 'Drag and drop an image to check'
       })
     })
   }
 
+  // terrible race condition fix :'(
   sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
+  detectBlurStatus = (className, blurNSFW = this.state.blurNSFW) => {
+    let droppedImageStyle = clean
+    if (blurNSFW) {
+      switch (className) {
+        case 'Hentai':
+        case 'Porn':
+        case 'Sexy':
+          droppedImageStyle = blurred
+      }
+    }
+    return droppedImageStyle
+  }
+
   checkContent = async () => {
-    // Strange race condition grabbing image before it's rendered
-    // Not really a problem of this library, more so react silliness
+    // Sleep bc it's grabbing image before it's rendered
+    // Not really a problem of this library
     await this.sleep(100)
     const img = this.refs.dropped
     const predictions = await this.state.model.classify(img)
+    let droppedImageStyle = this.detectBlurStatus(predictions[0].className)
     this.setState({
       message: `Identified as ${predictions[0].className}`,
-      predictions
+      predictions,
+      droppedImageStyle
     })
   }
 
@@ -59,8 +81,10 @@ class App extends Component {
     if (rejected.length > 0) {
       window.alert('JPG, PNG, GIF only plz')
     } else {
+      let droppedImageStyle = this.state.blurNSFW ? blurred : clean
       this.setState({
-        message: 'Processing'
+        message: 'Processing...',
+        droppedImageStyle
       })
       this.setFile(accepted[0])
     }
@@ -70,17 +94,31 @@ class App extends Component {
     return (
       <div id="predictions">
         <ul>
-          {
-            this.state.predictions.map((prediction) =>
-              <li>
-                {prediction.className} - {(prediction.probability * 100).toFixed(2)}%
-              </li>
-            )
-          }
+          {this.state.predictions.map(prediction => (
+            <li>
+              {prediction.className} -{' '}
+              {(prediction.probability * 100).toFixed(2)}%
+            </li>
+          ))}
         </ul>
       </div>
-
     )
+  }
+
+  blurChange = checked => {
+    // Check on blurring
+    let droppedImageStyle = clean
+    if (this.state.predictions.length > 0) {
+      droppedImageStyle = this.detectBlurStatus(
+        this.state.predictions[0].className,
+        checked
+      )
+    }
+
+    this.setState({
+      blurNSFW: checked,
+      droppedImageStyle
+    })
   }
 
   render() {
@@ -98,18 +136,31 @@ class App extends Component {
         </div>
         <header className="App-header">
           <p>{this.state.titleMessage}</p>
-          <Dropzone
-            accept="image/jpeg, image/png, image/gif"
-            className="photo-box"
-            onDrop={this.onDrop.bind(this)}
-          >
-            <img
-              src={this.state.graphic}
-              alt="drop your file here"
-              className="dropped-photo"
-              ref="dropped"
-            />
-          </Dropzone>
+          <div>
+            <Dropzone
+              accept="image/jpeg, image/png, image/gif"
+              className="photo-box"
+              onDrop={this.onDrop.bind(this)}
+            >
+              <img
+                src={this.state.graphic}
+                style={this.state.droppedImageStyle}
+                alt="drop your file here"
+                className="dropped-photo"
+                ref="dropped"
+              />
+            </Dropzone>
+
+            <div id="switchStation">
+              <p>Blur Protection</p>
+              <Switch
+                onColor="#e79f23"
+                offColor="#000"
+                onChange={this.blurChange}
+                checked={this.state.blurNSFW}
+              />
+            </div>
+          </div>
           <div id="results">
             <p>{this.state.message}</p>
             {this._renderPredictions()}
