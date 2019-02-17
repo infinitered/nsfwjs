@@ -6,18 +6,20 @@ import './App.css'
 import * as nsfwjs from 'nsfwjs'
 import Dropzone from 'react-dropzone'
 import Switch from 'react-switch'
+import * as Spinner from 'react-spinkit'
 
 const blurred = { filter: 'blur(30px)', WebkitFilter: 'blur(30px)' }
 const clean = {}
+const loadingMessage = 'Loading NSFWJS Model'
 
 class App extends Component {
   state = {
     model: null,
     graphic: logo,
     titleMessage: 'Please hold, the model is loading...',
-    message: '',
+    message: loadingMessage,
     predictions: [],
-    droppedImageStyle: clean,
+    droppedImageStyle: { opacity: 0.4 },
     blurNSFW: true
   }
   componentDidMount() {
@@ -25,7 +27,8 @@ class App extends Component {
     nsfwjs.load('/model/').then(model => {
       this.setState({
         model,
-        titleMessage: 'Drag and drop an image to check'
+        titleMessage: 'Drag and drop an image to check',
+        message: 'Ready to Classify'
       })
     })
   }
@@ -121,6 +124,16 @@ class App extends Component {
     })
   }
 
+  _renderSpinner = () => {
+    if (this.state.message === loadingMessage) {
+      return (
+        <div id="spinContainer">
+          <Spinner name="cube-grid" color="#e79f23" id="processCube" />
+        </div>
+      )
+    }
+  }
+
   render() {
     return (
       <div className="App">
@@ -161,6 +174,7 @@ class App extends Component {
               />
             </div>
           </div>
+          {this._renderSpinner()}
           <div id="results">
             <p>{this.state.message}</p>
             {this._renderPredictions()}
