@@ -8,7 +8,8 @@
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-dropzone": "^7.0.1",
-    "react-scripts": "2.1.5"
+    "react-scripts": "2.1.5",
+    "react-switch": "^4.1.0"
   },
   "scripts": {
     "start": "react-scripts start",

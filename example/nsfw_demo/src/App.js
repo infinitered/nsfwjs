@@ -5,6 +5,10 @@ import tflogo from './tflogo.jpg'
 import './App.css'
 import * as nsfwjs from 'nsfwjs'
 import Dropzone from 'react-dropzone'
+import Switch from 'react-switch'
+
+const blurred = { filter: 'blur(30px)', WebkitFilter: 'blur(30px)' }
+const clean = {}
 
 class App extends Component {
   state = {
@@ -12,7 +16,9 @@ class App extends Component {
     graphic: logo,
     titleMessage: 'Please hold, the model is loading...',
     message: '',
-    predictions: []
+    predictions: [],
+    droppedImageStyle: clean,
+    blurNSFW: true
   }
   componentDidMount() {
     // Load model!
@@ -34,9 +40,19 @@ class App extends Component {
     await this.sleep(100)
     const img = this.refs.dropped
     const predictions = await this.state.model.classify(img)
+    let droppedImageStyle = clean
+    if (this.state.blurNSFW) {
+      switch (predictions[0].className) {
+        case 'Hentai':
+        case 'Porn':
+        case 'Sexy':
+          droppedImageStyle = blurred
+      }
+    }
     this.setState({
       message: `Identified as ${predictions[0].className}`,
-      predictions
+      predictions,
+      droppedImageStyle
     })
   }
 
@@ -59,8 +75,10 @@ class App extends Component {
     if (rejected.length > 0) {
       window.alert('JPG, PNG, GIF only plz')
     } else {
+      let droppedImageStyle = this.state.blurNSFW ? blurred : clean
       this.setState({
-        message: 'Processing'
+        message: 'Processing...',
+        droppedImageStyle
       })
       this.setFile(accepted[0])
     }
@@ -70,17 +88,21 @@ class App extends Component {
     return (
       <div id="predictions">
         <ul>
-          {
-            this.state.predictions.map((prediction) =>
-              <li>
-                {prediction.className} - {(prediction.probability * 100).toFixed(2)}%
-              </li>
-            )
-          }
+          {this.state.predictions.map(prediction => (
+            <li>
+              {prediction.className} -{' '}
+              {(prediction.probability * 100).toFixed(2)}%
+            </li>
+          ))}
         </ul>
       </div>
-
     )
+  }
+
+  blurChange = checked => {
+    this.setState({
+      blurNSFW: checked
+    })
   }
 
   render() {
@@ -98,18 +120,31 @@ class App extends Component {
         </div>
         <header className="App-header">
           <p>{this.state.titleMessage}</p>
-          <Dropzone
-            accept="image/jpeg, image/png, image/gif"
-            className="photo-box"
-            onDrop={this.onDrop.bind(this)}
-          >
-            <img
-              src={this.state.graphic}
-              alt="drop your file here"
-              className="dropped-photo"
-              ref="dropped"
-            />
-          </Dropzone>
+          <div>
+            <Dropzone
+              accept="image/jpeg, image/png, image/gif"
+              className="photo-box"
+              onDrop={this.onDrop.bind(this)}
+            >
+              <img
+                src={this.state.graphic}
+                style={this.state.droppedImageStyle}
+                alt="drop your file here"
+                className="dropped-photo"
+                ref="dropped"
+              />
+            </Dropzone>
+
+            <div id="switchStation">
+              <p>Blur Protection</p>
+              <Switch
+                onColor="#e79f23"
+                offColor="#000"
+                onChange={this.blurChange}
+                checked={this.state.blurNSFW}
+              />
+            </div>
+          </div>
           <div id="results">
             <p>{this.state.message}</p>
             {this._renderPredictions()}

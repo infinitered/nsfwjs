@@ -69,6 +69,18 @@ body {
   color: #e79f23;
 }
 
+#switchStation {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  float: right;
+}
+
+#switchStation p {
+  font-size: 0.8em;
+  padding-right: 10px;
+}
+
 .photo-box {
   padding: 20px;
   border-width: 5px;
@@ -82,10 +94,11 @@ body {
 
 #predictions ul {
   list-style-type: none;
+  padding-right: 10%;
+  margin-left: -2%;
 }
 
 #predictions ul li {
-  margin-right: 10%;
   font-size: 0.8em;
   color: #e79f23;
 }
@@ -96,7 +109,7 @@ footer {
   bottom: 0;
   height: 60px;
   background: #000;
-  color: #FFF;
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -109,6 +122,6 @@ footer ul li {
 }
 
 footer a {
-  color: #FFF;
+  color: #fff;
   text-decoration: none;
 }
