@@ -25,7 +25,7 @@ class App extends Component {
     nsfwjs.load('/model/').then(model => {
       this.setState({
         model,
-        titleMessage: 'Please drag and drop an image to check!'
+        titleMessage: 'Drag and drop an image to check'
       })
     })
   }
