@@ -8,11 +8,11 @@ A simple JavaScript library to help you quickly identify unseemly images; all in
 <img src="https://github.com/infinitered/nsfwjs/raw/master/_art/example.gif" alt="demo example" width="400" />
 
 The library categorizes image probabilities in the following 5 classes:
-- `drawings` - safe for work drawings (including anime)
-- `hentai` - hentai and pornographic drawings
-- `neutral` - safe for work neutral images
-- `porn` - pornographic images, sexual acts
-- `sexy` - sexually explicit images, not pornography
+- `Drawing` - safe for work drawings (including anime)
+- `Hentai` - hentai and pornographic drawings
+- `Neutral` - safe for work neutral images
+- `Porn` - pornographic images, sexual acts
+- `Sexy` - sexually explicit images, not pornography
 
 The demo is a continuous deployment source - Give it a go: http://nsfwjs.com/
 
