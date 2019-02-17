@@ -40,6 +40,12 @@ body {
   color: white;
 }
 
+#results p {
+  font-weight: bold;
+  margin: -20px 0 15px 0;
+  border-bottom: 1px solid;
+}
+
 .snippet {
   display: flex;
   flex-direction: column;
@@ -95,6 +101,7 @@ body {
 #predictions ul {
   list-style-type: none;
   padding-right: 10%;
+  margin-top: -2%;
   margin-left: -2%;
 }
 

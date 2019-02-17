@@ -21,7 +21,7 @@ class App extends Component {
     blurNSFW: true
   }
   componentDidMount() {
-    // Load model!
+    // Load model from public
     nsfwjs.load('/model/').then(model => {
       this.setState({
         model,
@@ -30,25 +30,31 @@ class App extends Component {
     })
   }
 
+  // terrible race condition fix :'(
   sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
-  checkContent = async () => {
-    // Strange race condition grabbing image before it's rendered
-    // Not really a problem of this library, more so react silliness
-    await this.sleep(100)
-    const img = this.refs.dropped
-    const predictions = await this.state.model.classify(img)
+  detectBlurStatus = (className, blurNSFW = this.state.blurNSFW) => {
     let droppedImageStyle = clean
-    if (this.state.blurNSFW) {
-      switch (predictions[0].className) {
+    if (blurNSFW) {
+      switch (className) {
         case 'Hentai':
         case 'Porn':
         case 'Sexy':
           droppedImageStyle = blurred
       }
     }
+    return droppedImageStyle
+  }
+
+  checkContent = async () => {
+    // Sleep bc it's grabbing image before it's rendered
+    // Not really a problem of this library
+    await this.sleep(100)
+    const img = this.refs.dropped
+    const predictions = await this.state.model.classify(img)
+    let droppedImageStyle = this.detectBlurStatus(predictions[0].className)
     this.setState({
       message: `Identified as ${predictions[0].className}`,
       predictions,
@@ -100,8 +106,18 @@ class App extends Component {
   }
 
   blurChange = checked => {
+    // Check on blurring
+    let droppedImageStyle = clean
+    if (this.state.predictions.length > 0) {
+      droppedImageStyle = this.detectBlurStatus(
+        this.state.predictions[0].className,
+        checked
+      )
+    }
+
     this.setState({
-      blurNSFW: checked
+      blurNSFW: checked,
+      droppedImageStyle
     })
   }
 
