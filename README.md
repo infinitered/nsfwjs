@@ -51,7 +51,7 @@ const model = nsfwjs.load('/path/to/model/directory/')
 
 - Ready to use NSFWJS model object
 
-#### `classify`
+#### `classify` an image
 
 This function can take any browser-based image elements (<img>, <video>, <canvas>) and return an array of most likely predictions and their confidence levels.
 
