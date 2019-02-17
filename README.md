@@ -32,6 +32,19 @@ const predictions = await model.classify(img)
 console.log('Predictions: ', predictions)
 ```
 
+## Install
+NSFWJS is powered by Tensorflow.JS as a peer dependency.  If your project does not already have TFJS you'll need to add it.
+
+```bash
+# peer dependency
+$ yarn add @tensorflow/tfjs
+# install NSFWJS
+$ yarn add nsfwjs
+```
+
+#### Encouraged! - Host your own model files
+The magic that powers NSFWJS is the [NSFW detection model](https://github.com/gantman/nsfw_model).  By default, this node module is pulling from my S3, but I make no guarantees that I'll keep that download link available forever.  It's best for the longevity of your project that you download and host your own version of [the model files](https://github.com/infinitered/nsfwjs/tree/master/example/nsfw_demo/public/model).  You can then pass the relative URL to your hosted files in the `load` function.  If you can come up with a way to bundle the model into the NPM package, I'd love to see a PR to this repo!
+
 ## Run the Example
 
 The demo that powers https://nsfwjs.com/ is available in the example folder.
