@@ -148,7 +148,7 @@ class App extends Component {
           </div>
         </div>
         <header className="App-header">
-          <p>{this.state.titleMessage}</p>
+          <p id="topMessage">{this.state.titleMessage}</p>
           <div>
             <Dropzone
               accept="image/jpeg, image/png, image/gif"
