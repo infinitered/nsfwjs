@@ -40,6 +40,16 @@ body {
   color: white;
 }
 
+#spinContainer {
+  position: absolute;
+  padding-bottom: 20px;
+}
+
+#processCube {
+  width: 200px;
+  height: 200px;
+}
+
 #results p {
   font-weight: bold;
   margin: -20px 0 15px 0;
