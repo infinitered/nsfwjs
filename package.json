@@ -4,7 +4,7 @@
   "description": "Detect NSFW content client side",
   "main": "dist/index.js",
   "scripts": {
-    "test": "jest",
+    "test": "yarn build && jest",
     "lint": "tslint -p . -t verbose",
     "shipit": "yarn build && np",
     "build": "tsc --skipLibCheck",
