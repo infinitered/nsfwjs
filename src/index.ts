@@ -1,7 +1,7 @@
 import * as tf from '@tensorflow/tfjs'
 import { NSFW_CLASSES } from './nsfw_classes'
 
-const BASE_PATH = 'https://s3.amazonaws.com/nsfwdetector/nsfwjs_model/'
+const BASE_PATH = 'https://s3.amazonaws.com/ir_public/nsfwjs/'
 const IMAGE_SIZE = 299
 
 export async function load(base = BASE_PATH) {
