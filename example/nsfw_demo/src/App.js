@@ -190,6 +190,9 @@ class App extends Component {
               <a href="https://github.com/gantman/nsfw_model">Model Repo</a>
             </li>
             <li>
+              <a href="https://shift.infinite.red/avoid-nightmares-nsfw-js-ab7b176978b1">Read the Blog Post</a>
+            </li>
+            <li>
               <a href="https://infinite.red">
                 <img src={ir} alt="infinite red logo" />
               </a>
