@@ -96,7 +96,7 @@ To run the demo, run `yarn prep` which will copy the latest code into the demo. 
 
 ## More!
 
-The model was trained in Keras over several days and 60+ Gigs of data. Be sure to [check out the model code](https://github.com/GantMan/nsfw_model).
+The model was trained in Keras over several days and 60+ Gigs of data. Be sure to [check out the model code](https://github.com/GantMan/nsfw_model) which was trained on data provided by [Alexander Kim's](https://github.com/alexkimxyz) [nsfw_data_scraper](https://github.com/alexkimxyz/nsfw_data_scraper).
 
 #### Open Source
 
