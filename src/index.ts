@@ -32,7 +32,8 @@ export class NSFWJS {
   }
 
   async load() {
-    this.model = await tf.loadModel(this.path)
+    // don't use loadModel anymore
+    this.model = await tf.loadLayersModel(this.path)
     this.endpoints = this.model.layers.map(l => l.name)
 
     // Warmup the model.

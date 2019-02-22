@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshots 1`] = `
+Array [
+  Object {
+    "className": "Drawing",
+    "probability": 0.9265862107276917,
+  },
+  Object {
+    "className": "Neutral",
+    "probability": 0.054741520434617996,
+  },
+  Object {
+    "className": "Sexy",
+    "probability": 0.010052704252302647,
+  },
+  Object {
+    "className": "Hentai",
+    "probability": 0.005562558304518461,
+  },
+  Object {
+    "className": "Porn",
+    "probability": 0.003057030262425542,
+  },
+]
+`;
