@@ -45,5 +45,6 @@
   "bugs": {
     "url": "https://github.com/infinitered/nsfwjs/issues"
   },
-  "homepage": "https://github.com/infinitered/nsfwjs#readme"
+  "homepage": "https://github.com/infinitered/nsfwjs#readme",
+  "dependencies": {}
 }

@@ -5,7 +5,7 @@ body {
 .App {
   text-align: center;
   background-color: #282c34;
-  height: 100vmin;
+  min-height: 100vh;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -52,7 +52,7 @@ body {
 
 #results p {
   font-weight: bold;
-  margin: -20px 0 15px 0;
+  margin: 8px 0 15px 0;
   border-bottom: 1px solid;
 }
 
@@ -85,6 +85,49 @@ body {
   color: #e79f23;
 }
 
+#fpInfo {
+  background-color: rgba(0,0,0,0.9);
+  color: #fff;
+  border-radius: 15px;
+  max-width: 400px;
+  padding: 20px;
+  font-size: 1.2em;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+#fpInfo h2 {
+  border-bottom: 1px solid;
+  color: #fff;
+  padding-left: 5px;
+}
+
+#fpInfo h3 {
+  color: #fff;
+}
+
+#fpInfo a {
+  color: #e79f23;
+}
+
+#fpInfo li {
+  padding: 0 0 20px 0;
+}
+
+.clickTarget {
+  cursor: pointer;
+}
+
+#underDrop {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.7em;
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 0 0 15px 15px;
+  padding: 0 15px;
+}
+
 #switchStation {
   display: flex;
   flex-direction: row;
@@ -93,7 +136,6 @@ body {
 }
 
 #switchStation p {
-  font-size: 0.8em;
   padding-right: 10px;
 }
 
@@ -162,10 +204,6 @@ footer a {
     overflow: hidden;
     position: relative;
     padding: 40px 0;
-  }
-
-  #results p {
-    margin: 0;
   }
 
   footer ul li {
