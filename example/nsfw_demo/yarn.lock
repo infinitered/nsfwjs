@@ -5682,7 +5682,7 @@ npmlog@^4.0.2:
     set-blocking "~2.0.0"
 
 nsfwjs@../../:
-  version "0.1.0"
+  version "0.1.1"
 
 nth-check@^1.0.2, nth-check@~1.0.1:
   version "1.0.2"
@@ -8076,6 +8076,18 @@ test-exclude@^4.2.1:
     object-assign "^4.1.0"
     read-pkg-up "^1.0.1"
     require-main-filename "^1.0.1"
+
+tether-drop@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/tether-drop/-/tether-drop-1.4.2.tgz#28e240cce077f4ae1d8e5990a03b71e0cd6fbfec"
+  integrity sha1-KOJAzOB39K4djlmQoDtx4M1vv+w=
+  dependencies:
+    tether "^1.1.0"
+
+tether@^1.1.0:
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/tether/-/tether-1.4.5.tgz#8efd7b35572767ba502259ba9b1cc167fcf6f2c1"
+  integrity sha512-fysT1Gug2wbRi7a6waeu39yVDwiNtvwj5m9eRD+qZDSHKNghLo6KqP/U3yM2ap6TNUL2skjXGJaJJTJqoC31vw==
 
 text-table@0.2.0, text-table@^0.2.0:
   version "0.2.0"
