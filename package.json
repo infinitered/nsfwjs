@@ -23,6 +23,7 @@
     "babel-core": "^6.26.0",
     "babel-plugin-transform-runtime": "~6.23.0",
     "jest": "^24.1.0",
+    "jpeg-js": "^0.3.4",
     "node-fetch": "^2.3.0",
     "np": "^4.0.2",
     "ts-jest": "^24.0.0",
