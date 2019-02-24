@@ -157,7 +157,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className="menu">
+        <header>
           <img src={logo} className="App-logo" alt="logo" />
           <h1>Client-side indecent content checking</h1>
           <div className="snippet">
@@ -166,8 +166,8 @@ class App extends Component {
               <img src={tflogo} id="tflogo" alt="TensorflowJS Logo" />
             </a>
           </div>
-        </div>
-        <header className="App-header">
+        </header>
+        <main>
           <p id="topMessage">{this.state.titleMessage}</p>
           <div>
             <Dropzone
@@ -227,25 +227,23 @@ class App extends Component {
             <p>{this.state.message}</p>
             {this._renderPredictions()}
           </div>
-        </header>
+        </main>
         <footer>
-          <ul>
-            <li>Copyright Now(ish)</li>
-            <li>
-              <a href="https://github.com/infinitered/nsfwjs">NSFWJS GitHub</a>
-            </li>
-            <li>
-              <a href="https://github.com/gantman/nsfw_model">Model Repo</a>
-            </li>
-            <li>
-              <a href="https://shift.infinite.red/avoid-nightmares-nsfw-js-ab7b176978b1">Read the Blog Post</a>
-            </li>
-            <li>
-              <a href="https://infinite.red">
-                <img src={ir} alt="infinite red logo" />
-              </a>
-            </li>
-          </ul>
+          <div>Copyright Now(ish)</div>
+          <div>
+            <a href="https://github.com/infinitered/nsfwjs">NSFWJS GitHub</a>
+          </div>
+          <div>
+            <a href="https://github.com/gantman/nsfw_model">Model Repo</a>
+          </div>
+          <div>
+            <a href="https://shift.infinite.red/avoid-nightmares-nsfw-js-ab7b176978b1">Blog Post</a>
+          </div>
+          <div>
+            <a href="https://infinite.red">
+              <img src={ir} alt="infinite red logo" />
+            </a>
+          </div>
         </footer>
       </div>
     )
