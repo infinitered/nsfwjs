@@ -23,6 +23,8 @@ The demo is a continuous deployment source - Give it a go: http://nsfwjs.com/
 
 ## How to use the module
 
+With `async/await` support:
+
 ```js
 import * as nsfwjs from 'nsfwjs'
 
@@ -35,6 +37,23 @@ const model = await nsfwjs.load()
 // Classify the image
 const predictions = await model.classify(img)
 console.log('Predictions: ', predictions)
+```
+
+Without `async/await` support:
+
+```js
+import * as nsfwjs from 'nsfwjs'
+
+const img = document.getElementById('img')
+
+// Load model from my S3.
+// See the section hosting the model files on your site.
+nsfwjs.load().then(function (model) {
+  model.classify(img).then(function (predictions) {
+    // Classify the image
+    console.log('Predictions: ', predictions)
+  })
+})
 ```
 
 ## API
