@@ -1,22 +1,23 @@
 body {
-  background: #000;
+  background-color: #282c34;
 }
 
 .App {
-  text-align: center;
-  background-color: #282c34;
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  text-align: center;
 }
 
-.menu {
+header {
   display: flex;
   background-color: #000;
   color: #fff;
   align-items: center;
 }
 
-.menu h1 {
+header h1 {
   margin-left: 3%;
   font-style: italic;
   font-size: 2em;
@@ -30,7 +31,7 @@ body {
   padding-left: 3%;
 }
 
-.App-header {
+main {
   background-color: #282c34;
   display: flex;
   flex-direction: column;
@@ -38,6 +39,7 @@ body {
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  flex: 1 0 auto;
 }
 
 #spinContainer {
@@ -153,6 +155,7 @@ body {
 
 #predictions {
   min-height: 100px;
+  margin-bottom: 20px;
 }
 
 #predictions ul {
@@ -168,47 +171,40 @@ body {
 }
 
 footer {
-  position: absolute;
-  width: 100%;
-  bottom: 0;
-  height: 60px;
+  align-items: center;
   background: #000;
-  padding: 10px;
+  bottom: 0;
   color: #fff;
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
+  font-size: .875em;
+  font-weight: 600;
   justify-content: center;
-  font-weight: bold;
+  position: relative;
+  text-transform: uppercase;
+  width: 100vw;
 }
 
-footer ul li {
-  display: inline;
-  padding: 0 40px;
-  font-size: 1em;
+footer div {
+  display: inline-block;
+  margin: 15px 30px;
 }
 
 footer a {
   color: #fff;
   text-decoration: none;
 }
+footer a:hover {
+  color: #e79f23;
+}
 
 @media screen and (max-width: 600px) {
-  .menu {
+  header {
     flex-direction: column;
   }
   .snippet {
     visibility: hidden;
     display: none;
-  }
-  footer {
-    overflow: hidden;
-    position: relative;
-    padding: 40px 0;
-  }
-
-  footer ul li {
-    display: block;
-    padding: 5px 0;
   }
 
   #switchStation {
@@ -222,5 +218,4 @@ footer a {
   #predictions {
     padding-top: 10px;
   }
-
 }
