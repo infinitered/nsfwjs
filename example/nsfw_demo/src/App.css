@@ -155,6 +155,7 @@ main {
 
 #predictions {
   min-height: 100px;
+  margin-bottom: 20px;
 }
 
 #predictions ul {
@@ -179,7 +180,7 @@ footer {
   font-size: .875em;
   font-weight: 600;
   justify-content: center;
-  position: fixed;
+  position: relative;
   text-transform: uppercase;
   width: 100vw;
 }
