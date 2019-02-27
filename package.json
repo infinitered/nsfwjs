@@ -2,7 +2,7 @@
   "name": "nsfwjs",
   "version": "0.0.3",
   "description": "Detect NSFW content client side",
-  "main": "dist/index.js",
+  "private": true,
   "scripts": {
     "test": "echo \"COMING SOON\"",
     "lint": "tslint -p . -t verbose",
@@ -39,5 +39,11 @@
   "bugs": {
     "url": "https://github.com/infinitered/nsfwjs/issues"
   },
-  "homepage": "https://github.com/infinitered/nsfwjs#readme"
+  "homepage": "https://github.com/infinitered/nsfwjs#readme",
+  "dependencies": {
+    "ts-loader": "^5.3.3",
+    "val-loader": "^1.1.1",
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3"
+  }
 }
