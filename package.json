@@ -24,7 +24,8 @@
     "ts-loader": "^5.3.3",
     "ts-node": "~5.0.0",
     "tslint": "~5.8.0",
-    "typescript": "2.9.2"
+    "typescript": "2.9.2",
+    "val-loader": "^1.1.1"
   },
   "keywords": [
     "NSFW",
@@ -42,7 +43,6 @@
   },
   "homepage": "https://github.com/infinitered/nsfwjs#readme",
   "dependencies": {
-    "val-loader": "^1.1.1",
     "webpack": "^4.29.5",
     "webpack-cli": "^3.2.3"
   }
