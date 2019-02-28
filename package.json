@@ -2,7 +2,7 @@
   "name": "nsfwjs",
   "version": "0.0.3",
   "description": "Detect NSFW content client side",
-  "private": true,
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"COMING SOON\"",
     "lint": "tslint -p . -t verbose",
