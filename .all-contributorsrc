@@ -1,0 +1,33 @@
+{
+  "projectName": "nsfwjs",
+  "projectOwner": "infinitered",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "contributors": [
+    {
+      "login": "GantMan",
+      "name": "Gant Laborde",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/997157?v=4",
+      "profile": "http://gantlaborde.com/",
+      "contributions": [
+        "question",
+        "blog",
+        "code",
+        "design",
+        "doc",
+        "example",
+        "ideas",
+        "infra",
+        "review",
+        "talk",
+        "test"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7
+}
