@@ -8,6 +8,8 @@
     "lint": "tslint -p . -t verbose",
     "shipit": "yarn build && np",
     "build": "tsc --skipLibCheck",
+    "contributors:add": "all-contributors add",
+    "contributors:generate": "all-contributors generate",
     "prep": "yarn && yarn build && cd example/nsfw_demo/ && yarn add ../../ && cd -"
   },
   "repository": {
@@ -20,6 +22,7 @@
   "devDependencies": {
     "@tensorflow/tfjs": "^0.15.2",
     "@types/jest": "^24.0.6",
+    "all-contributors-cli": "^6.1.2",
     "babel-core": "^6.26.0",
     "babel-plugin-transform-runtime": "~6.23.0",
     "jest": "^24.1.0",

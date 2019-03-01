@@ -1,0 +1,51 @@
+{
+  "projectName": "nsfwjs",
+  "projectOwner": "infinitered",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "contributors": [
+    {
+      "login": "GantMan",
+      "name": "Gant Laborde",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/997157?v=4",
+      "profile": "http://gantlaborde.com/",
+      "contributions": [
+        "question",
+        "blog",
+        "code",
+        "design",
+        "doc",
+        "example",
+        "ideas",
+        "infra",
+        "review",
+        "talk",
+        "test"
+      ]
+    },
+    {
+      "login": "jamonholmgren",
+      "name": "Jamon Holmgren",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/1479215?v=4",
+      "profile": "https://jamonholmgren.com",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "jstudenski",
+      "name": "Jeff Studenski",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/7350279?v=4",
+      "profile": "https://github.com/jstudenski",
+      "contributions": [
+        "design"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7
+}
