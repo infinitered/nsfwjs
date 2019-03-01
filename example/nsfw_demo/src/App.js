@@ -8,10 +8,12 @@ import Dropzone from 'react-dropzone'
 import Switch from 'react-switch'
 import * as Spinner from 'react-spinkit'
 import Drop from 'tether-drop'
+import Webcam from 'react-webcam'
 
 const blurred = { filter: 'blur(30px)', WebkitFilter: 'blur(30px)' }
 const clean = {}
 const loadingMessage = 'Loading NSFWJS Model'
+const DETECTION_PERIOD = 1000
 
 class App extends Component {
   state = {
@@ -33,7 +35,7 @@ class App extends Component {
       constrainToWindow: true,
       constrainToScrollParent: true,
       remove: true
-    });
+    })
 
     // Load model from public
     nsfwjs.load('/model/').then(model => {
@@ -45,13 +47,17 @@ class App extends Component {
     })
   }
 
-  _refTarget = (ref) => {
-    this.hoverTarget = ref;
-  };
+  _refTarget = ref => {
+    this.hoverTarget = ref
+  }
 
-  _refContent = (ref) => {
-    this.hoverContent = ref;
-  };
+  _refContent = ref => {
+    this.hoverContent = ref
+  }
+
+  _refWeb = webcam => {
+    this.webcam = webcam
+  }
 
   // terrible race condition fix :'(
   sleep(ms) {
@@ -101,6 +107,7 @@ class App extends Component {
   }
 
   onDrop = (accepted, rejected) => {
+    this.detectWebcam()
     if (rejected.length > 0) {
       window.alert('JPG, PNG, GIF only plz')
     } else {
@@ -126,6 +133,18 @@ class App extends Component {
         </ul>
       </div>
     )
+  }
+
+  detectWebcam = async () => {
+    const video = document.querySelectorAll('.captureCam')
+    const predictions = await this.state.model.classify(video[0])
+    const topResult = predictions[0]
+
+    if (topResult.className === 'sexy') {
+      alert('sexy')
+    }
+
+    setTimeout(this.detectWebcam, DETECTION_PERIOD)
   }
 
   blurChange = checked => {
@@ -155,6 +174,15 @@ class App extends Component {
   }
 
   render() {
+    const maxWidth = window.innerWidth
+    const maxHeight = window.innerHeight
+
+    const videoConstraints = {
+      width: { ideal: maxWidth, max: maxWidth },
+      height: { ideal: maxHeight, max: maxHeight },
+      facingMode: 'environment'
+    }
+
     return (
       <div className="App">
         <header>
@@ -168,6 +196,13 @@ class App extends Component {
           </div>
         </header>
         <main>
+          <Webcam
+            className="captureCam"
+            width={maxWidth}
+            audio={false}
+            ref={this._refWeb}
+            videoConstraints={videoConstraints}
+          />
           <p id="topMessage">{this.state.titleMessage}</p>
           <div>
             <Dropzone
@@ -184,29 +219,54 @@ class App extends Component {
               />
             </Dropzone>
             <div id="underDrop">
-              <div ref={this._refTarget} className="clickTarget" >
+              <div ref={this._refTarget} className="clickTarget">
                 False Positive?
                 <div ref={this._refContent}>
                   <div id="fpInfo">
                     <h2>+ False Positives +</h2>
                     <p>
-                      Humans are amazing at visual identification. NSFW tries to error more on the side of things being dirty than clean.
-                      It's part of what makes failures on NSFW JS entertaining as well as practical. This algorithm for NSFW JS is constantly
-                      getting improved, <strong>and you can help!</strong>
+                      Humans are amazing at visual identification. NSFW tries to
+                      error more on the side of things being dirty than clean.
+                      It's part of what makes failures on NSFW JS entertaining
+                      as well as practical. This algorithm for NSFW JS is
+                      constantly getting improved,{' '}
+                      <strong>and you can help!</strong>
                     </p>
-                    <h3>
-                      Ways to Help!
-                    </h3>
+                    <h3>Ways to Help!</h3>
                     <p>
                       <ul>
                         <li>
-                          🌟<a href="https://github.com/alexkimxyz/nsfw_data_scrapper" target="_blank">Contribute to the Data Scraper</a> - Noticed any common misclassifications? Just PR a subreddit that represents those misclassifications.  Future models will be smarter!
+                          🌟
+                          <a
+                            href="https://github.com/alexkimxyz/nsfw_data_scrapper"
+                            target="_blank"
+                          >
+                            Contribute to the Data Scraper
+                          </a>{' '}
+                          - Noticed any common misclassifications? Just PR a
+                          subreddit that represents those misclassifications.
+                          Future models will be smarter!
                         </li>
                         <li>
-                          🌟<a href="https://github.com/gantman/nsfw_model" target="_blank">Contribute to the Trainer</a> - The algorithm is public. Advancements here help NSFW JS and other projects!
+                          🌟
+                          <a
+                            href="https://github.com/gantman/nsfw_model"
+                            target="_blank"
+                          >
+                            Contribute to the Trainer
+                          </a>{' '}
+                          - The algorithm is public. Advancements here help NSFW
+                          JS and other projects!
                         </li>
                       </ul>
-                      <a href="https://medium.freecodecamp.org/machine-learning-how-to-go-from-zero-to-hero-40e26f8aa6da" target="_blank"><strong>Learn more about how Machine Learning works!</strong></a>
+                      <a
+                        href="https://medium.freecodecamp.org/machine-learning-how-to-go-from-zero-to-hero-40e26f8aa6da"
+                        target="_blank"
+                      >
+                        <strong>
+                          Learn more about how Machine Learning works!
+                        </strong>
+                      </a>
                     </p>
                   </div>
                 </div>
@@ -237,7 +297,9 @@ class App extends Component {
             <a href="https://github.com/gantman/nsfw_model">Model Repo</a>
           </div>
           <div>
-            <a href="https://shift.infinite.red/avoid-nightmares-nsfw-js-ab7b176978b1">Blog Post</a>
+            <a href="https://shift.infinite.red/avoid-nightmares-nsfw-js-ab7b176978b1">
+              Blog Post
+            </a>
           </div>
           <div>
             <a href="https://infinite.red">
