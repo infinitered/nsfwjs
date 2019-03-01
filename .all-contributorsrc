@@ -36,6 +36,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "jstudenski",
+      "name": "Jeff Studenski",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/7350279?v=4",
+      "profile": "https://github.com/jstudenski",
+      "contributions": [
+        "design"
+      ]
     }
   ],
   "contributorsPerLine": 7
