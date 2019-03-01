@@ -18,13 +18,10 @@
         "question",
         "blog",
         "code",
-        "design",
-        "doc",
         "example",
         "ideas",
         "infra",
         "review",
-        "talk",
         "test"
       ]
     },
