@@ -23,7 +23,8 @@ class App extends Component {
     message: loadingMessage,
     predictions: [],
     droppedImageStyle: { opacity: 0.4 },
-    blurNSFW: true
+      blurNSFW: true,
+      enableWebcam: false,
   }
   componentDidMount() {
     // hovercard
@@ -44,8 +45,7 @@ class App extends Component {
           model,
           titleMessage: 'Drag and drop an image to check',
           message: 'Ready to Classify'
-        },
-        this.detectWebcam
+        }
       )
     })
   }
@@ -138,16 +138,22 @@ class App extends Component {
   }
 
   detectWebcam = async () => {
-    const video = document.querySelectorAll('.captureCam')
-    const predictions = await this.state.model.classify(video[0])
-    let droppedImageStyle = this.detectBlurStatus(predictions[0].className)
-    this.setState({
-      message: `Identified as ${predictions[0].className}`,
-      predictions,
-      droppedImageStyle
-    })
+    await this.sleep(100)
 
-    setTimeout(this.detectWebcam, DETECTION_PERIOD)
+    const video = document.querySelectorAll('.captureCam')
+
+    if (video[0]){
+      const predictions = await this.state.model.classify(video[0])
+      console.log('preds : ', predictions)
+      let droppedImageStyle = this.detectBlurStatus(predictions[0].className)
+      this.setState({
+        message: `Identified as ${predictions[0].className}`,
+        predictions,
+        droppedImageStyle
+      })
+      setTimeout(this.detectWebcam, DETECTION_PERIOD)
+    }
+
   }
 
   blurChange = checked => {
@@ -170,13 +176,13 @@ class App extends Component {
     if (this.state.message === loadingMessage) {
       return (
         <div id="spinContainer">
-          <Spinner name="cube-grid" color="#e79f23" id="processCube" />
+        <Spinner name="cube-grid" color="#e79f23" id="processCube" />
         </div>
       )
     }
   }
 
-  render() {
+  _renderWebcam = (showCamflag = this.state.enableWebcam) =>{
     const maxWidth = window.innerWidth
     const maxHeight = window.innerHeight
 
@@ -185,6 +191,35 @@ class App extends Component {
       height: { ideal: maxHeight, max: maxHeight },
       facingMode: 'environment'
     }
+    if (showCamflag) {
+      this.detectWebcam()
+      return(
+        <Webcam
+        className="captureCam"
+        width={maxWidth}
+        audio={false}
+        ref={this._refWeb}
+        videoConstraints={videoConstraints}
+        /> )}
+    else {
+      return(
+        <Dropzone
+        accept="image/jpeg, image/png, image/gif"
+        className="photo-box"
+        onDrop={this.onDrop.bind(this)}
+        >
+          <img
+             src={this.state.graphic}
+             style={this.state.droppedImageStyle}
+             alt="drop your file here"
+             className="dropped-photo"
+             ref="dropped"
+             />
+        </Dropzone>
+      )}
+  }
+
+  render() {
 
     return (
       <div className="App">
@@ -199,28 +234,14 @@ class App extends Component {
           </div>
         </header>
         <main>
-          <Webcam
-            className="captureCam"
-            width={maxWidth}
-            audio={false}
-            ref={this._refWeb}
-            videoConstraints={videoConstraints}
-          />
+          <p> webcam </p>
+          <button name="enable cam" onClick={ e => { console.log('btn clicked');
+                                                       this.setState({enableWebcam: !this.state.enableWebcam, predictions: []}) }}>
+            Toggle Cam</button>
           <p id="topMessage">{this.state.titleMessage}</p>
+            { this._renderWebcam() }
+
           <div>
-            <Dropzone
-              accept="image/jpeg, image/png, image/gif"
-              className="photo-box"
-              onDrop={this.onDrop.bind(this)}
-            >
-              <img
-                src={this.state.graphic}
-                style={this.state.droppedImageStyle}
-                alt="drop your file here"
-                className="dropped-photo"
-                ref="dropped"
-              />
-            </Dropzone>
             <div id="underDrop">
               <div ref={this._refTarget} className="clickTarget">
                 False Positive?
@@ -288,6 +309,7 @@ class App extends Component {
           {this._renderSpinner()}
           <div id="results">
             <p>{this.state.message}</p>
+<p> results here </p>
             {this._renderPredictions()}
           </div>
         </main>
