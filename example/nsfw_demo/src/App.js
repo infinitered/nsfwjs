@@ -39,11 +39,14 @@ class App extends Component {
 
     // Load model from public
     nsfwjs.load('/model/').then(model => {
-      this.setState({
-        model,
-        titleMessage: 'Drag and drop an image to check',
-        message: 'Ready to Classify'
-      })
+      this.setState(
+        {
+          model,
+          titleMessage: 'Drag and drop an image to check',
+          message: 'Ready to Classify'
+        },
+        this.detectWebcam
+      )
     })
   }
 
@@ -107,7 +110,6 @@ class App extends Component {
   }
 
   onDrop = (accepted, rejected) => {
-    this.detectWebcam()
     if (rejected.length > 0) {
       window.alert('JPG, PNG, GIF only plz')
     } else {
@@ -125,7 +127,7 @@ class App extends Component {
       <div id="predictions">
         <ul>
           {this.state.predictions.map(prediction => (
-            <li>
+            <li id={prediction.className}>
               {prediction.className} -{' '}
               {(prediction.probability * 100).toFixed(2)}%
             </li>
@@ -138,11 +140,12 @@ class App extends Component {
   detectWebcam = async () => {
     const video = document.querySelectorAll('.captureCam')
     const predictions = await this.state.model.classify(video[0])
-    const topResult = predictions[0]
-
-    if (topResult.className === 'sexy') {
-      alert('sexy')
-    }
+    let droppedImageStyle = this.detectBlurStatus(predictions[0].className)
+    this.setState({
+      message: `Identified as ${predictions[0].className}`,
+      predictions,
+      droppedImageStyle
+    })
 
     setTimeout(this.detectWebcam, DETECTION_PERIOD)
   }
