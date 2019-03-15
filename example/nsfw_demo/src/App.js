@@ -13,7 +13,7 @@ import Webcam from 'react-webcam'
 const blurred = { filter: 'blur(30px)', WebkitFilter: 'blur(30px)' }
 const clean = {}
 const loadingMessage = 'Loading NSFWJS Model'
-const DETECTION_PERIOD = 1000
+const DETECTION_PERIOD = 2000
 
 class App extends Component {
   state = {
@@ -23,8 +23,8 @@ class App extends Component {
     message: loadingMessage,
     predictions: [],
     droppedImageStyle: { opacity: 0.4 },
-      blurNSFW: true,
-      enableWebcam: false,
+    blurNSFW: true,
+    enableWebcam: false
   }
   componentDidMount() {
     // hovercard
@@ -40,13 +40,11 @@ class App extends Component {
 
     // Load model from public
     nsfwjs.load('/model/').then(model => {
-      this.setState(
-        {
-          model,
-          titleMessage: 'Drag and drop an image to check',
-          message: 'Ready to Classify'
-        }
-      )
+      this.setState({
+        model,
+        titleMessage: 'Drag and drop an image to check',
+        message: 'Ready to Classify'
+      })
     })
   }
 
@@ -95,6 +93,7 @@ class App extends Component {
   }
 
   setFile = file => {
+    // Currently not sending URL strings, but good for future.
     if (typeof file === 'string') {
       // using a sample
       this.setState({ graphic: file }, this.checkContent)
@@ -141,19 +140,17 @@ class App extends Component {
     await this.sleep(100)
 
     const video = document.querySelectorAll('.captureCam')
-
-    if (video[0]){
+    // assure video is still shown
+    if (video[0]) {
       const predictions = await this.state.model.classify(video[0])
-      console.log('preds : ', predictions)
-      let droppedImageStyle = this.detectBlurStatus(predictions[0].className)
+      // let droppedImageStyle = this.detectBlurStatus(predictions[0].className)
       this.setState({
         message: `Identified as ${predictions[0].className}`,
-        predictions,
-        droppedImageStyle
+        predictions
+        // droppedImageStyle
       })
       setTimeout(this.detectWebcam, DETECTION_PERIOD)
     }
-
   }
 
   blurChange = checked => {
@@ -176,13 +173,13 @@ class App extends Component {
     if (this.state.message === loadingMessage) {
       return (
         <div id="spinContainer">
-        <Spinner name="cube-grid" color="#e79f23" id="processCube" />
+          <Spinner name="cube-grid" color="#e79f23" id="processCube" />
         </div>
       )
     }
   }
 
-  _renderWebcam = (showCamflag = this.state.enableWebcam) =>{
+  _renderWebcam = () => {
     const maxWidth = window.innerWidth
     const maxHeight = window.innerHeight
 
@@ -191,36 +188,39 @@ class App extends Component {
       height: { ideal: maxHeight, max: maxHeight },
       facingMode: 'environment'
     }
-    if (showCamflag) {
+    if (this.state.enableWebcam) {
       this.detectWebcam()
-      return(
+      return (
         <Webcam
-        className="captureCam"
-        width={maxWidth}
-        audio={false}
-        ref={this._refWeb}
-        videoConstraints={videoConstraints}
-        /> )}
-    else {
-      return(
+          id="capCam"
+          className="captureCam"
+          width={maxWidth}
+          audio={false}
+          ref={this._refWeb}
+          videoConstraints={videoConstraints}
+        />
+      )
+    } else {
+      return (
         <Dropzone
-        accept="image/jpeg, image/png, image/gif"
-        className="photo-box"
-        onDrop={this.onDrop.bind(this)}
+          id="dropBox"
+          accept="image/jpeg, image/png, image/gif"
+          className="photo-box"
+          onDrop={this.onDrop.bind(this)}
         >
           <img
-             src={this.state.graphic}
-             style={this.state.droppedImageStyle}
-             alt="drop your file here"
-             className="dropped-photo"
-             ref="dropped"
-             />
+            src={this.state.graphic}
+            style={this.state.droppedImageStyle}
+            alt="drop your file here"
+            className="dropped-photo"
+            ref="dropped"
+          />
         </Dropzone>
-      )}
+      )
+    }
   }
 
   render() {
-
     return (
       <div className="App">
         <header>
@@ -234,14 +234,21 @@ class App extends Component {
           </div>
         </header>
         <main>
-          <p> webcam </p>
-          <button name="enable cam" onClick={ e => { console.log('btn clicked');
-                                                       this.setState({enableWebcam: !this.state.enableWebcam, predictions: []}) }}>
-            Toggle Cam</button>
+          <button
+            name="enable cam"
+            onClick={e => {
+              this.setState({
+                enableWebcam: !this.state.enableWebcam,
+                predictions: []
+              })
+            }}
+          >
+            Toggle Cam
+          </button>
           <p id="topMessage">{this.state.titleMessage}</p>
-            { this._renderWebcam() }
-
           <div>
+            {this._renderWebcam()}
+
             <div id="underDrop">
               <div ref={this._refTarget} className="clickTarget">
                 False Positive?
@@ -309,7 +316,6 @@ class App extends Component {
           {this._renderSpinner()}
           <div id="results">
             <p>{this.state.message}</p>
-<p> results here </p>
             {this._renderPredictions()}
           </div>
         </main>
