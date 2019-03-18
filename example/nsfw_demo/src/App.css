@@ -213,6 +213,22 @@ footer a:hover {
     display: none;
   }
 
+  #camDescription span {
+    display: none;
+  }
+
+  #camDescription:after {
+    content: 'Cam';
+  }
+
+  #blurDescription span {
+    display: none;
+  }
+
+  #blurDescription:after {
+    content: 'Protection';
+  }
+
   #switchStation {
     padding-right: 5px;
   }

@@ -139,7 +139,6 @@ class App extends Component {
   }
 
   detectWebcam = async () => {
-    console.log(Date.now())
     await this.sleep(100)
 
     const video = document.querySelectorAll('.captureCam')
@@ -307,7 +306,9 @@ class App extends Component {
                 </div>
               </div>
               <div className="switchStation">
-                <p>Camera</p>
+                <p id="camDescription">
+                  <span>Camera</span>
+                </p>
                 <Switch
                   onColor="#e79f23"
                   offColor="#000"
@@ -316,7 +317,9 @@ class App extends Component {
                 />
               </div>
               <div className="switchStation">
-                <p>Blur Protection</p>
+                <p id="blurDescription">
+                  <span>Blur Protection</span>
+                </p>
                 <Switch
                   onColor="#e79f23"
                   offColor="#000"
