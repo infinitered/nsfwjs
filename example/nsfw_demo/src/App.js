@@ -13,7 +13,7 @@ import Webcam from 'react-webcam'
 const blurred = { filter: 'blur(30px)', WebkitFilter: 'blur(30px)' }
 const clean = {}
 const loadingMessage = 'Loading NSFWJS Model'
-const DETECTION_PERIOD = 2000
+const DETECTION_PERIOD = 1000
 
 class App extends Component {
   state = {
@@ -137,6 +137,7 @@ class App extends Component {
   }
 
   detectWebcam = async () => {
+    console.log(Date.now())
     await this.sleep(100)
 
     const video = document.querySelectorAll('.captureCam')
@@ -189,11 +190,11 @@ class App extends Component {
       facingMode: 'environment'
     }
     if (this.state.enableWebcam) {
-      this.detectWebcam()
       return (
         <Webcam
           id="capCam"
           className="captureCam"
+          style={this.state.droppedImageStyle}
           width={maxWidth}
           audio={false}
           ref={this._refWeb}
@@ -237,9 +238,11 @@ class App extends Component {
           <button
             name="enable cam"
             onClick={e => {
+              this.detectWebcam()
               this.setState({
                 enableWebcam: !this.state.enableWebcam,
-                predictions: []
+                predictions: [],
+                droppedImageStyle: {}
               })
             }}
           >
