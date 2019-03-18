@@ -62,7 +62,7 @@ nsfwjs.load().then(function (model) {
 
 #### `load` the model
 
-Before you can classify any images, you'll need to load the model. For many reasons, you should use the optional parameter and load the model from your website. Review how in the install directions.
+Before you can classify any image, you'll need to load the model. You should use the optional parameter and load the model from your website, as explained in the install directions.
 
 ```js
 const model = nsfwjs.load('/path/to/model/directory/')
