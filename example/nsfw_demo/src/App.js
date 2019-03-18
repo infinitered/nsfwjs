@@ -13,6 +13,8 @@ import Webcam from 'react-webcam'
 const blurred = { filter: 'blur(30px)', WebkitFilter: 'blur(30px)' }
 const clean = {}
 const loadingMessage = 'Loading NSFWJS Model'
+const dragMessage = 'Drag and drop an image to check'
+const camMessage = 'Cam active'
 const DETECTION_PERIOD = 1000
 
 class App extends Component {
@@ -42,7 +44,7 @@ class App extends Component {
     nsfwjs.load('/model/').then(model => {
       this.setState({
         model,
-        titleMessage: 'Drag and drop an image to check',
+        titleMessage: dragMessage,
         message: 'Ready to Classify'
       })
     })
@@ -144,11 +146,11 @@ class App extends Component {
     // assure video is still shown
     if (video[0]) {
       const predictions = await this.state.model.classify(video[0])
-      // let droppedImageStyle = this.detectBlurStatus(predictions[0].className)
+      let droppedImageStyle = this.detectBlurStatus(predictions[0].className)
       this.setState({
         message: `Identified as ${predictions[0].className}`,
-        predictions
-        // droppedImageStyle
+        predictions,
+        droppedImageStyle
       })
       setTimeout(this.detectWebcam, DETECTION_PERIOD)
     }
@@ -180,7 +182,7 @@ class App extends Component {
     }
   }
 
-  _renderWebcam = () => {
+  _renderInterface = () => {
     const maxWidth = window.innerWidth
     const maxHeight = window.innerHeight
 
@@ -221,6 +223,16 @@ class App extends Component {
     }
   }
 
+  _camChange = e => {
+    this.detectWebcam()
+    this.setState({
+      enableWebcam: !this.state.enableWebcam,
+      predictions: [],
+      droppedImageStyle: {},
+      titleMessage: this.state.enableWebcam ? dragMessage : camMessage
+    })
+  }
+
   render() {
     return (
       <div className="App">
@@ -235,22 +247,11 @@ class App extends Component {
           </div>
         </header>
         <main>
-          <button
-            name="enable cam"
-            onClick={e => {
-              this.detectWebcam()
-              this.setState({
-                enableWebcam: !this.state.enableWebcam,
-                predictions: [],
-                droppedImageStyle: {}
-              })
-            }}
-          >
-            Toggle Cam
-          </button>
-          <p id="topMessage">{this.state.titleMessage}</p>
           <div>
-            {this._renderWebcam()}
+            <div id="overDrop">
+              <p id="topMessage">{this.state.titleMessage}</p>
+            </div>
+            {this._renderInterface()}
 
             <div id="underDrop">
               <div ref={this._refTarget} className="clickTarget">
@@ -305,7 +306,16 @@ class App extends Component {
                   </div>
                 </div>
               </div>
-              <div id="switchStation">
+              <div className="switchStation">
+                <p>Camera</p>
+                <Switch
+                  onColor="#e79f23"
+                  offColor="#000"
+                  onChange={this._camChange}
+                  checked={this.state.enableWebcam}
+                />
+              </div>
+              <div className="switchStation">
                 <p>Blur Protection</p>
                 <Switch
                   onColor="#e79f23"
