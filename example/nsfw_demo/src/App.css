@@ -58,6 +58,10 @@ main {
   border-bottom: 1px solid;
 }
 
+#camBlock {
+  padding: 0 20px;
+}
+
 .snippet {
   display: flex;
   flex-direction: column;
@@ -88,7 +92,7 @@ main {
 }
 
 #fpInfo {
-  background-color: rgba(0,0,0,0.9);
+  background-color: rgba(0, 0, 0, 0.9);
   color: #fff;
   border-radius: 15px;
   max-width: 400px;
@@ -119,25 +123,31 @@ main {
   cursor: pointer;
 }
 
+#overDrop {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 #underDrop {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   font-size: 0.7em;
-  background-color: rgba(0,0,0,0.2);
+  background-color: rgba(0, 0, 0, 0.2);
   border-radius: 0 0 15px 15px;
   padding: 0 15px;
 }
 
-#switchStation {
+.switchStation {
   display: flex;
   flex-direction: row;
   align-items: center;
   float: right;
 }
 
-#switchStation p {
+.switchStation p {
   padding-right: 10px;
 }
 
@@ -177,7 +187,7 @@ footer {
   color: #fff;
   display: flex;
   flex-wrap: wrap;
-  font-size: .875em;
+  font-size: 0.875em;
   font-weight: 600;
   justify-content: center;
   position: relative;
@@ -207,12 +217,28 @@ footer a:hover {
     display: none;
   }
 
+  #camDescription span {
+    display: none;
+  }
+
+  #camDescription:after {
+    content: 'Cam';
+  }
+
+  #blurDescription span {
+    display: none;
+  }
+
+  #blurDescription:after {
+    content: 'Protection';
+  }
+
   #switchStation {
     padding-right: 5px;
   }
 
   #topMessage:after {
-    content: ' - On mobile tap to add'
+    content: ' - On mobile tap to add';
   }
 
   #predictions {

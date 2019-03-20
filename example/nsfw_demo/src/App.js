@@ -8,10 +8,14 @@ import Dropzone from 'react-dropzone'
 import Switch from 'react-switch'
 import * as Spinner from 'react-spinkit'
 import Drop from 'tether-drop'
+import Webcam from 'react-webcam'
 
 const blurred = { filter: 'blur(30px)', WebkitFilter: 'blur(30px)' }
 const clean = {}
 const loadingMessage = 'Loading NSFWJS Model'
+const dragMessage = 'Drag and drop an image to check'
+const camMessage = 'Cam active'
+const DETECTION_PERIOD = 1000
 
 class App extends Component {
   state = {
@@ -21,7 +25,8 @@ class App extends Component {
     message: loadingMessage,
     predictions: [],
     droppedImageStyle: { opacity: 0.4 },
-    blurNSFW: true
+    blurNSFW: true,
+    enableWebcam: false
   }
   componentDidMount() {
     // hovercard
@@ -33,25 +38,29 @@ class App extends Component {
       constrainToWindow: true,
       constrainToScrollParent: true,
       remove: true
-    });
+    })
 
     // Load model from public
     nsfwjs.load('/model/').then(model => {
       this.setState({
         model,
-        titleMessage: 'Drag and drop an image to check',
+        titleMessage: dragMessage,
         message: 'Ready to Classify'
       })
     })
   }
 
-  _refTarget = (ref) => {
-    this.hoverTarget = ref;
-  };
+  _refTarget = ref => {
+    this.hoverTarget = ref
+  }
 
-  _refContent = (ref) => {
-    this.hoverContent = ref;
-  };
+  _refContent = ref => {
+    this.hoverContent = ref
+  }
+
+  _refWeb = webcam => {
+    this.webcam = webcam
+  }
 
   // terrible race condition fix :'(
   sleep(ms) {
@@ -86,6 +95,7 @@ class App extends Component {
   }
 
   setFile = file => {
+    // Currently not sending URL strings, but good for future.
     if (typeof file === 'string') {
       // using a sample
       this.setState({ graphic: file }, this.checkContent)
@@ -118,7 +128,7 @@ class App extends Component {
       <div id="predictions">
         <ul>
           {this.state.predictions.map(prediction => (
-            <li>
+            <li id={prediction.className}>
               {prediction.className} -{' '}
               {(prediction.probability * 100).toFixed(2)}%
             </li>
@@ -126,6 +136,23 @@ class App extends Component {
         </ul>
       </div>
     )
+  }
+
+  detectWebcam = async () => {
+    await this.sleep(100)
+
+    const video = document.querySelectorAll('.captureCam')
+    // assure video is still shown
+    if (video[0]) {
+      const predictions = await this.state.model.classify(video[0])
+      let droppedImageStyle = this.detectBlurStatus(predictions[0].className)
+      this.setState({
+        message: `Identified as ${predictions[0].className}`,
+        predictions,
+        droppedImageStyle
+      })
+      setTimeout(this.detectWebcam, DETECTION_PERIOD)
+    }
   }
 
   blurChange = checked => {
@@ -154,6 +181,61 @@ class App extends Component {
     }
   }
 
+  _renderInterface = () => {
+    const maxWidth = window.innerWidth
+    const maxHeight = window.innerHeight
+
+    const videoConstraints = {
+      width: { ideal: maxWidth, max: maxWidth },
+      height: { ideal: maxHeight, max: maxHeight },
+      facingMode: 'environment'
+    }
+    if (this.state.enableWebcam) {
+      return (
+        <Webcam
+          id="capCam"
+          className="captureCam"
+          style={this.state.droppedImageStyle}
+          width={maxWidth}
+          audio={false}
+          ref={this._refWeb}
+          videoConstraints={videoConstraints}
+        />
+      )
+    } else {
+      return (
+        <Dropzone
+          id="dropBox"
+          accept="image/jpeg, image/png, image/gif"
+          className="photo-box"
+          onDrop={this.onDrop.bind(this)}
+        >
+          <img
+            src={this.state.graphic}
+            style={this.state.droppedImageStyle}
+            alt="drop your file here"
+            className="dropped-photo"
+            ref="dropped"
+          />
+        </Dropzone>
+      )
+    }
+  }
+
+  _camChange = e => {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      window.alert("Sorry, your browser doesn't seem to support camera access.")
+      return
+    }    
+    this.detectWebcam()
+    this.setState({
+      enableWebcam: !this.state.enableWebcam,
+      predictions: [],
+      droppedImageStyle: {},
+      titleMessage: this.state.enableWebcam ? dragMessage : camMessage
+    })
+  }
+
   render() {
     return (
       <div className="App">
@@ -168,51 +250,80 @@ class App extends Component {
           </div>
         </header>
         <main>
-          <p id="topMessage">{this.state.titleMessage}</p>
           <div>
-            <Dropzone
-              accept="image/jpeg, image/png, image/gif"
-              className="photo-box"
-              onDrop={this.onDrop.bind(this)}
-            >
-              <img
-                src={this.state.graphic}
-                style={this.state.droppedImageStyle}
-                alt="drop your file here"
-                className="dropped-photo"
-                ref="dropped"
-              />
-            </Dropzone>
+            <div id="overDrop">
+              <p id="topMessage">{this.state.titleMessage}</p>
+            </div>
+            {this._renderInterface()}
+
             <div id="underDrop">
-              <div ref={this._refTarget} className="clickTarget" >
+              <div ref={this._refTarget} className="clickTarget">
                 False Positive?
                 <div ref={this._refContent}>
                   <div id="fpInfo">
                     <h2>+ False Positives +</h2>
                     <p>
-                      Humans are amazing at visual identification. NSFW tries to error more on the side of things being dirty than clean.
-                      It's part of what makes failures on NSFW JS entertaining as well as practical. This algorithm for NSFW JS is constantly
-                      getting improved, <strong>and you can help!</strong>
+                      Humans are amazing at visual identification. NSFW tries to
+                      error more on the side of things being dirty than clean.
+                      It's part of what makes failures on NSFW JS entertaining
+                      as well as practical. This algorithm for NSFW JS is
+                      constantly getting improved,{' '}
+                      <strong>and you can help!</strong>
                     </p>
-                    <h3>
-                      Ways to Help!
-                    </h3>
+                    <h3>Ways to Help!</h3>
                     <p>
                       <ul>
                         <li>
-                          🌟<a href="https://github.com/alexkimxyz/nsfw_data_scrapper" target="_blank">Contribute to the Data Scraper</a> - Noticed any common misclassifications? Just PR a subreddit that represents those misclassifications.  Future models will be smarter!
+                          🌟
+                          <a
+                            href="https://github.com/alexkimxyz/nsfw_data_scrapper"
+                            target="_blank"
+                          >
+                            Contribute to the Data Scraper
+                          </a>{' '}
+                          - Noticed any common misclassifications? Just PR a
+                          subreddit that represents those misclassifications.
+                          Future models will be smarter!
                         </li>
                         <li>
-                          🌟<a href="https://github.com/gantman/nsfw_model" target="_blank">Contribute to the Trainer</a> - The algorithm is public. Advancements here help NSFW JS and other projects!
+                          🌟
+                          <a
+                            href="https://github.com/gantman/nsfw_model"
+                            target="_blank"
+                          >
+                            Contribute to the Trainer
+                          </a>{' '}
+                          - The algorithm is public. Advancements here help NSFW
+                          JS and other projects!
                         </li>
                       </ul>
-                      <a href="https://medium.freecodecamp.org/machine-learning-how-to-go-from-zero-to-hero-40e26f8aa6da" target="_blank"><strong>Learn more about how Machine Learning works!</strong></a>
+                      <a
+                        href="https://medium.freecodecamp.org/machine-learning-how-to-go-from-zero-to-hero-40e26f8aa6da"
+                        target="_blank"
+                      >
+                        <strong>
+                          Learn more about how Machine Learning works!
+                        </strong>
+                      </a>
                     </p>
                   </div>
                 </div>
               </div>
-              <div id="switchStation">
-                <p>Blur Protection</p>
+              <div className="switchStation" id="camBlock">
+                <p id="camDescription">
+                  <span>Camera</span>
+                </p>
+                <Switch
+                  onColor="#e79f23"
+                  offColor="#000"
+                  onChange={this._camChange}
+                  checked={this.state.enableWebcam}
+                />
+              </div>
+              <div className="switchStation">
+                <p id="blurDescription">
+                  <span>Blur Protection</span>
+                </p>
                 <Switch
                   onColor="#e79f23"
                   offColor="#000"
@@ -237,7 +348,9 @@ class App extends Component {
             <a href="https://github.com/gantman/nsfw_model">Model Repo</a>
           </div>
           <div>
-            <a href="https://shift.infinite.red/avoid-nightmares-nsfw-js-ab7b176978b1">Blog Post</a>
+            <a href="https://shift.infinite.red/avoid-nightmares-nsfw-js-ab7b176978b1">
+              Blog Post
+            </a>
           </div>
           <div>
             <a href="https://infinite.red">

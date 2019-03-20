@@ -7051,6 +7051,12 @@ react-switch@^4.1.0:
   dependencies:
     prop-types "^15.6.2"
 
+react-webcam@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-webcam/-/react-webcam-1.1.0.tgz#81214365da997717ebe7dac281e18ae8b50ee413"
+  dependencies:
+    prop-types "^15.5.8"
+
 react@^16.8.1:
   version "16.8.1"
   resolved "https://registry.yarnpkg.com/react/-/react-16.8.1.tgz#ae11831f6cb2a05d58603a976afc8a558e852c4a"
@@ -8080,14 +8086,12 @@ test-exclude@^4.2.1:
 tether-drop@^1.4.2:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/tether-drop/-/tether-drop-1.4.2.tgz#28e240cce077f4ae1d8e5990a03b71e0cd6fbfec"
-  integrity sha1-KOJAzOB39K4djlmQoDtx4M1vv+w=
   dependencies:
     tether "^1.1.0"
 
 tether@^1.1.0:
   version "1.4.5"
   resolved "https://registry.yarnpkg.com/tether/-/tether-1.4.5.tgz#8efd7b35572767ba502259ba9b1cc167fcf6f2c1"
-  integrity sha512-fysT1Gug2wbRi7a6waeu39yVDwiNtvwj5m9eRD+qZDSHKNghLo6KqP/U3yM2ap6TNUL2skjXGJaJJTJqoC31vw==
 
 text-table@0.2.0, text-table@^0.2.0:
   version "0.2.0"

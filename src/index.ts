@@ -71,7 +71,7 @@ export class NSFWJS {
 
     return tf.tidy(() => {
       if (!(img instanceof tf.Tensor)) {
-        img = tf.fromPixels(img)
+        img = tf.browser.fromPixels(img)
       }
 
       // Normalize the image from [0, 255] to [0, 1].
