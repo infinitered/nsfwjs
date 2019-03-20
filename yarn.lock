@@ -2672,6 +2672,11 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
+libgif@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/libgif/-/libgif-0.0.2.tgz#6ba7fe5208de8b78cbd7caa0dd011cdd55ca35b0"
+  integrity sha512-TQ+P1BXm37su8KEWsfn3y5cKf9eOr9k65Ql7AYq9Wt5BjGM0yiC3XHbPfuaqOAikgHKpGZEO6krjkORknwJTbw==
+
 listr-input@^0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/listr-input/-/listr-input-0.1.3.tgz#0c313967b6d179ebe964a81e9363ce2a5a39d25c"

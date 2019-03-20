@@ -49,5 +49,7 @@
     "url": "https://github.com/infinitered/nsfwjs/issues"
   },
   "homepage": "https://github.com/infinitered/nsfwjs#readme",
-  "dependencies": {}
+  "dependencies": {
+    "libgif": "0.0.2"
+  }
 }
