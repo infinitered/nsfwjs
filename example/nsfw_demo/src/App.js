@@ -223,6 +223,10 @@ class App extends Component {
   }
 
   _camChange = e => {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      window.alert("Sorry, your browser doesn't seem to support camera access.")
+      return
+    }    
     this.detectWebcam()
     this.setState({
       enableWebcam: !this.state.enableWebcam,
