@@ -58,6 +58,10 @@ main {
   border-bottom: 1px solid;
 }
 
+#camBlock {
+  padding: 0 20px;
+}
+
 .snippet {
   display: flex;
   flex-direction: column;

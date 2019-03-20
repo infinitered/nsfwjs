@@ -309,7 +309,7 @@ class App extends Component {
                   </div>
                 </div>
               </div>
-              <div className="switchStation">
+              <div className="switchStation" id="camBlock">
                 <p id="camDescription">
                   <span>Camera</span>
                 </p>
