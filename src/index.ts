@@ -1,5 +1,6 @@
 import * as tf from '@tensorflow/tfjs'
 import { NSFW_CLASSES } from './nsfw_classes'
+import * as SuperGif from 'libgif'
 
 const BASE_PATH = 'https://s3.amazonaws.com/ir_public/nsfwjs/'
 const IMAGE_SIZE = 299
@@ -135,6 +136,32 @@ export class NSFWJS {
     logits.dispose()
 
     return classes
+  }
+
+  /**
+   * Classifies a gif from the 5 classes returning a map of
+   * the most likely class names to their probability.
+   *
+   * @param gif The gif to classify. DOM element image
+   * @param topk How many top values to use. Defaults to 5
+   */
+  async classifyGif(
+    gif: HTMLImageElement,
+    topk = 5
+  ): Promise<Array<Array<{ className: string; probability: number }>>> {
+    const gifObj = new SuperGif({ gif })
+    return new Promise (resolve => {
+      gifObj.load(async () => {
+        const arrayOfClasses = []
+        for (let i = 1; i <= gifObj.get_length(); i++) {
+          gifObj.move_to(i)
+          const classes = await this.classify(gifObj.get_canvas(), topk)
+          arrayOfClasses.push(classes)
+        }
+        
+        resolve(arrayOfClasses)
+      })
+    })
   }
 }
 

@@ -43,6 +43,34 @@
       "contributions": [
         "design"
       ]
+    },
+    {
+      "login": "fvonhoven",
+      "name": "Frank von Hoven III",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/10098988?v=4",
+      "profile": "https://github.com/fvonhoven",
+      "contributions": [
+        "doc",
+        "ideas"
+      ]
+    },
+    {
+      "login": "sandeshsoni",
+      "name": "Sandesh Soni",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/3761745?v=4",
+      "profile": "https://github.com/sandeshsoni",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "seannam1218",
+      "name": "Sean Nam",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/24437898?v=4",
+      "profile": "https://github.com/seannam1218",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
