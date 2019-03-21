@@ -43,6 +43,16 @@
       "contributions": [
         "design"
       ]
+    },
+    {
+      "login": "fvonhoven",
+      "name": "Frank von Hoven III",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/10098988?v=4",
+      "profile": "https://github.com/fvonhoven",
+      "contributions": [
+        "doc",
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7
