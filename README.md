@@ -78,7 +78,7 @@ const model = nsfwjs.load('/path/to/model/directory/')
 
 #### `classify` an image
 
-This function can take any browser-based image elements (<img>, <video>, <canvas>) and return an array of most likely predictions and their confidence levels.
+This function can take any browser-based image elements (`<img>`, `<video>`, `<canvas>`) and returns an array of most likely predictions and their confidence levels.
 
 ```js
 // Return top 3 guesses (instead of all 5)
@@ -93,6 +93,24 @@ const predictions = await model.classify(img, 3)
 **Returns**
 
 - Array of objects that contain `className` and `probability`. Array size is determined by the second parameter in the `classify` function.
+
+#### `classifyGif`
+
+This function can take a browser-based image element (`<img>`) that is a GIF, and retursn an array prediction arrays.  It basically breaks a GIF into it's frames and runs `classify` on each.   This can take a few moments, as GIFs are frequently hundreds of frames.
+
+```js
+// Returns all predictions of each GIF frame
+const framePredictions = await model.classifyGif(img)
+```
+
+**Parameters**
+
+- Image element to check
+- Number of results to return per frame (default all 5)
+
+**Returns**
+
+- Array of the same order as number of frames in GIF.  Each index corresponding to that frame, an returns array of objects that contain `className` and `probability`; sorted by probability and limited by second parameter.
 
 ## Install
 
