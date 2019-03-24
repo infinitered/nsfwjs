@@ -4,8 +4,10 @@
   "private": true,
   "dependencies": {
     "@tensorflow/tfjs": "^0.15.1",
+    "d3": "^5.9.2",
     "nsfwjs": "../../",
     "react": "^16.8.1",
+    "react-d3-library": "^1.1.8",
     "react-dom": "^16.8.1",
     "react-dropzone": "^7.0.1",
     "react-scripts": "2.1.5",

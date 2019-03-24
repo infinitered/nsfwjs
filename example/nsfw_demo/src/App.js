@@ -9,6 +9,7 @@ import Switch from 'react-switch'
 import * as Spinner from 'react-spinkit'
 import Drop from 'tether-drop'
 import Webcam from 'react-webcam'
+import GifGraph from './GifGraph'
 
 const blurred = { filter: 'blur(30px)', WebkitFilter: 'blur(30px)' }
 const clean = {}
@@ -21,12 +22,15 @@ class App extends Component {
   state = {
     model: null,
     graphic: logo,
+    imageType: null,
+    loading: true,
     titleMessage: 'Please hold, the model is loading...',
     message: loadingMessage,
     predictions: [],
     droppedImageStyle: { opacity: 0.4 },
     blurNSFW: true,
-    enableWebcam: false
+    enableWebcam: false,
+    gifGraph: null
   }
   componentDidMount() {
     // hovercard
@@ -45,7 +49,8 @@ class App extends Component {
       this.setState({
         model,
         titleMessage: dragMessage,
-        message: 'Ready to Classify'
+        message: 'Ready to Classify',
+        loading: false
       })
     })
   }
@@ -80,34 +85,66 @@ class App extends Component {
     return droppedImageStyle
   }
 
+  predictionsTransform = predictions => {
+    let results = { name: 'results', children: [] }
+    predictions.map((frame, i) => {
+      const lastChild = results.children.slice(-1)[0]
+      const currentClass = frame[0].className
+      if (lastChild && currentClass == lastChild.name) {
+        // Add frame to entry
+        lastChild.children.push({ name: 'frame ' + (i + 1), value: 1 })
+      } else {
+        // Create new
+        results.children.push({
+          name: currentClass,
+          children: [{ name: 'frame ' + (i + 1), value: 1 }]
+        })
+      }
+    })
+    // formatted for d3
+    return results
+  }
+
   checkContent = async () => {
     // Sleep bc it's grabbing image before it's rendered
     // Not really a problem of this library
     await this.sleep(100)
     const img = this.refs.dropped
-    const predictions = await this.state.model.classify(img)
-    let droppedImageStyle = this.detectBlurStatus(predictions[0].className)
-    this.setState({
-      message: `Identified as ${predictions[0].className}`,
-      predictions,
-      droppedImageStyle
-    })
+    if (this.state.imageType === 'image/gif') {
+      this.setState({
+        message: 'Analyzing GIF',
+        prediction: [],
+        loading: true
+      })
+      const predictions = await this.state.model.classifyGif(img)
+      const gifGraph = this.predictionsTransform(predictions)
+      this.setState({
+        message: 'GIF Graph',
+        gifGraph,
+        loading: false
+      })
+    } else {
+      const predictions = await this.state.model.classify(img)
+      let droppedImageStyle = this.detectBlurStatus(predictions[0].className)
+      this.setState({
+        message: `Identified as ${predictions[0].className}`,
+        predictions,
+        droppedImageStyle
+      })
+    }
   }
 
   setFile = file => {
-    // Currently not sending URL strings, but good for future.
-    if (typeof file === 'string') {
-      // using a sample
-      this.setState({ graphic: file }, this.checkContent)
-    } else {
-      // drag and dropped
-      const reader = new FileReader()
-      reader.onload = e => {
-        this.setState({ graphic: e.target.result }, this.checkContent)
-      }
-
-      reader.readAsDataURL(file)
+    // drag and dropped
+    const reader = new FileReader()
+    reader.onload = e => {
+      this.setState(
+        { graphic: e.target.result, imageType: file.type },
+        this.checkContent
+      )
     }
+
+    reader.readAsDataURL(file)
   }
 
   onDrop = (accepted, rejected) => {
@@ -172,7 +209,7 @@ class App extends Component {
   }
 
   _renderSpinner = () => {
-    if (this.state.message === loadingMessage) {
+    if (this.state.loading) {
       return (
         <div id="spinContainer">
           <Spinner name="cube-grid" color="#e79f23" id="processCube" />
@@ -226,7 +263,7 @@ class App extends Component {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       window.alert("Sorry, your browser doesn't seem to support camera access.")
       return
-    }    
+    }
     this.detectWebcam()
     this.setState({
       enableWebcam: !this.state.enableWebcam,
@@ -250,6 +287,7 @@ class App extends Component {
           </div>
         </header>
         <main>
+          <GifGraph />
           <div>
             <div id="overDrop">
               <p id="topMessage">{this.state.titleMessage}</p>
@@ -271,10 +309,10 @@ class App extends Component {
                       <strong>and you can help!</strong>
                     </p>
                     <h3>Ways to Help!</h3>
-                    <p>
+                    <div>
                       <ul>
                         <li>
-                          🌟
+                          <span role="img">🌟</span>
                           <a
                             href="https://github.com/alexkimxyz/nsfw_data_scrapper"
                             target="_blank"
@@ -305,7 +343,7 @@ class App extends Component {
                           Learn more about how Machine Learning works!
                         </strong>
                       </a>
-                    </p>
+                    </div>
                   </div>
                 </div>
               </div>
