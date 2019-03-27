@@ -5088,6 +5088,10 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
+libgif@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/libgif/-/libgif-0.0.2.tgz#6ba7fe5208de8b78cbd7caa0dd011cdd55ca35b0"
+
 load-json-file@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/load-json-file/-/load-json-file-1.1.0.tgz#956905708d58b4bab4c2261b04f59f31c99374c0"
@@ -5683,6 +5687,8 @@ npmlog@^4.0.2:
 
 nsfwjs@../../:
   version "0.1.1"
+  dependencies:
+    libgif "0.0.2"
 
 nth-check@^1.0.2, nth-check@~1.0.1:
   version "1.0.2"
