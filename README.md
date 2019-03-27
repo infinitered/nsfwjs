@@ -7,7 +7,7 @@
 
 A simple JavaScript library to help you quickly identify unseemly images; all in the client's browser. NSFWJS isn't perfect, but it's pretty accurate (~90% from our test set of 15,000 test images)... and it's getting more accurate all the time.
 
-Why would this be useful?  [Check out the announcement blog post](https://shift.infinite.red/avoid-nightmares-nsfw-js-ab7b176978b1).
+Why would this be useful? [Check out the announcement blog post](https://shift.infinite.red/avoid-nightmares-nsfw-js-ab7b176978b1).
 
 <p align="center">
 <img src="https://github.com/infinitered/nsfwjs/raw/master/_art/nsfw_demo.gif" alt="demo example" width="800" align="center" />
@@ -50,8 +50,8 @@ const img = document.getElementById('img')
 
 // Load model from my S3.
 // See the section hosting the model files on your site.
-nsfwjs.load().then(function (model) {
-  model.classify(img).then(function (predictions) {
+nsfwjs.load().then(function(model) {
+  model.classify(img).then(function(predictions) {
     // Classify the image
     console.log('Predictions: ', predictions)
   })
@@ -96,21 +96,30 @@ const predictions = await model.classify(img, 3)
 
 #### `classifyGif`
 
-This function can take a browser-based image element (`<img>`) that is a GIF, and retursn an array prediction arrays.  It basically breaks a GIF into it's frames and runs `classify` on each.   This can take a few moments, as GIFs are frequently hundreds of frames.
+This function can take a browser-based image element (`<img>`) that is a GIF, and returns an array prediction arrays. It basically breaks a GIF into it's frames and runs `classify` on each, with a given configuration. This can take a few moments, as GIFs are frequently hundreds of frames.
 
 ```js
 // Returns all predictions of each GIF frame
 const framePredictions = await model.classifyGif(img)
+
+// returns 1 prediction of each GIF frame, and logs the result to console
+const framePredictions = await classifyGif(img, {
+  topk: 1,
+  onFrame: (index, totalFrames, prediction) =>
+    console.log(index, totalFrames, prediction)
+})
 ```
 
 **Parameters**
 
 - Image element to check
-- Number of results to return per frame (default all 5)
+- Configuration object literal
+  - topk - Number of results to return per frame (default all 5)
+  - onFrame - Function to call on each frame - params are index, totalFrames, and current frame prediction.
 
 **Returns**
 
-- Array of the same order as number of frames in GIF.  Each index corresponding to that frame, an returns array of objects that contain `className` and `probability`; sorted by probability and limited by second parameter.
+- Array of the same order as number of frames in GIF. Each index corresponding to that frame, an returns array of objects that contain `className` and `probability`; sorted by probability and limited by topk config parameter.
 
 ## Install
 
