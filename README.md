@@ -96,23 +96,23 @@ const predictions = await model.classify(img, 3)
 
 #### `classifyGif`
 
-This function can take a browser-based image element (`<img>`) that is a GIF, and returns an array prediction arrays. It basically breaks a GIF into it's frames and runs `classify` on each, with a given configuration. This can take a few moments, as GIFs are frequently hundreds of frames.
+This function can take a browser-based image element (`<img>`) that is a GIF, and returns an array of prediction arrays. It breaks a GIF into it's frames and runs `classify` on each with a given configuration. This can take a while, as GIFs are frequently hundreds of frames.
 
 ```js
 // Returns all predictions of each GIF frame
 const framePredictions = await model.classifyGif(img)
 ```
 
-Or passing configuration:
+Example of passing a configuration:
 
 ```js
-// returns 1 prediction of each GIF frame, and logs the result to console
-const config = {
+// returns top 1 prediction of each GIF frame, and logs the status to console
+const myConfig = {
   topk: 1,
   onFrame: (index, totalFrames, prediction) =>
     console.log(index, totalFrames, prediction)
 }
-const framePredictions = await classifyGif(img, config)
+const framePredictions = await classifyGif(img, myConfig)
 ```
 
 **Parameters**
