@@ -101,21 +101,26 @@ This function can take a browser-based image element (`<img>`) that is a GIF, an
 ```js
 // Returns all predictions of each GIF frame
 const framePredictions = await model.classifyGif(img)
+```
 
+Or passing configuration:
+
+```js
 // returns 1 prediction of each GIF frame, and logs the result to console
-const framePredictions = await classifyGif(img, {
+const config = {
   topk: 1,
   onFrame: (index, totalFrames, prediction) =>
     console.log(index, totalFrames, prediction)
-})
+}
+const framePredictions = await classifyGif(img, config)
 ```
 
 **Parameters**
 
 - Image element to check
-- Configuration object literal
-  - topk - Number of results to return per frame (default all 5)
-  - onFrame - Function to call on each frame - params are index, totalFrames, and current frame prediction.
+- Configuration object literal the following possible key/values:
+  - `topk` - Number of results to return per frame (default all 5)
+  - `onFrame` - Function to call on each frame - params are index, totalFrames, and current frame prediction.
 
 **Returns**
 
