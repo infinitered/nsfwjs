@@ -2,13 +2,15 @@ import * as tf from '@tensorflow/tfjs'
 import { NSFW_CLASSES } from './nsfw_classes'
 import * as SuperGif from 'libgif'
 
+interface frameResult {
+  index: number
+  totalFrames: number
+  predictions: Array<Object>
+}
+
 interface classifyConfig {
   topk?: number
-  onFrame?: (
-    frameIndex: number,
-    totalFrames: number,
-    framePredictions: Array<Object>
-  ) => {}
+  onFrame?: (result: frameResult) => {}
 }
 
 const BASE_PATH = 'https://s3.amazonaws.com/ir_public/nsfwjs/'
@@ -167,7 +169,12 @@ export class NSFWJS {
           gifObj.move_to(i)
           const classes = await this.classify(gifObj.get_canvas(), config.topk)
           // Update to onFrame
-          if (config.onFrame) config.onFrame(i, gifLength, classes)
+          if (config.onFrame)
+            config.onFrame({
+              index: i,
+              totalFrames: gifLength,
+              predictions: classes
+            })
           // Store the goods
           arrayOfClasses.push(classes)
         }
