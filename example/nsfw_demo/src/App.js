@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import logo from './logo.svg'
-import tflogo from './tflogo.jpg'
 import './App.css'
 import * as nsfwjs from 'nsfwjs'
 import Dropzone from 'react-dropzone'
@@ -9,7 +8,9 @@ import Webcam from 'react-webcam'
 // components
 import Underdrop from './components/Underdrop'
 import Loading from './components/Loading'
+import Header from './components/Header'
 import Footer from './components/Footer'
+import Results from './components/Results'
 
 const blurred = { filter: 'blur(30px)', WebkitFilter: 'blur(30px)' }
 const clean = {}
@@ -30,6 +31,7 @@ class App extends Component {
     enableWebcam: false,
     loading: true
   }
+
   componentDidMount() {
     // Load model from public
     nsfwjs.load('/model/').then(model => {
@@ -79,19 +81,13 @@ class App extends Component {
   }
 
   setFile = file => {
-    // Currently not sending URL strings, but good for future.
-    if (typeof file === 'string') {
-      // using a sample
-      this.setState({ graphic: file }, this.checkContent)
-    } else {
-      // drag and dropped
-      const reader = new FileReader()
-      reader.onload = e => {
-        this.setState({ graphic: e.target.result }, this.checkContent)
-      }
-
-      reader.readAsDataURL(file)
+    // drag and dropped
+    const reader = new FileReader()
+    reader.onload = e => {
+      this.setState({ graphic: e.target.result }, this.checkContent)
     }
+
+    reader.readAsDataURL(file)
   }
 
   onDrop = (accepted, rejected) => {
@@ -105,21 +101,6 @@ class App extends Component {
       })
       this.setFile(accepted[0])
     }
-  }
-
-  _renderPredictions = () => {
-    return (
-      <div id="predictions">
-        <ul>
-          {this.state.predictions.map(prediction => (
-            <li id={prediction.className}>
-              {prediction.className} -{' '}
-              {(prediction.probability * 100).toFixed(2)}%
-            </li>
-          ))}
-        </ul>
-      </div>
-    )
   }
 
   detectWebcam = async () => {
@@ -213,16 +194,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <header>
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1>Client-side indecent content checking</h1>
-          <div className="snippet">
-            <p>Powered by</p>
-            <a href="https://js.tensorflow.org/" targe="_blank">
-              <img src={tflogo} id="tflogo" alt="TensorflowJS Logo" />
-            </a>
-          </div>
-        </header>
+        <Header />
         <main>
           <div>
             <div id="overDrop">
@@ -237,10 +209,10 @@ class App extends Component {
             />
           </div>
           <Loading showLoading={this.state.loading} />
-          <div id="results">
-            <p>{this.state.message}</p>
-            {this._renderPredictions()}
-          </div>
+          <Results
+            message={this.state.message}
+            predictions={this.state.predictions}
+          />
         </main>
         <Footer />
       </div>
