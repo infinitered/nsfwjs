@@ -5,11 +5,11 @@ import tflogo from './tflogo.jpg'
 import './App.css'
 import * as nsfwjs from 'nsfwjs'
 import Dropzone from 'react-dropzone'
-import * as Spinner from 'react-spinkit'
 import Webcam from 'react-webcam'
 
 // components
 import Underdrop from './components/Underdrop'
+import Loading from './components/Loading'
 
 const blurred = { filter: 'blur(30px)', WebkitFilter: 'blur(30px)' }
 const clean = {}
@@ -27,7 +27,8 @@ class App extends Component {
     predictions: [],
     droppedImageStyle: { opacity: 0.4 },
     blurNSFW: true,
-    enableWebcam: false
+    enableWebcam: false,
+    loading: true
   }
   componentDidMount() {
     // Load model from public
@@ -35,7 +36,8 @@ class App extends Component {
       this.setState({
         model,
         titleMessage: dragMessage,
-        message: 'Ready to Classify'
+        message: 'Ready to Classify',
+        loading: false
       })
     })
   }
@@ -153,16 +155,6 @@ class App extends Component {
     })
   }
 
-  _renderSpinner = () => {
-    if (this.state.message === loadingMessage) {
-      return (
-        <div id="spinContainer">
-          <Spinner name="cube-grid" color="#e79f23" id="processCube" />
-        </div>
-      )
-    }
-  }
-
   _renderInterface = () => {
     const maxWidth = window.innerWidth
     const maxHeight = window.innerHeight
@@ -244,7 +236,7 @@ class App extends Component {
               blurStatus={this.state.blurNSFW}
             />
           </div>
-          {this._renderSpinner()}
+          <Loading showLoading={this.state.loading} />
           <div id="results">
             <p>{this.state.message}</p>
             {this._renderPredictions()}

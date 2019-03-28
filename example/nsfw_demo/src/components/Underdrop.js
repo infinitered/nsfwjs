@@ -40,7 +40,7 @@ export default class Underdrop extends Component {
                 improved, <strong>and you can help!</strong>
               </p>
               <h3>Ways to Help!</h3>
-              <p>
+              <div>
                 <ul>
                   <li>
                     🌟
@@ -72,7 +72,7 @@ export default class Underdrop extends Component {
                 >
                   <strong>Learn more about how Machine Learning works!</strong>
                 </a>
-              </p>
+              </div>
             </div>
           </div>
         </div>
