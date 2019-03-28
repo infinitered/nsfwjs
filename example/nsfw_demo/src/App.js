@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import logo from './logo.svg'
-import ir from './ir.svg'
 import tflogo from './tflogo.jpg'
 import './App.css'
 import * as nsfwjs from 'nsfwjs'
@@ -10,6 +9,7 @@ import Webcam from 'react-webcam'
 // components
 import Underdrop from './components/Underdrop'
 import Loading from './components/Loading'
+import Footer from './components/Footer'
 
 const blurred = { filter: 'blur(30px)', WebkitFilter: 'blur(30px)' }
 const clean = {}
@@ -242,25 +242,7 @@ class App extends Component {
             {this._renderPredictions()}
           </div>
         </main>
-        <footer>
-          <div>Copyright Now(ish)</div>
-          <div>
-            <a href="https://github.com/infinitered/nsfwjs">NSFWJS GitHub</a>
-          </div>
-          <div>
-            <a href="https://github.com/gantman/nsfw_model">Model Repo</a>
-          </div>
-          <div>
-            <a href="https://shift.infinite.red/avoid-nightmares-nsfw-js-ab7b176978b1">
-              Blog Post
-            </a>
-          </div>
-          <div>
-            <a href="https://infinite.red">
-              <img src={ir} alt="infinite red logo" />
-            </a>
-          </div>
-        </footer>
+        <Footer />
       </div>
     )
   }

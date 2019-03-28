@@ -8,7 +8,7 @@ export default ({ showLoading }) => {
         <Spinner name="cube-grid" color="#e79f23" id="processCube" />
       </div>
     )
-  } else {
-    return null
   }
+
+  return null
 }
