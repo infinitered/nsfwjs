@@ -29,7 +29,8 @@ class App extends Component {
     droppedImageStyle: { opacity: 0.4 },
     blurNSFW: true,
     enableWebcam: false,
-    loading: true
+    loading: true,
+    fileType: null
   }
 
   componentDidMount() {
@@ -71,20 +72,39 @@ class App extends Component {
     // Not really a problem of this library
     await this.sleep(100)
     const img = this.refs.dropped
-    const predictions = await this.state.model.classify(img)
-    let droppedImageStyle = this.detectBlurStatus(predictions[0].className)
-    this.setState({
-      message: `Identified as ${predictions[0].className}`,
-      predictions,
-      droppedImageStyle
-    })
+    if (this.state.fileType === 'image/gif') {
+      this.setState({
+        message: `0% - Chopping up GIF`
+      })
+      const predictions = await this.state.model.classifyGif(img, {
+        topk: 1,
+        onFrame: (i, t, p) => {
+          this.setState({
+            message: `${((i / t) * 100).toFixed(0)}% - Frame ${i} is ${
+              p[0].className
+            }`
+          })
+        }
+      })
+    } else {
+      const predictions = await this.state.model.classify(img)
+      let droppedImageStyle = this.detectBlurStatus(predictions[0].className)
+      this.setState({
+        message: `Identified as ${predictions[0].className}`,
+        predictions,
+        droppedImageStyle
+      })
+    }
   }
 
   setFile = file => {
     // drag and dropped
     const reader = new FileReader()
     reader.onload = e => {
-      this.setState({ graphic: e.target.result }, this.checkContent)
+      this.setState(
+        { graphic: e.target.result, fileType: file.type },
+        this.checkContent
+      )
     }
 
     reader.readAsDataURL(file)
