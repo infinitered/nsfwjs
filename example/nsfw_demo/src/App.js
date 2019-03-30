@@ -74,14 +74,16 @@ class App extends Component {
     const img = this.refs.dropped
     if (this.state.fileType === 'image/gif') {
       this.setState({
-        message: `0% - Chopping up GIF`
+        message: `0% - Chopping up GIF`,
+        predictions: []
       })
       const predictions = await this.state.model.classifyGif(img, {
         topk: 1,
-        onFrame: (i, t, p) => {
+        onFrame: ({ index, totalFrames, predictions }) => {
+          const percent = ((index / totalFrames) * 100).toFixed(0)
           this.setState({
-            message: `${((i / t) * 100).toFixed(0)}% - Frame ${i} is ${
-              p[0].className
+            message: `${percent}% - Frame ${index} is ${
+              predictions[0].className
             }`
           })
         }
