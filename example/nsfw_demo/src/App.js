@@ -88,7 +88,8 @@ class App extends Component {
     if (this.state.fileType === 'image/gif') {
       this.setState({
         message: `0% - Parsing GIF frames`,
-        predictions: []
+        predictions: [],
+        loading: true
       })
       const predictions = await this.state.model.classifyGif(img, {
         topk: 1,
@@ -111,7 +112,8 @@ class App extends Component {
       this.setState({
         message: `GIF Result: ${gifMessage}`,
         predictions,
-        droppedImageStyle
+        droppedImageStyle,
+        loading: false
       })
     } else {
       const predictions = await this.state.model.classify(img)

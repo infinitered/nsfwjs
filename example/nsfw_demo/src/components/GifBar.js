@@ -1,12 +1,18 @@
 import React from 'react'
-import { VictoryBar, VictoryChart, VictoryAxis, VictoryTooltip } from 'victory'
+import {
+  VictoryBar,
+  VictoryChart,
+  VictoryAxis,
+  VictoryTooltip,
+  VictoryLegend
+} from 'victory'
 
 export default props => (
   <VictoryChart height={150} domainPadding={{ x: 10 }}>
     <VictoryAxis
       style={{
-        tickLabels: { fill: '#fff', fontSize: 8 },
-        axisLabel: { fill: '#fff', fontSize: 8 }
+        tickLabels: { fill: '#fff', fontSize: 8, padding: 0 },
+        axisLabel: { fill: '#fff', fontSize: 8, padding: 10 }
       }}
       label="GIF Frame Index"
     />
@@ -21,9 +27,27 @@ export default props => (
       // tickFormat specifies how ticks should be displayed
       tickFormat={x => `${(x * 100).toFixed(0)}%`}
     />
+    <VictoryLegend
+      x={15}
+      y={125}
+      width={100}
+      orientation="horizontal"
+      gutter={12}
+      style={{
+        border: { stroke: 'black' },
+        labels: { fill: 'white', fontSize: 8 }
+      }}
+      data={[
+        { name: 'Hentai', symbol: { fill: '#eef442', fillOpacity: 0.8 } },
+        { name: 'Porn', symbol: { fill: '#f00', fillOpacity: 0.8 } },
+        { name: 'Sexy', symbol: { fill: '#e79f23', fillOpacity: 0.8 } },
+        { name: 'Drawing', symbol: { fill: '#0f0', fillOpacity: 0.8 } },
+        { name: 'Neutral', symbol: { fill: '#fff', fillOpacity: 0.8 } }
+      ]}
+    />
     <VictoryBar
       animate={true}
-      labelComponent={<VictoryTooltip style={{ fontSize: 8 }} />}
+      labelComponent={<VictoryTooltip style={{ fontSize: 10 }} />}
       labels={d => `${(d.probability * 100).toFixed(0)}% ${d.className}`}
       style={{
         data: {
