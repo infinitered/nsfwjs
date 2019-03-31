@@ -160,7 +160,7 @@ export class NSFWJS {
     gif: HTMLImageElement,
     config: classifyConfig = { topk: 5 }
   ): Promise<Array<Array<{ className: string; probability: number }>>> {
-    const gifObj = new SuperGif({ gif })
+    let gifObj = new SuperGif({ gif })
     return new Promise(resolve => {
       gifObj.load(async () => {
         const arrayOfClasses = []
@@ -178,7 +178,8 @@ export class NSFWJS {
           // Store the goods
           arrayOfClasses.push(classes)
         }
-
+        // try to clean up
+        gifObj = null
         resolve(arrayOfClasses)
       })
     })

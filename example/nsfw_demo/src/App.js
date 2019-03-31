@@ -29,7 +29,9 @@ class App extends Component {
     droppedImageStyle: { opacity: 0.4 },
     blurNSFW: true,
     enableWebcam: false,
-    loading: true
+    loading: true,
+    fileType: null,
+    hardReset: false
   }
 
   componentDidMount() {
@@ -53,38 +55,83 @@ class App extends Component {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
-  detectBlurStatus = (className, blurNSFW = this.state.blurNSFW) => {
+  detectBlurStatus = (predictions, blurNSFW = this.state.blurNSFW) => {
     let droppedImageStyle = clean
-    if (blurNSFW) {
-      switch (className) {
-        case 'Hentai':
-        case 'Porn':
-        case 'Sexy':
-          droppedImageStyle = blurred
+    if (this.state.fileType === 'image/gif') {
+      const deemedEvil = this.detectGifEvil(predictions)
+      droppedImageStyle = deemedEvil > 0 && blurNSFW ? blurred : clean
+    } else {
+      if (blurNSFW) {
+        switch (predictions[0].className) {
+          case 'Hentai':
+          case 'Porn':
+          case 'Sexy':
+            droppedImageStyle = blurred
+        }
       }
     }
     return droppedImageStyle
   }
+
+  detectGifEvil = predictions =>
+    predictions
+      .filter(c => {
+        return ['Hentai', 'Porn', 'Sexy'].includes(c[0].className)
+      })
+      .flat().length
 
   checkContent = async () => {
     // Sleep bc it's grabbing image before it's rendered
     // Not really a problem of this library
     await this.sleep(100)
     const img = this.refs.dropped
-    const predictions = await this.state.model.classify(img)
-    let droppedImageStyle = this.detectBlurStatus(predictions[0].className)
-    this.setState({
-      message: `Identified as ${predictions[0].className}`,
-      predictions,
-      droppedImageStyle
-    })
+    if (this.state.fileType === 'image/gif') {
+      this.setState({
+        message: `0% - Chopping up GIF`,
+        predictions: []
+      })
+      const predictions = await this.state.model.classifyGif(img, {
+        topk: 1,
+        onFrame: ({ index, totalFrames, predictions }) => {
+          const percent = ((index / totalFrames) * 100).toFixed(0)
+          this.setState({
+            message: `${percent}% - Frame ${index} is ${
+              predictions[0].className
+            }`
+          })
+        }
+      })
+      const deemedEvil = this.detectGifEvil(predictions)
+      // If any frame is NSFW, blur it (if blur is on)
+      const droppedImageStyle = this.detectBlurStatus(predictions)
+      const gifMessage =
+        deemedEvil > 0
+          ? `Detected ${deemedEvil} NSFW frames`
+          : 'All frames look clean'
+      this.setState({
+        message: `GIF Result: ${gifMessage}`,
+        predictions,
+        droppedImageStyle
+      })
+    } else {
+      const predictions = await this.state.model.classify(img)
+      let droppedImageStyle = this.detectBlurStatus(predictions)
+      this.setState({
+        message: `Identified as ${predictions[0].className}`,
+        predictions,
+        droppedImageStyle
+      })
+    }
   }
 
   setFile = file => {
     // drag and dropped
     const reader = new FileReader()
     reader.onload = e => {
-      this.setState({ graphic: e.target.result }, this.checkContent)
+      this.setState(
+        { graphic: e.target.result, fileType: file.type },
+        this.checkContent
+      )
     }
 
     reader.readAsDataURL(file)
@@ -97,7 +144,8 @@ class App extends Component {
       let droppedImageStyle = this.state.blurNSFW ? blurred : clean
       this.setState({
         message: 'Processing...',
-        droppedImageStyle
+        droppedImageStyle,
+        hardReset: true
       })
       this.setFile(accepted[0])
     }
@@ -110,10 +158,11 @@ class App extends Component {
     // assure video is still shown
     if (video[0]) {
       const predictions = await this.state.model.classify(video[0])
-      let droppedImageStyle = this.detectBlurStatus(predictions[0].className)
+      let droppedImageStyle = this.detectBlurStatus(predictions)
       this.setState({
         message: `Identified as ${predictions[0].className}`,
         predictions,
+        graphic: logo,
         droppedImageStyle
       })
       setTimeout(this.detectWebcam, DETECTION_PERIOD)
@@ -124,10 +173,7 @@ class App extends Component {
     // Check on blurring
     let droppedImageStyle = clean
     if (this.state.predictions.length > 0) {
-      droppedImageStyle = this.detectBlurStatus(
-        this.state.predictions[0].className,
-        checked
-      )
+      droppedImageStyle = this.detectBlurStatus(this.state.predictions, checked)
     }
 
     this.setState({
@@ -158,6 +204,13 @@ class App extends Component {
         />
       )
     } else {
+      // SuperGif kills our React Component
+      // Only way I can seem to revive it is
+      // to force a full re-render of Drop area
+      if (this.state.hardReset) {
+        this.setState({ hardReset: false })
+        return null
+      }
       return (
         <Dropzone
           id="dropBox"
@@ -165,13 +218,14 @@ class App extends Component {
           className="photo-box"
           onDrop={this.onDrop.bind(this)}
         >
-          <img
-            src={this.state.graphic}
-            style={this.state.droppedImageStyle}
-            alt="drop your file here"
-            className="dropped-photo"
-            ref="dropped"
-          />
+          <div style={this.state.droppedImageStyle}>
+            <img
+              src={this.state.graphic}
+              alt="drop your file here"
+              className="dropped-photo"
+              ref="dropped"
+            />
+          </div>
         </Dropzone>
       )
     }
