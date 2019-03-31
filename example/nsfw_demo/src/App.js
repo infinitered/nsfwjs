@@ -55,14 +55,19 @@ class App extends Component {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
-  detectBlurStatus = (className, blurNSFW = this.state.blurNSFW) => {
+  detectBlurStatus = (predictions, blurNSFW = this.state.blurNSFW) => {
     let droppedImageStyle = clean
-    if (blurNSFW) {
-      switch (className) {
-        case 'Hentai':
-        case 'Porn':
-        case 'Sexy':
-          droppedImageStyle = blurred
+    if (this.state.fileType === 'image/gif') {
+      const deemedEvil = this.detectGifEvil(predictions)
+      droppedImageStyle = deemedEvil > 0 && blurNSFW ? blurred : clean
+    } else {
+      if (blurNSFW) {
+        switch (predictions[0].className) {
+          case 'Hentai':
+          case 'Porn':
+          case 'Sexy':
+            droppedImageStyle = blurred
+        }
       }
     }
     return droppedImageStyle
@@ -96,21 +101,21 @@ class App extends Component {
           })
         }
       })
-      let deemedEvil = this.detectGifEvil(predictions)
+      const deemedEvil = this.detectGifEvil(predictions)
       // If any frame is NSFW, blur it (if blur is on)
-      const droppedImageStyle =
-        deemedEvil > 0 && this.state.blurNSFW ? blurred : clean
+      const droppedImageStyle = this.detectBlurStatus(predictions)
       const gifMessage =
         deemedEvil > 0
           ? `Detected ${deemedEvil} NSFW frames`
-          : 'All frames look good!'
+          : 'All frames look clean'
       this.setState({
         message: `GIF Result: ${gifMessage}`,
+        predictions,
         droppedImageStyle
       })
     } else {
       const predictions = await this.state.model.classify(img)
-      let droppedImageStyle = this.detectBlurStatus(predictions[0].className)
+      let droppedImageStyle = this.detectBlurStatus(predictions)
       this.setState({
         message: `Identified as ${predictions[0].className}`,
         predictions,
@@ -153,10 +158,11 @@ class App extends Component {
     // assure video is still shown
     if (video[0]) {
       const predictions = await this.state.model.classify(video[0])
-      let droppedImageStyle = this.detectBlurStatus(predictions[0].className)
+      let droppedImageStyle = this.detectBlurStatus(predictions)
       this.setState({
         message: `Identified as ${predictions[0].className}`,
         predictions,
+        graphic: logo,
         droppedImageStyle
       })
       setTimeout(this.detectWebcam, DETECTION_PERIOD)
@@ -167,10 +173,7 @@ class App extends Component {
     // Check on blurring
     let droppedImageStyle = clean
     if (this.state.predictions.length > 0) {
-      droppedImageStyle = this.detectBlurStatus(
-        this.state.predictions[0].className,
-        checked
-      )
+      droppedImageStyle = this.detectBlurStatus(this.state.predictions, checked)
     }
 
     this.setState({
