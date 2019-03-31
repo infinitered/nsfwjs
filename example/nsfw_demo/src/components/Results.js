@@ -1,5 +1,7 @@
 import React from 'react'
+import GifBar from './GifBar'
 
+// Render Text Prediction OR GifBar
 const renderPredictions = props => {
   // only render if predictions is in singular format
   if (props.predictions[0] && props.predictions[0].className) {
@@ -15,6 +17,8 @@ const renderPredictions = props => {
         </ul>
       </div>
     )
+  } else if (props.predictions[0]) {
+    return <GifBar data={props.predictions} />
   }
 }
 

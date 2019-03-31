@@ -87,7 +87,7 @@ class App extends Component {
     const img = this.refs.dropped
     if (this.state.fileType === 'image/gif') {
       this.setState({
-        message: `0% - Chopping up GIF`,
+        message: `0% - Parsing GIF frames`,
         predictions: []
       })
       const predictions = await this.state.model.classifyGif(img, {
