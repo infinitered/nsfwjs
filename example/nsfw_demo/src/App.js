@@ -30,7 +30,8 @@ class App extends Component {
     blurNSFW: true,
     enableWebcam: false,
     loading: true,
-    fileType: null
+    fileType: null,
+    hardReset: false
   }
 
   componentDidMount() {
@@ -119,7 +120,8 @@ class App extends Component {
       let droppedImageStyle = this.state.blurNSFW ? blurred : clean
       this.setState({
         message: 'Processing...',
-        droppedImageStyle
+        droppedImageStyle,
+        hardReset: true
       })
       this.setFile(accepted[0])
     }
@@ -180,6 +182,13 @@ class App extends Component {
         />
       )
     } else {
+      // SuperGif kills our React Component
+      // Only way I can seem to revive it is
+      // to force a full re-render of Drop area
+      if (this.state.hardReset) {
+        this.setState({ hardReset: false })
+        return null
+      }
       return (
         <Dropzone
           id="dropBox"
@@ -187,13 +196,14 @@ class App extends Component {
           className="photo-box"
           onDrop={this.onDrop.bind(this)}
         >
-          <img
-            src={this.state.graphic}
-            style={this.state.droppedImageStyle}
-            alt="drop your file here"
-            className="dropped-photo"
-            ref="dropped"
-          />
+          <div style={this.state.droppedImageStyle}>
+            <img
+              src={this.state.graphic}
+              alt="drop your file here"
+              className="dropped-photo"
+              ref="dropped"
+            />
+          </div>
         </Dropzone>
       )
     }
