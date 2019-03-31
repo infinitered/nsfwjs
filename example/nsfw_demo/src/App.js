@@ -68,6 +68,13 @@ class App extends Component {
     return droppedImageStyle
   }
 
+  detectGifEvil = predictions =>
+    predictions
+      .filter(c => {
+        return ['Hentai', 'Porn', 'Sexy'].includes(c[0].className)
+      })
+      .flat().length
+
   checkContent = async () => {
     // Sleep bc it's grabbing image before it's rendered
     // Not really a problem of this library
@@ -88,6 +95,18 @@ class App extends Component {
             }`
           })
         }
+      })
+      let deemedEvil = this.detectGifEvil(predictions)
+      // If any frame is NSFW, blur it (if blur is on)
+      const droppedImageStyle =
+        deemedEvil > 0 && this.state.blurNSFW ? blurred : clean
+      const gifMessage =
+        deemedEvil > 0
+          ? `Detected ${deemedEvil} NSFW frames`
+          : 'All frames look good!'
+      this.setState({
+        message: `GIF Result: ${gifMessage}`,
+        droppedImageStyle
       })
     } else {
       const predictions = await this.state.model.classify(img)
