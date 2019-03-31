@@ -241,8 +241,10 @@ class App extends Component {
     this.detectWebcam()
     this.setState({
       enableWebcam: !this.state.enableWebcam,
+      message: 'Ready',
       predictions: [],
       droppedImageStyle: {},
+      fileType: null,
       titleMessage: this.state.enableWebcam ? dragMessage : camMessage
     })
   }
