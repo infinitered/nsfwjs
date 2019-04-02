@@ -52,10 +52,19 @@ main {
   height: 200px;
 }
 
+.VictoryContainer {
+  margin-top: -70px;
+}
+
+#results {
+  width: 100%;
+}
+
 #results p {
   font-weight: bold;
   margin: 8px 0 15px 0;
   border-bottom: 1px solid;
+  display: inline-block;
 }
 
 #camBlock {
@@ -170,8 +179,7 @@ main {
 
 #predictions ul {
   list-style-type: none;
-  padding-right: 10%;
-  margin-top: -2%;
+  margin-top: -1%;
   margin-left: -2%;
 }
 
@@ -215,6 +223,10 @@ footer a:hover {
   .snippet {
     visibility: hidden;
     display: none;
+  }
+
+  .VictoryContainer {
+    margin-top: -40px;
   }
 
   #camDescription span {

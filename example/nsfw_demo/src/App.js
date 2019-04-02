@@ -87,8 +87,9 @@ class App extends Component {
     const img = this.refs.dropped
     if (this.state.fileType === 'image/gif') {
       this.setState({
-        message: `0% - Chopping up GIF`,
-        predictions: []
+        message: `0% - Parsing GIF frames`,
+        predictions: [],
+        loading: true
       })
       const predictions = await this.state.model.classifyGif(img, {
         topk: 1,
@@ -111,7 +112,8 @@ class App extends Component {
       this.setState({
         message: `GIF Result: ${gifMessage}`,
         predictions,
-        droppedImageStyle
+        droppedImageStyle,
+        loading: false
       })
     } else {
       const predictions = await this.state.model.classify(img)
@@ -239,8 +241,10 @@ class App extends Component {
     this.detectWebcam()
     this.setState({
       enableWebcam: !this.state.enableWebcam,
+      message: 'Ready',
       predictions: [],
       droppedImageStyle: {},
+      fileType: null,
       titleMessage: this.state.enableWebcam ? dragMessage : camMessage
     })
   }

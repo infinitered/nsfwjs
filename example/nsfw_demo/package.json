@@ -12,7 +12,8 @@
     "react-spinkit": "^3.0.0",
     "react-switch": "^4.1.0",
     "react-webcam": "^1.1.0",
-    "tether-drop": "^1.4.2"
+    "tether-drop": "^1.4.2",
+    "victory": "^32.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
