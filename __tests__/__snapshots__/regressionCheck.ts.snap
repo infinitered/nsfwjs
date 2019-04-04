@@ -4,19 +4,19 @@ exports[`Snapshots 1`] = `
 Array [
   Object {
     "className": "Drawing",
-    "probability": 0.5632436275482178,
+    "probability": 0.5632437467575073,
   },
   Object {
     "className": "Neutral",
-    "probability": 0.4238457977771759,
+    "probability": 0.42384570837020874,
   },
   Object {
     "className": "Hentai",
-    "probability": 0.007276070304214954,
+    "probability": 0.0072760735638439655,
   },
   Object {
     "className": "Porn",
-    "probability": 0.0035432709846645594,
+    "probability": 0.003543272614479065,
   },
   Object {
     "className": "Sexy",
