@@ -82,6 +82,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "xilaraux",
+      "name": "Oleksandr Kozlov",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/17703730?v=4",
+      "profile": "https://github.com/xilaraux",
+      "contributions": [
+        "infra",
+        "test"
+      ]
     }
   ],
   "contributorsPerLine": 7
