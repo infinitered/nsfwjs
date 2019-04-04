@@ -1,0 +1,13 @@
+language: node_js
+
+node_js:
+  - "lts/*"
+
+cache: yarn
+
+jobs:
+  include:
+    - stage: lint
+      script: yarn lint
+    - stage: test
+      script: yarn test
