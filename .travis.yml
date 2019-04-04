@@ -1,0 +1,17 @@
+language: node_js
+
+node_js:
+  - "lts/*"
+
+cache: yarn
+
+branches:
+  only:
+    - master
+
+jobs:
+  include:
+    - stage: lint
+      script: yarn lint
+    - stage: test
+      script: yarn test
