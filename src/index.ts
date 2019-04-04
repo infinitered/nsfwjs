@@ -33,8 +33,8 @@ export class NSFWJS {
   public endpoints: string[]
 
   private path: string
-  private model: tf.Model
-  private intermediateModels: { [layerName: string]: tf.Model } = {}
+  private model: tf.LayersModel
+  private intermediateModels: { [layerName: string]: tf.LayersModel } = {}
 
   private normalizationOffset: tf.Scalar
 
@@ -44,7 +44,7 @@ export class NSFWJS {
   }
 
   async load() {
-    // don't use loadModel anymore
+    // this is a Layers Model
     this.model = await tf.loadLayersModel(this.path)
     this.endpoints = this.model.layers.map(l => l.name)
 
@@ -105,7 +105,7 @@ export class NSFWJS {
       // Reshape to a single-element batch so we can pass it to predict.
       const batched = resized.reshape([1, IMAGE_SIZE, IMAGE_SIZE, 3])
 
-      let model: tf.Model
+      let model: tf.LayersModel
       if (endpoint == null) {
         model = this.model
       } else {
@@ -119,6 +119,7 @@ export class NSFWJS {
         model = this.intermediateModels[endpoint]
       }
 
+      // return logits
       return model.predict(batched) as tf.Tensor2D
     })
   }

@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@tensorflow/tfjs": "^0.15.1",
+    "@tensorflow/tfjs": "^1.0.4",
+    "seedrandom": "^3.0.1",
     "nsfwjs": "../../",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
