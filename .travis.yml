@@ -5,6 +5,10 @@ node_js:
 
 cache: yarn
 
+branches:
+  only:
+    - master
+
 jobs:
   include:
     - stage: lint
