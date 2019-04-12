@@ -112,6 +112,7 @@ Example of passing a configuration:
 // returns top 1 prediction of each GIF frame, and logs the status to console
 const myConfig = {
   topk: 1,
+  setGifControl: (gifControl) => console.log(gifControl),
   onFrame: ({ index, totalFrames, predictions }) =>
     console.log(index, totalFrames, predictions)
 }
@@ -123,6 +124,7 @@ const framePredictions = await classifyGif(img, myConfig)
 - Image element to check
 - Configuration object with the following possible key/values:
   - `topk` - Number of results to return per frame (default all 5)
+  - `setGifControl` - Function callback receives SuperGif object as an argument, allows a user to save it for later use
   - `onFrame` - Function callback on each frame - Param is an object with the following key/values:
     - `index` - the current GIF frame that was classified (starting at 1)
     - `totalFrames` - the complete number of frames for this GIF (for progress calculations)
