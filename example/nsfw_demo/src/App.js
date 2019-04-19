@@ -31,7 +31,8 @@ class App extends Component {
     enableWebcam: false,
     loading: true,
     fileType: null,
-    hardReset: false
+    hardReset: false,
+    gifControl: null
   }
 
   componentDidMount() {
@@ -93,6 +94,11 @@ class App extends Component {
       })
       const predictions = await this.state.model.classifyGif(img, {
         topk: 1,
+        setGifControl: (gifControl) => {
+          this.setState({
+            gifControl,
+          })
+        },
         onFrame: ({ index, totalFrames, predictions }) => {
           const percent = ((index / totalFrames) * 100).toFixed(0)
           this.setState({
@@ -269,6 +275,7 @@ class App extends Component {
           <Loading showLoading={this.state.loading} />
           <Results
             message={this.state.message}
+            gifControl={this.state.gifControl}
             predictions={this.state.predictions}
           />
         </main>

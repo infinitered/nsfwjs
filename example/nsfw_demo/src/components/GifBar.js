@@ -71,6 +71,36 @@ export default props => (
       barRatio={1}
       data={props.data && props.data.flat()}
       y="probability"
+      events={[{
+        target: "data",
+        eventHandlers: {
+          onMouseOver: () => {
+            return [{
+              target: 'data',
+              mutation: (victoryBarProps) => {
+                props.gifControl.pause();
+                props.gifControl.move_to(victoryBarProps.index);
+                return null;
+              }
+            }, {
+              target: 'labels',
+              mutation: () => ({ active: true })
+            }];
+          },
+          onMouseOut: () => {
+            return [{
+              target: 'data',
+              mutation: () => {
+                props.gifControl.play();
+                return null;
+              }
+            }, {
+              target: 'labels',
+              mutation: () => ({ active: false })
+            }];
+          }
+        }
+      }]}
     />
   </VictoryChart>
 )

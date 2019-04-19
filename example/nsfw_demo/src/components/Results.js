@@ -18,7 +18,7 @@ const renderPredictions = props => {
       </div>
     )
   } else if (props.predictions[0]) {
-    return <GifBar data={props.predictions} />
+    return <GifBar data={props.predictions} gifControl={props.gifControl} />
   }
 }
 

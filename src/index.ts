@@ -11,6 +11,7 @@ interface frameResult {
 interface classifyConfig {
   topk?: number
   onFrame?: (result: frameResult) => {}
+  setGifControl?: (gifControl: typeof SuperGif) => {}
 }
 
 const BASE_PATH = 'https://s3.amazonaws.com/ir_public/nsfwjs/'
@@ -179,6 +180,8 @@ export class NSFWJS {
           // Store the goods
           arrayOfClasses.push(classes)
         }
+        // save gifObj if needed
+        config.setGifControl && config.setGifControl(gifObj);
         // try to clean up
         gifObj = null
         resolve(arrayOfClasses)
