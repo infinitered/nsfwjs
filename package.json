@@ -1,6 +1,6 @@
 {
   "name": "nsfwjs",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Detect NSFW content client side",
   "main": "dist/index.js",
   "scripts": {
@@ -10,7 +10,8 @@
     "build": "tsc --skipLibCheck",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
-    "prep": "yarn && yarn build && cd example/nsfw_demo/ && yarn add ../../ && cd -"
+    "prep": "yarn && yarn build && cd example/nsfw_demo/ && yarn add ../../ && cd -",
+    "scriptbundle": "browserify -r ./dist/index.js:nsfwjs > bundle.js"
   },
   "repository": {
     "type": "git",
@@ -18,13 +19,13 @@
   },
   "dependencies": {
     "libgif": "0.0.2"
-  },  
+  },
   "peerDependencies": {
     "@tensorflow/tfjs": "^1.0.4"
   },
   "devDependencies": {
     "@tensorflow/tfjs": "^1.0.4",
-    "seedrandom": "^3.0.1",    
+    "seedrandom": "^3.0.1",
     "@types/jest": "^24.0.6",
     "all-contributors-cli": "^6.1.2",
     "babel-core": "^6.26.0",
@@ -52,5 +53,5 @@
   "bugs": {
     "url": "https://github.com/infinitered/nsfwjs/issues"
   },
-  "homepage": "https://github.com/infinitered/nsfwjs#readme"
+  "homepage": "https://nsfwjs.com"
 }

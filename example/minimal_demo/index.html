@@ -1,0 +1,21 @@
+<!-- Load TensorFlow.js. This is required -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.4"></script>
+<!-- Load the NSFWJS library. -->
+<script src="https://s3.amazonaws.com/ir_public/nsfwjscdn/bundle.js"></script>
+
+<script>
+  const nsfwjs = require('nsfwjs')
+  const img = new Image()
+  img.crossOrigin = 'anonymous'
+  // some image here
+  img.src = 'https://i.imgur.com/Kwxetau.jpg'
+
+  // Load the model.
+  nsfwjs.load().then(model => {
+    // Classify the image.
+    model.classify(img).then(predictions => {
+      console.log('Predictions', predictions)
+    })
+  })
+</script>
+<pre>Checkout console.log output for results!</pre>

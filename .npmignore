@@ -15,3 +15,4 @@ yarn.lock
 example/
 _art/
 yarn-error.log
+bundle.js
