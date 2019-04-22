@@ -1,6 +1,6 @@
 {
   "name": "nsfwjs",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "Detect NSFW content client side",
   "main": "dist/index.js",
   "scripts": {
@@ -25,7 +25,6 @@
   },
   "devDependencies": {
     "@tensorflow/tfjs": "^1.0.4",
-    "seedrandom": "^3.0.1",
     "@types/jest": "^24.0.6",
     "all-contributors-cli": "^6.1.2",
     "babel-core": "^6.26.0",
@@ -34,6 +33,7 @@
     "jpeg-js": "^0.3.4",
     "node-fetch": "^2.3.0",
     "np": "^5.0.0",
+    "seedrandom": "^3.0.1",
     "ts-jest": "^24.0.0",
     "ts-node": "~8.1.0",
     "tslint": "~5.16.0",
