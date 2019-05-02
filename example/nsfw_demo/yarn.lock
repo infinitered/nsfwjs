@@ -5684,10 +5684,9 @@ npmlog@^4.0.2:
     set-blocking "~2.0.0"
 
 nsfwjs@../../:
-  version "0.1.1"
+  version "1.0.0"
   dependencies:
     libgif "0.0.2"
-    seedrandom "^3.0.1"
 
 nth-check@^1.0.2, nth-check@~1.0.1:
   version "1.0.2"
@@ -6953,6 +6952,13 @@ react-dom@^16.8.1:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     scheduler "^0.13.1"
+
+react-dropdown@^1.6.4:
+  version "1.6.4"
+  resolved "https://registry.yarnpkg.com/react-dropdown/-/react-dropdown-1.6.4.tgz#8dce141bb26fb6b3c3696d16e06f4517728c57f4"
+  integrity sha512-zTlNRZ6vzjEPsodBNgh6Xjp9IempEx9sReH3crT2Jw4S6KW2wS/BRIH3d/grYf/iXARadDRD91//uUCs9yjoLg==
+  dependencies:
+    classnames "^2.2.3"
 
 react-dropzone@^7.0.1:
   version "7.0.1"

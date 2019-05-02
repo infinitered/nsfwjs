@@ -9,7 +9,7 @@ const renderPredictions = props => {
       <div id="predictions">
         <ul>
           {props.predictions.map(prediction => (
-            <li id={prediction.className}>
+            <li key={prediction.className}>
               {prediction.className} -{' '}
               {(prediction.probability * 100).toFixed(2)}%
             </li>
