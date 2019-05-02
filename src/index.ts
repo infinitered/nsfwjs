@@ -18,8 +18,9 @@ interface nsfwjsOptions {
   size: number
 }
 
-const BASE_PATH = 'https://s3.amazonaws.com/ir_public/nsfwjs/'
-const IMAGE_SIZE = 299 // default to Inception v3 default
+const BASE_PATH =
+  'https://s3.amazonaws.com/ir_public/nsfwjscdn/TFJS_nsfw_mobilenet/tfjs_quant_nsfw_mobilenet/'
+const IMAGE_SIZE = 299 // default to Inception v3 size
 
 export async function load(base = BASE_PATH, options = { size: IMAGE_SIZE }) {
   if (tf == null) {
