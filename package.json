@@ -33,7 +33,7 @@
     "jpeg-js": "^0.3.4",
     "node-fetch": "^2.3.0",
     "np": "^5.0.0",
-    "seedrandom": "~2.4.3",
+    "seedrandom": "~3.0.1",
     "ts-jest": "^24.0.0",
     "ts-node": "~8.1.0",
     "tslint": "~5.16.0",
