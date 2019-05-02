@@ -19,6 +19,11 @@ const dragMessage = 'Drag and drop an image to check'
 const camMessage = 'Cam active'
 const DETECTION_PERIOD = 1000
 
+const availableModels = {
+  mobilenetv2: ['/quant_nsfw_mobilenet/', { size: 224 }],
+  inceptionv3: ['/model/']
+}
+
 class App extends Component {
   state = {
     model: null,
@@ -32,15 +37,33 @@ class App extends Component {
     loading: true,
     fileType: null,
     hardReset: false,
-    gifControl: null
+    gifControl: null,
+    currentModelName: 'mobilenetv2'
   }
 
   componentDidMount() {
-    // Load model from public
-    nsfwjs.load('/model/').then(model => {
+    this._loadModel()
+  }
+
+  _onChange = ({ value }) => {
+    this.setState({ currentModelName: value }, this._loadModel)
+  }
+
+  _loadModel = () => {
+    this.setState({
+      titleMessage: 'Please hold, the model is loading...',
+      message: loadingMessage,
+      droppedImageStyle: { opacity: 0.4 },
+      graphic: logo,
+      hardReset: true,
+      predictions: [],
+      loading: true
+    })
+    // Load model from public folder
+    nsfwjs.load(...availableModels[this.state.currentModelName]).then(model => {
       this.setState({
         model,
-        titleMessage: dragMessage,
+        titleMessage: this.state.enableWebcam ? camMessage : dragMessage,
         message: 'Ready to Classify',
         loading: false
       })
@@ -94,9 +117,9 @@ class App extends Component {
       })
       const predictions = await this.state.model.classifyGif(img, {
         topk: 1,
-        setGifControl: (gifControl) => {
+        setGifControl: gifControl => {
           this.setState({
-            gifControl,
+            gifControl
           })
         },
         onFrame: ({ index, totalFrames, predictions }) => {
@@ -279,7 +302,7 @@ class App extends Component {
             predictions={this.state.predictions}
           />
         </main>
-        <Footer />
+        <Footer onChange={this._onChange} value={this.state.currentModelName} />
       </div>
     )
   }
