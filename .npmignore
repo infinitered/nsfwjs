@@ -16,3 +16,4 @@ example/
 _art/
 yarn-error.log
 bundle.js
+.DS_Store

@@ -2,3 +2,4 @@ node_modules/
 dist/
 yarn-error.log
 .vscode
+.DS_Store
