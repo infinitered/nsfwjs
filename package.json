@@ -11,7 +11,7 @@
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
     "prep": "yarn && yarn build && cd example/nsfw_demo/ && yarn add ../../ && cd -",
-    "scriptbundle": "browserify -r ./dist/index.js:nsfwjs > bundle.js"
+    "scriptbundle": "browserify -r ./dist/index.js:nsfwjs > ./dist/bundle.js"
   },
   "repository": {
     "type": "git",
