@@ -20,8 +20,8 @@ const camMessage = 'Cam active'
 const DETECTION_PERIOD = 1000
 
 const availableModels = {
-  mobilenetv2: ['/quant_nsfw_mobilenet/', { size: 224 }],
-  inceptionv3: ['/model/']
+  mobilenetv2: ['/quant_nsfw_mobilenet/'],
+  inceptionv3: ['/model/', { size: 299 }]
 }
 
 class App extends Component {
