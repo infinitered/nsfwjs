@@ -36,7 +36,7 @@
     "np": "^5.0.0",
     "seedrandom": "~2.4.3",
     "ts-jest": "^24.0.0",
-    "ts-node": "~8.1.0",
+    "ts-node": "~8.2.0",
     "tslint": "~5.16.0",
     "typescript": "3.4.5"
   },
