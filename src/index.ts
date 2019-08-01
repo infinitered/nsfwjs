@@ -14,10 +14,15 @@ interface classifyConfig {
   setGifControl?: (gifControl: typeof SuperGif) => {}
 }
 
-const BASE_PATH = 'https://s3.amazonaws.com/ir_public/nsfwjs/'
-const IMAGE_SIZE = 299
+interface nsfwjsOptions {
+  size: number
+}
 
-export async function load(base = BASE_PATH) {
+const BASE_PATH =
+  'https://s3.amazonaws.com/ir_public/nsfwjscdn/TFJS_nsfw_mobilenet/tfjs_quant_nsfw_mobilenet/'
+const IMAGE_SIZE = 224 // default to Mobilenet v2
+
+export async function load(base = BASE_PATH, options = { size: IMAGE_SIZE }) {
   if (tf == null) {
     throw new Error(
       `Cannot find TensorFlow.js. If you are using a <script> tag, please ` +
@@ -25,33 +30,48 @@ export async function load(base = BASE_PATH) {
     )
   }
 
-  const nsfwnet = new NSFWJS(base)
+  const nsfwnet = new NSFWJS(base, options)
   await nsfwnet.load()
   return nsfwnet
+}
+
+interface IOHandler {
+  load: () => any
 }
 
 export class NSFWJS {
   public endpoints: string[]
 
-  private path: string
+  private options: nsfwjsOptions
+  private pathOrIOHandler: string | IOHandler
   private model: tf.LayersModel
   private intermediateModels: { [layerName: string]: tf.LayersModel } = {}
 
   private normalizationOffset: tf.Scalar
 
-  constructor(base: string) {
-    this.path = `${base}model.json`
+  constructor(
+    modelPathBaseOrIOHandler: string | IOHandler,
+    options: nsfwjsOptions
+  ) {
+    this.options = options
     this.normalizationOffset = tf.scalar(255)
+
+    if (typeof modelPathBaseOrIOHandler === 'string') {
+      this.pathOrIOHandler = `${modelPathBaseOrIOHandler}model.json`
+    } else {
+      this.pathOrIOHandler = modelPathBaseOrIOHandler
+    }
   }
 
   async load() {
     // this is a Layers Model
-    this.model = await tf.loadLayersModel(this.path)
+    this.model = await tf.loadLayersModel(this.pathOrIOHandler)
     this.endpoints = this.model.layers.map(l => l.name)
+    const { size } = this.options
 
     // Warmup the model.
     const result = tf.tidy(() =>
-      this.model.predict(tf.zeros([1, IMAGE_SIZE, IMAGE_SIZE, 3]))
+      this.model.predict(tf.zeros([1, size, size, 3]))
     ) as tf.Tensor
     await result.data()
     result.dispose()
@@ -94,17 +114,19 @@ export class NSFWJS {
 
       // Resize the image to
       let resized = normalized
-      if (img.shape[0] !== IMAGE_SIZE || img.shape[1] !== IMAGE_SIZE) {
+      const { size } = this.options
+      // check width and height if resize needed
+      if (img.shape[0] !== size || img.shape[1] !== size) {
         const alignCorners = true
         resized = tf.image.resizeBilinear(
           normalized,
-          [IMAGE_SIZE, IMAGE_SIZE],
+          [size, size],
           alignCorners
         )
       }
 
       // Reshape to a single-element batch so we can pass it to predict.
-      const batched = resized.reshape([1, IMAGE_SIZE, IMAGE_SIZE, 3])
+      const batched = resized.reshape([1, size, size, 3])
 
       let model: tf.LayersModel
       if (endpoint == null) {
@@ -181,7 +203,7 @@ export class NSFWJS {
           arrayOfClasses.push(classes)
         }
         // save gifObj if needed
-        config.setGifControl && config.setGifControl(gifObj);
+        config.setGifControl && config.setGifControl(gifObj)
         // try to clean up
         gifObj = null
         resolve(arrayOfClasses)

@@ -203,6 +203,20 @@ footer {
   width: 100vw;
 }
 
+.modelPicker {
+  padding-top: 20px;
+  display: flex;
+  justify-content: center;
+  color: white;
+  font-size: 1.2em;
+  align-items: center;
+}
+
+.modelPicker p {
+  font-size: 1.4em;
+  padding-right: 7px;
+}
+
 footer div {
   display: inline-block;
   margin: 15px 30px;
