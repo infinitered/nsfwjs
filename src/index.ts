@@ -43,7 +43,7 @@ export class NSFWJS {
   public endpoints: string[]
 
   private options: nsfwjsOptions
-  private pathOrIOHandler: string
+  private pathOrIOHandler: string | IOHandler
   private model: tf.LayersModel
   private intermediateModels: { [layerName: string]: tf.LayersModel } = {}
 
@@ -59,6 +59,7 @@ export class NSFWJS {
     if (typeof modelPathBaseOrIOHandler === 'string') {
       this.pathOrIOHandler = `${modelPathBaseOrIOHandler}model.json`
     } else {
+      this.pathOrIOHandler = modelPathBaseOrIOHandler
     }
   }
 
