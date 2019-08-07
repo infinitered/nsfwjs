@@ -142,7 +142,7 @@ const framePredictions = await classifyGif(img, myConfig)
 
 ## Install
 
-NSFWJS is powered by Tensorflow.JS as a peer dependency. If your project does not already have TFJS you'll need to add it.
+NSFWJS is powered by TensorFlow.js as a peer dependency. If your project does not already have TFJS you'll need to add it.
 
 ```bash
 # peer dependency
