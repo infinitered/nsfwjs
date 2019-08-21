@@ -37,7 +37,7 @@
     "seedrandom": "~3.0.3",
     "ts-jest": "^24.0.0",
     "ts-node": "~8.3.0",
-    "tslint": "~5.16.0",
+    "tslint": "~5.19.0",
     "typescript": "3.5.3"
   },
   "keywords": [
