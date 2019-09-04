@@ -18,7 +18,10 @@ yarn-error.log
 bundle.js
 .DS_Store
 
-# Ignore intermediate bundle (unminified)
+# Ignore intermediate browserify files
+# Mountpoint
 dist/nsfwjs.d.ts
 dist/nsfwjs.js
-dist/nsfwjs.js.map
+# Unminified bundle
+dist/bundle.js
+
