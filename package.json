@@ -1,17 +1,19 @@
 {
   "name": "nsfwjs",
   "version": "2.0.1",
+  "unpkg": "dist/nsfwjs.min.js",
   "description": "Detect NSFW content client side",
   "main": "dist/index.js",
   "scripts": {
     "test": "yarn build && jest",
     "lint": "tslint -p . -t verbose",
-    "shipit": "yarn build && np",
+    "shipit": "yarn build && yarn scriptbundle && yarn minbundle && np",
     "build": "tsc --skipLibCheck",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
     "prep": "yarn && yarn build && cd example/nsfw_demo/ && yarn add ../../ && cd -",
-    "scriptbundle": "browserify -r ./dist/index.js:nsfwjs > ./dist/bundle.js"
+    "scriptbundle": "browserify ./dist/nsfwjs.js --standalone nsfwjs --outfile ./dist/bundle.js",
+    "minbundle": "uglifyjs dist/bundle.js --compress --output dist/nsfwjs.min.js"
   },
   "repository": {
     "type": "git",
@@ -38,7 +40,8 @@
     "ts-jest": "^24.0.0",
     "ts-node": "~8.3.0",
     "tslint": "~5.19.0",
-    "typescript": "3.6.2"
+    "typescript": "3.6.2",
+    "uglify-js": "^3.6.0"
   },
   "keywords": [
     "NSFW",

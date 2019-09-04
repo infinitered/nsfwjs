@@ -17,3 +17,8 @@ _art/
 yarn-error.log
 bundle.js
 .DS_Store
+
+# Ignore intermediate bundle (unminified)
+dist/nsfwjs.d.ts
+dist/nsfwjs.js
+dist/nsfwjs.js.map
