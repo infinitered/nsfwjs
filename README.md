@@ -24,6 +24,11 @@ The library categorizes image probabilities in the following 5 classes:
 
 The demo is a continuous deployment source - Give it a go: http://nsfwjs.com/
 
+## How to import
+For package managers use `npm add nsfwjs` for npm & `yarn add nsfwjs` for yarn.  Then `import * as nsfwjs from 'nsfwjs'` to access the library.
+
+For script tags add `<script type="text/javascript" src="https://unpkg.com/nsfwjs"></script>`.  Then simply access the `nsfwjs` global variable. This requires that you've already imported TensorFlow.js as well.
+
 ## How to use the module
 
 With `async/await` support:
@@ -170,6 +175,8 @@ Please do not use the script tags hosted in this demo as a CDN.  This can and sh
 ## More!
 
 An [FAQ](https://github.com/infinitered/nsfwjs/wiki/FAQ:-NSFW-JS) page is available.
+
+More about NSFWJS and TensorFlow.js - https://youtu.be/uzQwmZwy3yw
 
 The [model was trained in Keras over several days](https://medium.freecodecamp.org/how-to-set-up-nsfw-content-detection-with-machine-learning-229a9725829c) and 60+ Gigs of data. Be sure to [check out the model code](https://github.com/GantMan/nsfw_model) which was trained on data provided by [Alexander Kim's](https://github.com/alexkimxyz) [nsfw_data_scraper](https://github.com/alexkimxyz/nsfw_data_scraper).
 
