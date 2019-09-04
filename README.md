@@ -24,11 +24,6 @@ The library categorizes image probabilities in the following 5 classes:
 
 The demo is a continuous deployment source - Give it a go: http://nsfwjs.com/
 
-## How to import
-For package managers use `npm add nsfwjs` for npm & `yarn add nsfwjs` for yarn.  Then `import * as nsfwjs from 'nsfwjs'` to access the library.
-
-For script tags add `<script type="text/javascript" src="https://unpkg.com/nsfwjs"></script>`.  Then simply access the `nsfwjs` global variable. This requires that you've already imported TensorFlow.js as well.
-
 ## How to use the module
 
 With `async/await` support:
@@ -155,6 +150,8 @@ $ yarn add @tensorflow/tfjs
 # install NSFWJS
 $ yarn add nsfwjs
 ```
+
+For script tags add <script type="text/javascript" src="https://unpkg.com/nsfwjs"></script>. Then simply access the nsfwjs global variable. This requires that you've already imported TensorFlow.js as well.
 
 #### Host your own model
 
