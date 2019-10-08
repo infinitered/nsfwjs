@@ -32,6 +32,7 @@ header h1 {
 .App-logo {
   width: 30VW;
   max-width: 250px;
+  min-width: 100px;
   pointer-events: none;
   padding-left: 3%;
 }
@@ -99,7 +100,7 @@ main {
 
 #tflogo {
   width: 25VW;
-  max-width: 385px;
+  max-width: 200px;
 }
 
 .App-link {
