@@ -2,6 +2,11 @@ body {
   background-color: #282c34;
 }
 
+div#root {
+  max-width: 100VW;
+  overflow: hidden;
+}
+
 .App {
   display: flex;
   flex-direction: column;
@@ -20,13 +25,14 @@ header {
 header h1 {
   margin-left: 3%;
   font-style: italic;
-  font-size: 2em;
+  font-size: 1.5em;
   justify-self: flex-end;
 }
 
 .App-logo {
-  height: 40vmin;
-  max-height: 150px;
+  width: 30VW;
+  max-width: 375px;
+  min-width: 100px;
   pointer-events: none;
   padding-left: 3%;
 }
@@ -84,6 +90,7 @@ main {
 
 .snippet p {
   margin-right: 30px;
+  font-size: 12pt;
 }
 
 .snippet a {
@@ -92,8 +99,8 @@ main {
 }
 
 #tflogo {
-  width: auto;
-  height: 80px;
+  width: 25VW;
+  max-width: 140px;
 }
 
 .App-link {
@@ -233,6 +240,9 @@ footer a:hover {
 @media screen and (max-width: 600px) {
   header {
     flex-direction: column;
+  }
+  header h1 {
+      font-size: 1.5em;
   }
   .snippet {
     visibility: hidden;
