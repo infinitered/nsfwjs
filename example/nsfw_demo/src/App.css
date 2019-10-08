@@ -31,7 +31,7 @@ header h1 {
 
 .App-logo {
   width: 30VW;
-  max-width: 250px;
+  max-width: 375px;
   min-width: 100px;
   pointer-events: none;
   padding-left: 3%;
@@ -100,7 +100,7 @@ main {
 
 #tflogo {
   width: 25VW;
-  max-width: 200px;
+  max-width: 140px;
 }
 
 .App-link {
@@ -240,6 +240,9 @@ footer a:hover {
 @media screen and (max-width: 600px) {
   header {
     flex-direction: column;
+  }
+  header h1 {
+      font-size: 1.5em;
   }
   .snippet {
     visibility: hidden;
