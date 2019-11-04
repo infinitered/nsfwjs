@@ -44,6 +44,9 @@ export default props => (
         </a>
       </div>
       <div>
+        <a href="https://github.com/infinitered/nsfwjs-mobile">Mobile Demo</a>
+      </div>
+      <div>
         <a href="https://infinite.red">
           <img src={ir} alt="infinite red logo" />
         </a>
