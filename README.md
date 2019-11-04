@@ -169,6 +169,11 @@ A browserified version using nothing but promises and script tags is available i
 
 Please do not use the script tags hosted in this demo as a CDN.  This can and should be hosted in your project along side the model files.
 
+### Example 3:
+The [NSFWJS React Native app](https://github.com/infinitered/nsfwjs-mobile)
+
+Loads a local copy of the model to reduce network load and utilizes TFJS-React-Native. [Blog Post](https://shift.infinite.red/nsfw-js-for-react-native-a37c9ba45fe9)
+
 ## More!
 
 An [FAQ](https://github.com/infinitered/nsfwjs/wiki/FAQ:-NSFW-JS) page is available.
