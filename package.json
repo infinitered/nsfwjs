@@ -20,7 +20,7 @@
     "url": "git+https://github.com/infinitered/nsfwjs.git"
   },
   "dependencies": {
-    "libgif": "0.0.2"
+    "libgif": "0.0.3"
   },
   "peerDependencies": {
     "@tensorflow/tfjs": "^1.1.0"
