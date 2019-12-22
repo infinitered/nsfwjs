@@ -159,20 +159,88 @@ The magic that powers NSFWJS is the [NSFW detection model](https://github.com/ga
 
 ## Run the Examples
 
-### Example 1:
+### Tensorflow.js in the browser
 The demo that powers https://nsfwjs.com/ is available in the `nsfw_demo` example folder.
 
 To run the demo, run `yarn prep` which will copy the latest code into the demo. After that's done, you can `cd` into the demo folder and run with `yarn start`.
 
-### Example 2:
+### Browserify
 A browserified version using nothing but promises and script tags is available in the `minimal_demo` folder.
 
 Please do not use the script tags hosted in this demo as a CDN.  This can and should be hosted in your project along side the model files.
 
-### Example 3:
+### React Native
 The [NSFWJS React Native app](https://github.com/infinitered/nsfwjs-mobile)
 
 Loads a local copy of the model to reduce network load and utilizes TFJS-React-Native. [Blog Post](https://shift.infinite.red/nsfw-js-for-react-native-a37c9ba45fe9)
+
+### Node JS App
+
+Using NPM, you can also use the model on the server side.
+```bash
+$ npm install nsfwjs
+```
+
+```javascript
+const nsfw = require('nsfwjs')
+const model = await nsfw.load()
+// To load a local model, nsfw.load('file://./path/to/model/')
+
+// Image must be in tf.tensor3d format
+const predictions = await model.classify(image)
+console.log(predictions)
+```
+
+Here is another full example of a [multipart/form-data POST using Express](example/node_demo), supposing you are using JPG format.
+```javascript
+const express = require('express')
+const multer = require('multer')
+const jpeg = require('jpeg-js')
+
+const tf = require('@tensorflow/tfjs-node')
+const nsfw = require('nsfwjs')
+
+const app = express()
+const upload = multer()
+
+let _model
+
+const convert = async (img) => {
+  // Decoded image in UInt8 Byte array
+  const image = await jpeg.decode(img, true)
+
+  const numChannels = 3
+  const numPixels = image.width * image.height
+  const values = new Int32Array(numPixels * numChannels)
+
+  for (let i = 0; i < numPixels; i++)
+    for (let c = 0; c < numChannels; ++c)
+      values[i * numChannels + c] = image.data[i * 4 + c]
+
+  return tf.tensor3d(values, [image.height, image.width, numChannels], 'int32')
+}
+
+app.post('/nsfw', upload.single("image"), async (req, res) => {
+  if (!req.file)
+    res.status(400).send("Missing image multipart/form-data")
+  else {
+    const image = await convert(req.file.buffer)
+    const predictions = await _model.classify(image)
+    res.json(predictions)
+  }
+})
+
+const load_model = async () => {
+  _model = await nsfw.load()
+}
+
+// Keep the model in memory, make sure it's loaded only once
+load_model().then(() => app.listen(8080))
+
+// curl --request POST localhost:8080/nsfw --header 'Content-Type: multipart/form-data --data-binary 'image=@/full/path/to/picture.jpg'
+```
+
+You can also use [`lovell/sharp`](https://github.com/lovell/sharp) for preprocessing tasks and more file formats.
 
 ## More!
 
