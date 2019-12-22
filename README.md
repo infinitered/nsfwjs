@@ -191,7 +191,7 @@ const predictions = await model.classify(image)
 console.log(predictions)
 ```
 
-Here is another full example of a multipart/form-data POST using Express, supposing you are using JPG format.
+Here is another full example of a [multipart/form-data POST using Express](example/node_demo), supposing you are using JPG format.
 ```javascript
 const express = require('express')
 const multer = require('multer')
