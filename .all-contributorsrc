@@ -103,6 +103,16 @@
         "code",
         "ideas"
       ]
+    },
+    {
+      "login": "mycaule",
+      "name": "Michel Hua",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/6161385?v=4",
+      "profile": "http://mycaule.github.io/",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
