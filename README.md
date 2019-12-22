@@ -197,8 +197,13 @@ const express = require('express')
 const multer = require('multer')
 const jpeg = require('jpeg-js')
 
+const tf = require('@tensorflow/tfjs-node')
+const nsfw = require('nsfwjs')
+
 const app = express()
 const upload = multer()
+
+let _model
 
 const convert = async (img) => {
   // Decoded image in UInt8 Byte array
@@ -220,10 +225,19 @@ app.post('/nsfw', upload.single("image"), async (req, res) => {
     res.status(400).send("Missing image multipart/form-data")
   else {
     const image = await convert(req.file.buffer)
-    const predictions = await nsfw.classify(image)
+    const predictions = await _model.classify(image)
     res.json(predictions)
   }
 })
+
+const load_model = async () => {
+  _model = await nsfw.load()
+}
+
+// Keep the model in memory
+load_model().then(() => app.listen(8080))
+
+// curl --request POST localhost:8080/nsfw --data-binary '@/full/path/to/picture.jpg
 ```
 
 You can also use [`lovell/sharp`](https://github.com/lovell/sharp) for more generality and to handle more file formats.
