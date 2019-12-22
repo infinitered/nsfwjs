@@ -159,20 +159,34 @@ The magic that powers NSFWJS is the [NSFW detection model](https://github.com/ga
 
 ## Run the Examples
 
-### Example 1:
+### Tensorflow.js in the browser
 The demo that powers https://nsfwjs.com/ is available in the `nsfw_demo` example folder.
 
 To run the demo, run `yarn prep` which will copy the latest code into the demo. After that's done, you can `cd` into the demo folder and run with `yarn start`.
 
-### Example 2:
+### Browserify
 A browserified version using nothing but promises and script tags is available in the `minimal_demo` folder.
 
 Please do not use the script tags hosted in this demo as a CDN.  This can and should be hosted in your project along side the model files.
 
-### Example 3:
+### React Native
 The [NSFWJS React Native app](https://github.com/infinitered/nsfwjs-mobile)
 
 Loads a local copy of the model to reduce network load and utilizes TFJS-React-Native. [Blog Post](https://shift.infinite.red/nsfw-js-for-react-native-a37c9ba45fe9)
+
+### Node JS App
+
+Using NPM, you can also use the model on the server side.
+```
+$ npm install nsfwjs
+
+const nsfw = require('nsfwjs')
+const model = nsfw.load();
+
+// Image must be in tf.tensor3d format
+const predictions = await model.classify(image);
+console.log(predictions);
+```
 
 ## More!
 
