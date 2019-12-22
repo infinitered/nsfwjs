@@ -177,16 +177,56 @@ Loads a local copy of the model to reduce network load and utilizes TFJS-React-N
 ### Node JS App
 
 Using NPM, you can also use the model on the server side.
-```
+```bash
 $ npm install nsfwjs
+```
 
+```javascript
 const nsfw = require('nsfwjs')
-const model = nsfw.load();
+const model = await nsfw.load()
+// To load a local model nsfw.load('file://./path/to/model/')
 
 // Image must be in tf.tensor3d format
-const predictions = await model.classify(image);
-console.log(predictions);
+const predictions = await model.classify(image)
+console.log(predictions)
 ```
+
+Here is another example of a multipart/form-data POST using Express, supposing you are using JPG format.
+```javascript
+const express = require('express')
+const multer = require('multer')
+const jpeg = require('jpeg-js')
+
+const app = express()
+const upload = multer()
+
+const convert = async (img) => {
+  // Decoded image in UInt8 Byte array
+  const image = await jpeg.decode(img, true)
+
+  const numChannels = 3
+  const numPixels = image.width * image.height
+  const values = new Int32Array(numPixels * numChannels)
+
+  for (let i = 0; i < numPixels; i++)
+    for (let c = 0; c < numChannels; ++c)
+      values[i * numChannels + c] = image.data[i * 4 + c]
+
+  return tf.tensor3d(values, [image.height, image.width, numChannels], 'int32')
+}
+
+app.post('/nsfw', upload.single("image"), async (req, res) => {
+  if (!req.file)
+    res.status(400).send("Missing image multipart/form-data")
+  else {
+    const image = await convert(req.file.buffer)
+    const predictions = await nsfw.classify(image)
+    res.json(predictions)
+  }
+})
+```
+
+You can also use [`lovell/sharp`](https://github.com/lovell/sharp) for more generality and to handle more file formats.
 
 ## More!
 
