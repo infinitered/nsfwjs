@@ -184,14 +184,14 @@ $ npm install nsfwjs
 ```javascript
 const nsfw = require('nsfwjs')
 const model = await nsfw.load()
-// To load a local model nsfw.load('file://./path/to/model/')
+// To load a local model, nsfw.load('file://./path/to/model/')
 
 // Image must be in tf.tensor3d format
 const predictions = await model.classify(image)
 console.log(predictions)
 ```
 
-Here is another example of a multipart/form-data POST using Express, supposing you are using JPG format.
+Here is another full example of a multipart/form-data POST using Express, supposing you are using JPG format.
 ```javascript
 const express = require('express')
 const multer = require('multer')
@@ -234,13 +234,13 @@ const load_model = async () => {
   _model = await nsfw.load()
 }
 
-// Keep the model in memory
+// Keep the model in memory, make sure it's loaded only once
 load_model().then(() => app.listen(8080))
 
 // curl --request POST localhost:8080/nsfw --data-binary '@/full/path/to/picture.jpg
 ```
 
-You can also use [`lovell/sharp`](https://github.com/lovell/sharp) for more generality and to handle more file formats.
+You can also use [`lovell/sharp`](https://github.com/lovell/sharp) for preprocessing tasks and more file formats.
 
 ## More!
 

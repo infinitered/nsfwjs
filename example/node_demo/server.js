@@ -39,5 +39,5 @@ const load_model = async () => {
   _model = await nsfw.load()
 }
 
-// Keep the model in memory
+// Keep the model in memory, make sure it's loaded only once
 load_model().then(() => app.listen(8080))
