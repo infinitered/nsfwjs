@@ -40,7 +40,7 @@
     "ts-jest": "^24.0.0",
     "ts-node": "~8.5.0",
     "tslint": "~5.20.0",
-    "typescript": "3.7.3",
+    "typescript": "3.7.4",
     "uglify-js": "^3.6.0"
   },
   "keywords": [
