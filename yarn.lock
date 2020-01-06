@@ -709,13 +709,14 @@ ajv@^6.5.5:
     uri-js "^4.2.2"
 
 all-contributors-cli@^6.1.2:
-  version "6.11.2"
-  resolved "https://registry.yarnpkg.com/all-contributors-cli/-/all-contributors-cli-6.11.2.tgz#46f4f2ab7f7f412cfe7185b7c627a878f103e032"
-  integrity sha512-EFj1dSiiBQVbZ2HBPoaMCBbqOVGi1gnxP/iMJ5uDXqANcmDiB1BnfB2F8GjcHaCrmsS2UHFZC0zkEgBxrwYE+A==
+  version "6.12.0"
+  resolved "https://registry.yarnpkg.com/all-contributors-cli/-/all-contributors-cli-6.12.0.tgz#2fe6a3dc08721ba96124e62ebdaefb8e62023f25"
+  integrity sha512-ENkZIWmJgU4v/gGpuJTGtYypX4qXd8oLXkeCtfDd6+yjrOIGzxyvB/iFCPAkZTltb4O5tgBw3p1ikNNBR3RUeA==
   dependencies:
     "@babel/runtime" "^7.2.0"
     async "^3.0.1"
     chalk "^3.0.0"
+    didyoumean "^1.2.1"
     inquirer "^6.2.1"
     json-fixer "^1.3.1-0"
     lodash "^4.11.2"
@@ -2062,6 +2063,11 @@ detective@^5.0.2:
     acorn-node "^1.6.1"
     defined "^1.0.0"
     minimist "^1.1.1"
+
+didyoumean@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/didyoumean/-/didyoumean-1.2.1.tgz#e92edfdada6537d484d73c0172fd1eba0c4976ff"
+  integrity sha1-6S7f2tplN9SE1zwBcv0eugxJdv8=
 
 diff-sequences@^24.9.0:
   version "24.9.0"
