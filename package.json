@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@tensorflow/tfjs": "^1.1.0",
-    "@types/jest": "^24.0.6",
+    "@types/jest": "^25.1.0",
     "all-contributors-cli": "^6.1.2",
     "babel-core": "^6.26.0",
     "babel-plugin-transform-runtime": "~6.23.0",
