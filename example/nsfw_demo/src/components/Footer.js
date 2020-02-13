@@ -33,6 +33,9 @@ export default props => (
     <footer>
       <div>Copyright Now(ish)</div>
       <div>
+        <a href="https://store.infinite.red/products/nsfw-js-black-shirt">Buy the Shirt</a>
+      </div>
+      <div>
         <a href="https://github.com/infinitered/nsfwjs">NSFWJS GitHub</a>
       </div>
       <div>
