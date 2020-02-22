@@ -6493,9 +6493,9 @@ typescript@3.8.2:
   integrity sha512-EgOVgL/4xfVrCMbhYKUQTdF37SQn4Iw73H5BgCrF1Abdun7Kwy/QZsE/ssAy0y4LxBbvua3PIbFsbRczWWnDdQ==
 
 uglify-js@^3.1.4, uglify-js@^3.6.0:
-  version "3.7.7"
-  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.7.7.tgz#21e52c7dccda80a53bf7cde69628a7e511aec9c9"
-  integrity sha512-FeSU+hi7ULYy6mn8PKio/tXsdSXN35lm4KgV2asx00kzrLU9Pi3oAslcJT70Jdj7PHX29gGUPOT6+lXGBbemhA==
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.8.0.tgz#f3541ae97b2f048d7e7e3aa4f39fd8a1f5d7a805"
+  integrity sha512-ugNSTT8ierCsDHso2jkBHXYrU8Y5/fY2ZUprfrJUiD7YpuFvV4jODLFmb3h4btQjqr5Nh4TX4XtgDfCU1WdioQ==
   dependencies:
     commander "~2.20.3"
     source-map "~0.6.1"
