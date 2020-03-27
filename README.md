@@ -140,6 +140,17 @@ const framePredictions = await classifyGif(img, myConfig)
 
 - Array of the same order as number of frames in GIF. Each index corresponding to that frame, an returns array of objects that contain `className` and `probability`; sorted by probability and limited by topk config parameter.
 
+## Production
+Tensorflow.js offers two flags, `enableProdMode` and `enableDebugMode`.  If you're going to use NSFWJS in production, be sure to enable prod mode before loading the NSFWJS model.
+
+```js
+import * as tf from '@tensorflow/tfjs';
+import * as nsfwjs from 'nsfwjs';
+tf.enableProdMode()
+//...
+let model = await nsfwjs.load(`${urlToNSFWJSModel}`);
+```
+
 ## Install
 
 NSFWJS is powered by TensorFlow.js as a peer dependency. If your project does not already have TFJS you'll need to add it.
