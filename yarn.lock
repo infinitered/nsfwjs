@@ -1541,16 +1541,16 @@ browserify-zlib@^0.2.0, browserify-zlib@~0.2.0:
     pako "~1.0.5"
 
 browserify@^16.2.3:
-  version "16.5.0"
-  resolved "https://registry.yarnpkg.com/browserify/-/browserify-16.5.0.tgz#a1c2bc0431bec11fd29151941582e3f645ede881"
-  integrity sha512-6bfI3cl76YLAnCZ75AGu/XPOsqUhRyc0F/olGIJeCxtfxF2HvPKEcmjU9M8oAPxl4uBY1U7Nry33Q6koV3f2iw==
+  version "16.5.1"
+  resolved "https://registry.yarnpkg.com/browserify/-/browserify-16.5.1.tgz#3c13c97436802930d5c3ae28658ddc33bfd37dc2"
+  integrity sha512-EQX0h59Pp+0GtSRb5rL6OTfrttlzv+uyaUVlK6GX3w11SQ0jKPKyjC/54RhPR2ib2KmfcELM06e8FxcI5XNU2A==
   dependencies:
     JSONStream "^1.0.3"
     assert "^1.4.0"
     browser-pack "^6.0.1"
     browser-resolve "^1.11.0"
     browserify-zlib "~0.2.0"
-    buffer "^5.0.2"
+    buffer "~5.2.1"
     cached-path-relative "^1.0.0"
     concat-stream "^1.6.0"
     console-browserify "^1.1.0"
@@ -1568,7 +1568,7 @@ browserify@^16.2.3:
     inherits "~2.0.1"
     insert-module-globals "^7.0.0"
     labeled-stream-splicer "^2.0.0"
-    mkdirp "^0.5.0"
+    mkdirp-classic "^0.5.2"
     module-deps "^6.0.0"
     os-browserify "~0.3.0"
     parents "^1.0.1"
@@ -1624,7 +1624,7 @@ buffer@^4.3.0:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
-buffer@^5.0.2:
+buffer@~5.2.1:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/buffer/-/buffer-5.2.1.tgz#dd57fa0f109ac59c602479044dca7b8b3d0b71d6"
   integrity sha512-c+Ko0loDaFfuPWiL02ls9Xd3GO3cPVmUobQ6t3rXNUk304u6hGq+8N/kFi+QEIKhzK3uwolVhLzszmfLmMLnqg==
@@ -4774,6 +4774,11 @@ mixin-deep@^1.2.0:
   dependencies:
     for-in "^1.0.2"
     is-extendable "^1.0.1"
+
+mkdirp-classic@^0.5.2:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/mkdirp-classic/-/mkdirp-classic-0.5.2.tgz#54c441ce4c96cd7790e10b41a87aa51068ecab2b"
+  integrity sha512-ejdnDQcR75gwknmMw/tx02AuRs8jCtqFoFqDZMjiNxsu85sRIJVXDKHuLYvUUPRBUtV2FpSZa9bL1BUa3BdR2g==
 
 mkdirp@0.x, mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0:
   version "0.5.1"
