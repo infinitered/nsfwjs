@@ -6966,9 +6966,9 @@ typescript@3.8.3:
   integrity sha512-MYlEfn5VrLNsgudQTVJeNaQFUAI7DkhnOjdpAp4T+ku1TfQClewlbSuTVHiA+8skNBgaf02TL/kLOvig4y3G8w==
 
 uglify-js@^3.6.0:
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.9.0.tgz#037163a936992050ed5d14f5d5c4014126019661"
-  integrity sha512-j5wNQBWaql8gr06dOUrfaohHlscboQZ9B8sNsoK5o4sBjm7Ht9dxSbrMXyktQpA16Acaij8AcoozteaPYZON0g==
+  version "3.9.1"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.9.1.tgz#a56a71c8caa2d36b5556cc1fd57df01ae3491539"
+  integrity sha512-JUPoL1jHsc9fOjVFHdQIhqEEJsQvfKDjlubcCilu8U26uZ73qOg8VsN8O1jbuei44ZPlwL7kmbAdM4tzaUvqnA==
   dependencies:
     commander "~2.20.3"
 
