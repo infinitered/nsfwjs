@@ -110,6 +110,8 @@ const predictions = await model.classify(img, 3);
 
 #### `classifyGif`
 
+![Gif Example](./_art/gif_scrub.gif)
+
 This function can take a browser-based image element (`<img>`) that is a GIF, and returns an array of prediction arrays. It breaks a GIF into its frames and runs `classify` on each with a given configuration. This can take a while, as GIFs are frequently hundreds of frames.
 
 ```js
