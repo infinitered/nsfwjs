@@ -616,7 +616,7 @@
   resolved "https://registry.yarnpkg.com/@tensorflow/tfjs-layers/-/tfjs-layers-1.7.4.tgz#93cdef70a4f414edb4ee470c49415d216f54ba20"
   integrity sha512-5/K8Z8RBfXsucL6EaSeb3/8jB/I8oPaaXkxwKVsBPQ+u6lB6LEtSKzeiFc57nDr5OMtVaUZV+pKDNEzP0RUQlg==
 
-"@tensorflow/tfjs@^1.1.0":
+"@tensorflow/tfjs@^1.7.4":
   version "1.7.4"
   resolved "https://registry.yarnpkg.com/@tensorflow/tfjs/-/tfjs-1.7.4.tgz#ea5483bc4b34f5a4c66d600e456c25b6071ea75e"
   integrity sha512-XWGwRQ/ECEoQacd74JY/dmbLdnMpwtq3H8tls45dQ+GJ553Advir1FDo/aQt0Yr6fTimQDeiOIG4Mcb5KduP/w==

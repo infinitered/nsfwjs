@@ -29,34 +29,34 @@ The demo is a continuous deployment source - Give it a go: http://nsfwjs.com/
 With `async/await` support:
 
 ```js
-import * as nsfwjs from 'nsfwjs'
+import * as nsfwjs from "nsfwjs";
 
-const img = document.getElementById('img')
+const img = document.getElementById("img");
 
 // Load model from my S3.
 // See the section hosting the model files on your site.
-const model = await nsfwjs.load()
+const model = await nsfwjs.load();
 
 // Classify the image
-const predictions = await model.classify(img)
-console.log('Predictions: ', predictions)
+const predictions = await model.classify(img);
+console.log("Predictions: ", predictions);
 ```
 
 Without `async/await` support:
 
 ```js
-import * as nsfwjs from 'nsfwjs'
+import * as nsfwjs from "nsfwjs";
 
-const img = document.getElementById('img')
+const img = document.getElementById("img");
 
 // Load model from my S3.
 // See the section hosting the model files on your site.
-nsfwjs.load().then(function(model) {
-  model.classify(img).then(function(predictions) {
+nsfwjs.load().then(function (model) {
+  model.classify(img).then(function (predictions) {
     // Classify the image
-    console.log('Predictions: ', predictions)
-  })
-})
+    console.log("Predictions: ", predictions);
+  });
+});
 ```
 
 ## API
@@ -66,12 +66,19 @@ nsfwjs.load().then(function(model) {
 Before you can classify any image, you'll need to load the model. You should use the optional first parameter and load the model from your website, as explained in the install directions.
 
 ```js
-const model = nsfwjs.load('/path/to/model/directory/')
+const model = nsfwjs.load("/path/to/model/directory/");
 ```
 
 If you're using a model that needs an image of dimension other than 224x224, you can pass the size in the options parameter.
+
 ```js
-const model = nsfwjs.load('/path/to/different/model/', {size: 299})
+const model = nsfwjs.load("/path/to/different/model/", { size: 299 });
+```
+
+If you're using a graph model, you cannot use use the infer method, and you'll need to tell model load that you're dealing with a graph model in options.
+
+```js
+const model = nsfwjs.load("/path/to/different/model/", { type: "graph" });
 ```
 
 **Parameters**
@@ -89,7 +96,7 @@ This function can take any browser-based image elements (`<img>`, `<video>`, `<c
 
 ```js
 // Return top 3 guesses (instead of all 5)
-const predictions = await model.classify(img, 3)
+const predictions = await model.classify(img, 3);
 ```
 
 **Parameters**
@@ -107,7 +114,7 @@ This function can take a browser-based image element (`<img>`) that is a GIF, an
 
 ```js
 // Returns all predictions of each GIF frame
-const framePredictions = await model.classifyGif(img)
+const framePredictions = await model.classifyGif(img);
 ```
 
 If you're looking to update the user on status (_e.g. progress bar_) or change the number of top results per frame, then you can utilize the configuration parameter.
@@ -120,9 +127,9 @@ const myConfig = {
   topk: 1,
   setGifControl: (gifControl) => console.log(gifControl),
   onFrame: ({ index, totalFrames, predictions }) =>
-    console.log(index, totalFrames, predictions)
-}
-const framePredictions = await classifyGif(img, myConfig)
+    console.log(index, totalFrames, predictions),
+};
+const framePredictions = await classifyGif(img, myConfig);
 ```
 
 **Parameters**
@@ -141,12 +148,13 @@ const framePredictions = await classifyGif(img, myConfig)
 - Array of the same order as number of frames in GIF. Each index corresponding to that frame, an returns array of objects that contain `className` and `probability`; sorted by probability and limited by topk config parameter.
 
 ## Production
-Tensorflow.js offers two flags, `enableProdMode` and `enableDebugMode`.  If you're going to use NSFWJS in production, be sure to enable prod mode before loading the NSFWJS model.
+
+Tensorflow.js offers two flags, `enableProdMode` and `enableDebugMode`. If you're going to use NSFWJS in production, be sure to enable prod mode before loading the NSFWJS model.
 
 ```js
-import * as tf from '@tensorflow/tfjs';
-import * as nsfwjs from 'nsfwjs';
-tf.enableProdMode()
+import * as tf from "@tensorflow/tfjs";
+import * as nsfwjs from "nsfwjs";
+tf.enableProdMode();
 //...
 let model = await nsfwjs.load(`${urlToNSFWJSModel}`);
 ```
@@ -171,16 +179,19 @@ The magic that powers NSFWJS is the [NSFW detection model](https://github.com/ga
 ## Run the Examples
 
 ### Tensorflow.js in the browser
+
 The demo that powers https://nsfwjs.com/ is available in the `nsfw_demo` example folder.
 
 To run the demo, run `yarn prep` which will copy the latest code into the demo. After that's done, you can `cd` into the demo folder and run with `yarn start`.
 
 ### Browserify
+
 A browserified version using nothing but promises and script tags is available in the `minimal_demo` folder.
 
-Please do not use the script tags hosted in this demo as a CDN.  This can and should be hosted in your project along side the model files.
+Please do not use the script tags hosted in this demo as a CDN. This can and should be hosted in your project along side the model files.
 
 ### React Native
+
 The [NSFWJS React Native app](https://github.com/infinitered/nsfwjs-mobile)
 
 Loads a local copy of the model to reduce network load and utilizes TFJS-React-Native. [Blog Post](https://shift.infinite.red/nsfw-js-for-react-native-a37c9ba45fe9)
@@ -188,65 +199,66 @@ Loads a local copy of the model to reduce network load and utilizes TFJS-React-N
 ### Node JS App
 
 Using NPM, you can also use the model on the server side.
+
 ```bash
 $ npm install nsfwjs
 ```
 
 ```javascript
-const nsfw = require('nsfwjs')
-const model = await nsfw.load()
+const nsfw = require("nsfwjs");
+const model = await nsfw.load();
 // To load a local model, nsfw.load('file://./path/to/model/')
 
 // Image must be in tf.tensor3d format
-const predictions = await model.classify(image)
-console.log(predictions)
+const predictions = await model.classify(image);
+console.log(predictions);
 ```
 
 Here is another full example of a [multipart/form-data POST using Express](example/node_demo), supposing you are using JPG format.
+
 ```javascript
-const express = require('express')
-const multer = require('multer')
-const jpeg = require('jpeg-js')
+const express = require("express");
+const multer = require("multer");
+const jpeg = require("jpeg-js");
 
-const tf = require('@tensorflow/tfjs-node')
-const nsfw = require('nsfwjs')
+const tf = require("@tensorflow/tfjs-node");
+const nsfw = require("nsfwjs");
 
-const app = express()
-const upload = multer()
+const app = express();
+const upload = multer();
 
-let _model
+let _model;
 
 const convert = async (img) => {
   // Decoded image in UInt8 Byte array
-  const image = await jpeg.decode(img, true)
+  const image = await jpeg.decode(img, true);
 
-  const numChannels = 3
-  const numPixels = image.width * image.height
-  const values = new Int32Array(numPixels * numChannels)
+  const numChannels = 3;
+  const numPixels = image.width * image.height;
+  const values = new Int32Array(numPixels * numChannels);
 
   for (let i = 0; i < numPixels; i++)
     for (let c = 0; c < numChannels; ++c)
-      values[i * numChannels + c] = image.data[i * 4 + c]
+      values[i * numChannels + c] = image.data[i * 4 + c];
 
-  return tf.tensor3d(values, [image.height, image.width, numChannels], 'int32')
-}
+  return tf.tensor3d(values, [image.height, image.width, numChannels], "int32");
+};
 
-app.post('/nsfw', upload.single("image"), async (req, res) => {
-  if (!req.file)
-    res.status(400).send("Missing image multipart/form-data")
+app.post("/nsfw", upload.single("image"), async (req, res) => {
+  if (!req.file) res.status(400).send("Missing image multipart/form-data");
   else {
-    const image = await convert(req.file.buffer)
-    const predictions = await _model.classify(image)
-    res.json(predictions)
+    const image = await convert(req.file.buffer);
+    const predictions = await _model.classify(image);
+    res.json(predictions);
   }
-})
+});
 
 const load_model = async () => {
-  _model = await nsfw.load()
-}
+  _model = await nsfw.load();
+};
 
 // Keep the model in memory, make sure it's loaded only once
-load_model().then(() => app.listen(8080))
+load_model().then(() => app.listen(8080));
 
 // curl --request POST localhost:8080/nsfw --header 'Content-Type: multipart/form-data --data-binary 'image=@/full/path/to/picture.jpg'
 ```
@@ -295,6 +307,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

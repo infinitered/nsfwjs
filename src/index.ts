@@ -1,80 +1,86 @@
-import * as tf from '@tensorflow/tfjs'
-import { NSFW_CLASSES } from './nsfw_classes'
-import * as SuperGif from 'libgif'
+import * as tf from "@tensorflow/tfjs";
+import { NSFW_CLASSES } from "./nsfw_classes";
+import * as SuperGif from "libgif";
 
 interface frameResult {
-  index: number
-  totalFrames: number
-  predictions: Array<Object>
+  index: number;
+  totalFrames: number;
+  predictions: Array<Object>;
 }
 
 interface classifyConfig {
-  topk?: number
-  onFrame?: (result: frameResult) => {}
-  setGifControl?: (gifControl: typeof SuperGif) => {}
+  topk?: number;
+  onFrame?: (result: frameResult) => {};
+  setGifControl?: (gifControl: typeof SuperGif) => {};
 }
 
 interface nsfwjsOptions {
-  size: number
+  size?: number;
+  type?: string;
 }
 
 const BASE_PATH =
-  'https://s3.amazonaws.com/ir_public/nsfwjscdn/TFJS_nsfw_mobilenet/tfjs_quant_nsfw_mobilenet/'
-const IMAGE_SIZE = 224 // default to Mobilenet v2
+  "https://s3.amazonaws.com/ir_public/nsfwjscdn/TFJS_nsfw_mobilenet/tfjs_quant_nsfw_mobilenet/";
+const IMAGE_SIZE = 224; // default to Mobilenet v2
 
 export async function load(base = BASE_PATH, options = { size: IMAGE_SIZE }) {
   if (tf == null) {
     throw new Error(
       `Cannot find TensorFlow.js. If you are using a <script> tag, please ` +
         `also include @tensorflow/tfjs on the page before using this model.`
-    )
+    );
   }
-
-  const nsfwnet = new NSFWJS(base, options)
-  await nsfwnet.load()
-  return nsfwnet
+  // Default size is IMAGE_SIZE - needed if just type option is used
+  options.size = options.size || IMAGE_SIZE;
+  const nsfwnet = new NSFWJS(base, options);
+  await nsfwnet.load();
+  return nsfwnet;
 }
 
 interface IOHandler {
-  load: () => any
+  load: () => any;
 }
 
 export class NSFWJS {
-  public endpoints: string[]
+  public endpoints: string[];
 
-  private options: nsfwjsOptions
-  private pathOrIOHandler: string | IOHandler
-  private model: tf.LayersModel
-  private intermediateModels: { [layerName: string]: tf.LayersModel } = {}
+  private options: nsfwjsOptions;
+  private pathOrIOHandler: string | IOHandler;
+  private model: tf.LayersModel | tf.GraphModel;
+  private intermediateModels: { [layerName: string]: tf.LayersModel } = {};
 
-  private normalizationOffset: tf.Scalar
+  private normalizationOffset: tf.Scalar;
 
   constructor(
     modelPathBaseOrIOHandler: string | IOHandler,
     options: nsfwjsOptions
   ) {
-    this.options = options
-    this.normalizationOffset = tf.scalar(255)
+    this.options = options;
+    this.normalizationOffset = tf.scalar(255);
 
-    if (typeof modelPathBaseOrIOHandler === 'string') {
-      this.pathOrIOHandler = `${modelPathBaseOrIOHandler}model.json`
+    if (typeof modelPathBaseOrIOHandler === "string") {
+      this.pathOrIOHandler = `${modelPathBaseOrIOHandler}model.json`;
     } else {
-      this.pathOrIOHandler = modelPathBaseOrIOHandler
+      this.pathOrIOHandler = modelPathBaseOrIOHandler;
     }
   }
 
   async load() {
-    // this is a Layers Model
-    this.model = await tf.loadLayersModel(this.pathOrIOHandler)
-    this.endpoints = this.model.layers.map(l => l.name)
-    const { size } = this.options
+    const { size, type } = this.options;
+    if (type === "graph") {
+      this.model = await tf.loadGraphModel(this.pathOrIOHandler);
+    } else {
+      // this is a Layers Model
+      this.model = await tf.loadLayersModel(this.pathOrIOHandler);
+      this.endpoints = this.model.layers.map((l) => l.name);
+    }
 
     // Warmup the model.
     const result = tf.tidy(() =>
       this.model.predict(tf.zeros([1, size, size, 3]))
-    ) as tf.Tensor
-    await result.data()
-    result.dispose()
+    ) as tf.Tensor;
+    await result.data();
+    result.dispose();
   }
 
   /**
@@ -99,52 +105,57 @@ export class NSFWJS {
       throw new Error(
         `Unknown endpoint ${endpoint}. Available endpoints: ` +
           `${this.endpoints}.`
-      )
+      );
     }
 
     return tf.tidy(() => {
       if (!(img instanceof tf.Tensor)) {
-        img = tf.browser.fromPixels(img)
+        img = tf.browser.fromPixels(img);
       }
 
       // Normalize the image from [0, 255] to [0, 1].
       const normalized = img
         .toFloat()
-        .div(this.normalizationOffset) as tf.Tensor3D
+        .div(this.normalizationOffset) as tf.Tensor3D;
 
       // Resize the image to
-      let resized = normalized
-      const { size } = this.options
+      let resized = normalized;
+      const { size } = this.options;
       // check width and height if resize needed
       if (img.shape[0] !== size || img.shape[1] !== size) {
-        const alignCorners = true
+        const alignCorners = true;
         resized = tf.image.resizeBilinear(
           normalized,
           [size, size],
           alignCorners
-        )
+        );
       }
 
       // Reshape to a single-element batch so we can pass it to predict.
-      const batched = resized.reshape([1, size, size, 3])
+      const batched = resized.reshape([1, size, size, 3]);
 
-      let model: tf.LayersModel
+      let model: tf.LayersModel | tf.GraphModel;
       if (endpoint == null) {
-        model = this.model
+        model = this.model;
       } else {
-        if (this.intermediateModels[endpoint] == null) {
-          const layer = this.model.layers.find(l => l.name === endpoint)
+        if (
+          this.model.hasOwnProperty("layers") &&
+          this.intermediateModels[endpoint] == null
+        ) {
+          // @ts-ignore
+          const layer = this.model.layers.find((l) => l.name === endpoint);
           this.intermediateModels[endpoint] = tf.model({
+            // @ts-ignore
             inputs: this.model.inputs,
-            outputs: layer.output
-          })
+            outputs: layer.output,
+          });
         }
-        model = this.intermediateModels[endpoint]
+        model = this.intermediateModels[endpoint];
       }
 
       // return logits
-      return model.predict(batched) as tf.Tensor2D
-    })
+      return model.predict(batched) as tf.Tensor2D;
+    });
   }
 
   /**
@@ -164,13 +175,13 @@ export class NSFWJS {
       | HTMLVideoElement,
     topk = 5
   ): Promise<Array<{ className: string; probability: number }>> {
-    const logits = this.infer(img) as tf.Tensor2D
+    const logits = this.infer(img) as tf.Tensor2D;
 
-    const classes = await getTopKClasses(logits, topk)
+    const classes = await getTopKClasses(logits, topk);
 
-    logits.dispose()
+    logits.dispose();
 
-    return classes
+    return classes;
   }
 
   /**
@@ -184,31 +195,31 @@ export class NSFWJS {
     gif: HTMLImageElement,
     config: classifyConfig = { topk: 5 }
   ): Promise<Array<Array<{ className: string; probability: number }>>> {
-    let gifObj = new SuperGif({ gif })
-    return new Promise(resolve => {
+    let gifObj = new SuperGif({ gif });
+    return new Promise((resolve) => {
       gifObj.load(async () => {
-        const arrayOfClasses = []
-        const gifLength = gifObj.get_length()
+        const arrayOfClasses = [];
+        const gifLength = gifObj.get_length();
         for (let i = 1; i <= gifLength; i++) {
-          gifObj.move_to(i)
-          const classes = await this.classify(gifObj.get_canvas(), config.topk)
+          gifObj.move_to(i);
+          const classes = await this.classify(gifObj.get_canvas(), config.topk);
           // Update to onFrame
           if (config.onFrame)
             config.onFrame({
               index: i,
               totalFrames: gifLength,
-              predictions: classes
-            })
+              predictions: classes,
+            });
           // Store the goods
-          arrayOfClasses.push(classes)
+          arrayOfClasses.push(classes);
         }
         // save gifObj if needed
-        config.setGifControl && config.setGifControl(gifObj)
+        config.setGifControl && config.setGifControl(gifObj);
         // try to clean up
-        gifObj = null
-        resolve(arrayOfClasses)
-      })
-    })
+        gifObj = null;
+        resolve(arrayOfClasses);
+      });
+    });
   }
 }
 
@@ -216,28 +227,28 @@ async function getTopKClasses(
   logits: tf.Tensor2D,
   topK: number
 ): Promise<Array<{ className: string; probability: number }>> {
-  const values = await logits.data()
+  const values = await logits.data();
 
-  const valuesAndIndices = []
+  const valuesAndIndices = [];
   for (let i = 0; i < values.length; i++) {
-    valuesAndIndices.push({ value: values[i], index: i })
+    valuesAndIndices.push({ value: values[i], index: i });
   }
   valuesAndIndices.sort((a, b) => {
-    return b.value - a.value
-  })
-  const topkValues = new Float32Array(topK)
-  const topkIndices = new Int32Array(topK)
+    return b.value - a.value;
+  });
+  const topkValues = new Float32Array(topK);
+  const topkIndices = new Int32Array(topK);
   for (let i = 0; i < topK; i++) {
-    topkValues[i] = valuesAndIndices[i].value
-    topkIndices[i] = valuesAndIndices[i].index
+    topkValues[i] = valuesAndIndices[i].value;
+    topkIndices[i] = valuesAndIndices[i].index;
   }
 
-  const topClassesAndProbs = []
+  const topClassesAndProbs = [];
   for (let i = 0; i < topkIndices.length; i++) {
     topClassesAndProbs.push({
       className: NSFW_CLASSES[topkIndices[i]],
-      probability: topkValues[i]
-    })
+      probability: topkValues[i],
+    });
   }
-  return topClassesAndProbs
+  return topClassesAndProbs;
 }

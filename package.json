@@ -23,10 +23,10 @@
     "libgif": "0.0.3"
   },
   "peerDependencies": {
-    "@tensorflow/tfjs": "^1.1.0"
+    "@tensorflow/tfjs": "^1.7.4"
   },
   "devDependencies": {
-    "@tensorflow/tfjs": "^1.1.0",
+    "@tensorflow/tfjs": "^1.7.4",
     "@types/jest": "^25.1.0",
     "all-contributors-cli": "^6.1.2",
     "babel-core": "^6.26.0",
