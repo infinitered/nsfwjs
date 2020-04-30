@@ -307,6 +307,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://www.infinite.red"><img src="https://avatars2.githubusercontent.com/u/1771152?v=4" width="100px;" alt=""/><br /><sub><b>Kevin VanGelder</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=kevinvangelder" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=kevinvangelder" title="Documentation">📖</a></td>
     <td align="center"><a href="http://technikempire.com"><img src="https://avatars2.githubusercontent.com/u/11234763?v=4" width="100px;" alt=""/><br /><sub><b>Jesse Nicholson</b></sub></a><br /><a href="#data-TechnikEmpire" title="Data">🔣</a> <a href="#ideas-TechnikEmpire" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/camhart"><img src="https://avatars0.githubusercontent.com/u/3038809?v=4" width="100px;" alt=""/><br /><sub><b>camhart</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=camhart" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/Cameron-Burkholder"><img src="https://avatars2.githubusercontent.com/u/13265710?v=4" width="100px;" alt=""/><br /><sub><b>Cameron Burkholder</b></sub></a><br /><a href="#design-Cameron-Burkholder" title="Design">🎨</a></td>
   </tr>
 </table>
 

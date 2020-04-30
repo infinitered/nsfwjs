@@ -142,6 +142,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "Cameron-Burkholder",
+      "name": "Cameron Burkholder",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/13265710?v=4",
+      "profile": "https://github.com/Cameron-Burkholder",
+      "contributions": [
+        "design"
+      ]
     }
   ],
   "contributorsPerLine": 7,
