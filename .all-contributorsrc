@@ -123,6 +123,16 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "TechnikEmpire",
+      "name": "Jesse Nicholson",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/11234763?v=4",
+      "profile": "http://technikempire.com",
+      "contributions": [
+        "data",
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,
