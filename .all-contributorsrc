@@ -113,6 +113,16 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "kevinvangelder",
+      "name": "Kevin VanGelder",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/1771152?v=4",
+      "profile": "https://www.infinite.red",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,

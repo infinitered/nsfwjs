@@ -304,12 +304,12 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/xilaraux"><img src="https://avatars2.githubusercontent.com/u/17703730?v=4" width="100px;" alt=""/><br /><sub><b>Oleksandr Kozlov</b></sub></a><br /><a href="#infra-xilaraux" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=xilaraux" title="Tests">⚠️</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=xilaraux" title="Code">💻</a></td>
     <td align="center"><a href="http://morganlaco.com"><img src="https://avatars2.githubusercontent.com/u/4466642?v=4" width="100px;" alt=""/><br /><sub><b>Morgan</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=mlaco" title="Code">💻</a> <a href="#ideas-mlaco" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="http://mycaule.github.io/"><img src="https://avatars2.githubusercontent.com/u/6161385?v=4" width="100px;" alt=""/><br /><sub><b>Michel Hua</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=mycaule" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=mycaule" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://www.infinite.red"><img src="https://avatars2.githubusercontent.com/u/1771152?v=4" width="100px;" alt=""/><br /><sub><b>Kevin VanGelder</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=kevinvangelder" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=kevinvangelder" title="Documentation">📖</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
