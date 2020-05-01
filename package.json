@@ -1,6 +1,6 @@
 {
   "name": "nsfwjs",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "unpkg": "dist/nsfwjs.min.js",
   "description": "Detect NSFW content client side",
   "main": "dist/index.js",
