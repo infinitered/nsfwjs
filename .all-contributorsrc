@@ -151,6 +151,15 @@
       "contributions": [
         "design"
       ]
+    },
+    {
+      "login": "qwertyforce",
+      "name": "qwertyforce",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/44163887?v=4",
+      "profile": "https://qwertyforce.ru",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
