@@ -3,7 +3,7 @@
   <h2 align="center">Client-side indecent content checking</h2>
 </p>
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-15-green.svg?style=flat-square)](#contributors)
 [![Travis CI](https://travis-ci.com/infinitered/nsfwjs.svg?branch=master)](https://travis-ci.com/github/infinitered/nsfwjs)
 
 A simple JavaScript library to help you quickly identify unseemly images; all in the client's browser. NSFWJS isn't perfect, but it's pretty accurate (~90% with small and ~93% with midsized model)... and it's getting more accurate all the time.
@@ -14,9 +14,9 @@ Why would this be useful? [Check out the announcement blog post](https://shift.i
 <img src="https://github.com/infinitered/nsfwjs/raw/master/_art/nsfw_demo.gif" alt="demo example" width="800" align="center" />
 </p>
 
+## **Table of Contents**
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
 
 - [QUICK: How to use the module](#quick-how-to-use-the-module)
 - [Library API](#library-api)
