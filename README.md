@@ -65,17 +65,22 @@ nsfwjs.load().then(function (model) {
 
 Before you can classify any image, you'll need to load the model. You should use the optional first parameter and load the model from your website, as explained in the install directions.
 
+Model example - [224x224](https://github.com/infinitered/nsfwjs/blob/master/example/nsfw_demo/public/quant_nsfw_mobilenet/)
+
 ```js
 const model = nsfwjs.load("/path/to/model/directory/");
 ```
 
 If you're using a model that needs an image of dimension other than 224x224, you can pass the size in the options parameter.
 
+Model example - [299x299](https://github.com/infinitered/nsfwjs/tree/master/example/nsfw_demo/public/model)
 ```js
 const model = nsfwjs.load("/path/to/different/model/", { size: 299 });
 ```
 
-If you're using a graph model, you cannot use use the infer method, and you'll need to tell model load that you're dealing with a graph model in options.
+If you're using a graph model, you cannot use the infer method, and you'll need to tell model load that you're dealing with a graph model in options. 
+
+Model example - [Graph](https://github.com/infinitered/nsfwjs/tree/master/example/nsfw_demo/public/quant_mid)
 
 ```js
 const model = nsfwjs.load("/path/to/different/model/", { type: "graph" });
