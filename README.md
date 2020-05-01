@@ -204,16 +204,23 @@ Using NPM, you can also use the model on the server side.
 
 ```bash
 $ npm install nsfwjs
+$ npm install @tensorflow/tfjs-node
 ```
 
 ```javascript
+const axios = require('axios'); //you can use any http client
+const tf=require('@tensorflow/tfjs-node')
 const nsfw = require("nsfwjs");
-const model = await nsfw.load();
-// To load a local model, nsfw.load('file://./path/to/model/')
-
-// Image must be in tf.tensor3d format
-const predictions = await model.classify(image);
-console.log(predictions);
+async function fn() {
+  const pic= await axios.get(`link-to-picture`,{responseType: 'arraybuffer' })
+  const model = await nsfw.load(); // To load a local model, nsfw.load('file://./path/to/model/')
+  // Image must be in tf.tensor3d format
+  // you can convert image to tf.tensor3d with tf.node.decodeImage(Uint8Array)
+  const image = await tf.node.decodeImage(pic.data);
+  const predictions = await  model.classify(image);
+  console.log(predictions)
+}
+fn()
 ```
 
 Here is another full example of a [multipart/form-data POST using Express](example/node_demo), supposing you are using JPG format.
