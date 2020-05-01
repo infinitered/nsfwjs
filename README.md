@@ -6,7 +6,7 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors)
 [![Travis CI](https://travis-ci.com/infinitered/nsfwjs.svg?branch=master)](https://travis-ci.com/github/infinitered/nsfwjs)
 
-A simple JavaScript library to help you quickly identify unseemly images; all in the client's browser. NSFWJS isn't perfect, but it's pretty accurate (~90% from our test set of 15,000 test images)... and it's getting more accurate all the time.
+A simple JavaScript library to help you quickly identify unseemly images; all in the client's browser. NSFWJS isn't perfect, but it's pretty accurate (~90% with small and ~93% with midsized model)... and it's getting more accurate all the time.
 
 Why would this be useful? [Check out the announcement blog post](https://shift.infinite.red/avoid-nightmares-nsfw-js-ab7b176978b1).
 
@@ -22,7 +22,7 @@ The library categorizes image probabilities in the following 5 classes:
 - `Porn` - pornographic images, sexual acts
 - `Sexy` - sexually explicit images, not pornography
 
-The demo is a continuous deployment source - Give it a go: http://nsfwjs.com/
+#### The demo is a continuous deployment source - Give it a go: http://nsfwjs.com/
 
 ## How to use the module
 
