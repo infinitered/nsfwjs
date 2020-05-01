@@ -247,8 +247,8 @@ async function fn() {
   })
   const model = await nsfw.load() // To load a local model, nsfw.load('file://./path/to/model/')
   // Image must be in tf.tensor3d format
-  // you can convert image to tf.tensor3d with tf.node.decodeImage(Uint8Array)
-  const image = await tf.node.decodeImage(pic.data)
+  // you can convert image to tf.tensor3d with tf.node.decodeImage(Uint8Array,channels)
+  const image = await tf.node.decodeImage(pic.data,3)
   const predictions = await model.classify(image)
   console.log(predictions)
 }
