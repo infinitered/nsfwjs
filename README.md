@@ -291,6 +291,7 @@ app.post('/nsfw', upload.single('image'), async (req, res) => {
   else {
     const image = await convert(req.file.buffer)
     const predictions = await _model.classify(image)
+    image.dispose()
     res.json(predictions)
   }
 })
