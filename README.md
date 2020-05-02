@@ -250,6 +250,7 @@ async function fn() {
   // you can convert image to tf.tensor3d with tf.node.decodeImage(Uint8Array,channels)
   const image = await tf.node.decodeImage(pic.data,3)
   const predictions = await model.classify(image)
+  image.dispose() // Tensor memory must be managed explicitly (it is not sufficient to let a tf.Tensor go out of scope for its memory to be released).
   console.log(predictions)
 }
 fn()
