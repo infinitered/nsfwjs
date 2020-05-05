@@ -225,6 +225,7 @@ Please do not use the script tags hosted in this demo as a CDN. This can and sho
 ### React Native
 
 The [NSFWJS React Native app](https://github.com/infinitered/nsfwjs-mobile)
+![React Native Demo](./_art/nsfwjs-mobile.jpg)
 
 Loads a local copy of the model to reduce network load and utilizes TFJS-React-Native. [Blog Post](https://shift.infinite.red/nsfw-js-for-react-native-a37c9ba45fe9)
 
