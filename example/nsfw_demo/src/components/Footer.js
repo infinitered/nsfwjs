@@ -1,33 +1,33 @@
-import React from "react";
-import ir from "../ir.svg";
-import Dropdown from "react-dropdown";
-import "react-dropdown/style.css";
+import React from 'react'
+import ir from '../ir.svg'
+import Dropdown from 'react-dropdown'
+import 'react-dropdown/style.css'
 const options = [
   {
-    type: "group",
-    name: "Mobilenet v2 Model",
+    type: 'group',
+    name: 'Mobilenet v2 Model',
     items: [
       {
-        value: "mobilenetv2",
-        label: "90% Accurate - 2.6MB",
+        value: 'mobilenetv2',
+        label: '90% Accurate - 2.6MB',
       },
       {
-        value: "mobilenetMid",
-        label: "93% Accurate - 6.1MB",
+        value: 'mobilenetMid',
+        label: '93% Accurate - 4.2MB',
       },
     ],
   },
   {
-    type: "group",
-    name: "Inception v3 Model",
+    type: 'group',
+    name: 'Inception v3 Model',
     items: [
       {
-        value: "inceptionv3",
-        label: "93% Accurate - Huge!",
+        value: 'inceptionv3',
+        label: '93% Accurate - Huge!',
       },
     ],
   },
-];
+]
 
 export default (props) => (
   <div>
@@ -67,4 +67,4 @@ export default (props) => (
       </div>
     </footer>
   </div>
-);
+)
