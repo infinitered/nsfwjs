@@ -32,6 +32,7 @@ Why would this be useful? [Check out the announcement blog post](https://shift.i
   - [Browserify](#browserify)
   - [React Native](#react-native)
   - [Node JS App](#node-js-app)
+  - [NSFW Filter(Browser Extension)](#nsfw-filter)
 - [More!](#more)
     - [Open Source](#open-source)
     - [Premium](#premium)
@@ -309,6 +310,14 @@ load_model().then(() => app.listen(8080))
 ```
 
 You can also use [`lovell/sharp`](https://github.com/lovell/sharp) for preprocessing tasks and more file formats.
+
+### NSFW Filter
+
+[**NSFW Filter**](https://github.com/navendu-pottekkat/nsfw-filter) is a web extension that uses NSFWJS for filtering out NSFW images from your browser. 
+
+It is currently available for Chrome and Firefox and is completely open-source.
+
+Check out the project [here](https://github.com/navendu-pottekkat/nsfw-filter).
 
 ## More!
 
