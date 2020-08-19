@@ -1,22 +1,20 @@
 import * as tf from "@tensorflow/tfjs";
 import { NSFW_CLASSES } from "./nsfw_classes";
-import * as SuperGif from "libgif";
-
-interface frameResult {
-  index: number;
-  totalFrames: number;
-  predictions: Array<Object>;
-}
+import gifFrames from "gif-frames";
 
 interface classifyConfig {
   topk?: number;
-  onFrame?: (result: frameResult) => {};
-  setGifControl?: (gifControl: typeof SuperGif) => {};
+  fps?: number;
 }
 
 interface nsfwjsOptions {
   size?: number;
   type?: string;
+}
+
+interface predictionClass {
+  className: string
+  probability: number
 }
 
 const BASE_PATH =
@@ -174,7 +172,7 @@ export class NSFWJS {
       | HTMLCanvasElement
       | HTMLVideoElement,
     topk = 5
-  ): Promise<Array<{ className: string; probability: number }>> {
+  ): Promise<Array<predictionClass>> {
     const logits = this.infer(img) as tf.Tensor2D;
 
     const classes = await getTopKClasses(logits, topk);
@@ -194,39 +192,40 @@ export class NSFWJS {
   async classifyGif(
     gif: HTMLImageElement,
     config: classifyConfig = { topk: 5 }
-  ): Promise<Array<Array<{ className: string; probability: number }>>> {
-    let gifObj = new SuperGif({ gif });
-    return new Promise((resolve) => {
-      gifObj.load(async () => {
-        const arrayOfClasses = [];
-        const gifLength = gifObj.get_length();
-        for (let i = 1; i <= gifLength; i++) {
-          gifObj.move_to(i);
-          const classes = await this.classify(gifObj.get_canvas(), config.topk);
-          // Update to onFrame
-          if (config.onFrame)
-            config.onFrame({
-              index: i,
-              totalFrames: gifLength,
-              predictions: classes,
-            });
-          // Store the goods
-          arrayOfClasses.push(classes);
-        }
-        // save gifObj if needed
-        config.setGifControl && config.setGifControl(gifObj);
-        // try to clean up
-        gifObj = null;
-        resolve(arrayOfClasses);
-      });
-    });
+  ): Promise<Array<Array<predictionClass>>> {
+    const frameData = await gifFrames({ url: gif.src, frames: 'all', outputType: 'canvas' })
+    let acceptedFrames: number[] = []
+
+    if (config.fps) {
+      let totalTimeInMs = 0
+      for (let i = 0; i < frameData.length; i++) {
+        totalTimeInMs = totalTimeInMs + (frameData[i].frameInfo.delay * 10)
+      }
+
+      const totalFrames: number = Math.floor(totalTimeInMs / 1000 * config.fps)
+      const interval: number = Math.floor(frameData.length / totalFrames)
+
+      for (let i = 0; i <= totalFrames; i++) {
+        acceptedFrames.push(i * interval)
+      }
+    } else {
+      acceptedFrames = frameData.map((_e, i) => i)
+    }
+
+    const arrayOfClasses: predictionClass[][] = []
+    for (let i = 0; i < acceptedFrames.length; i++) {
+      const classes = await this.classify(frameData[acceptedFrames[i]].getImage(), config.topk);
+      arrayOfClasses.push(classes);
+    }
+
+    return arrayOfClasses
   }
 }
 
 async function getTopKClasses(
   logits: tf.Tensor2D,
   topK: number
-): Promise<Array<{ className: string; probability: number }>> {
+): Promise<Array<predictionClass>> {
   const values = await logits.data();
 
   const valuesAndIndices = [];
@@ -243,7 +242,7 @@ async function getTopKClasses(
     topkIndices[i] = valuesAndIndices[i].index;
   }
 
-  const topClassesAndProbs = [];
+  const topClassesAndProbs: predictionClass[] = [];
   for (let i = 0; i < topkIndices.length; i++) {
     topClassesAndProbs.push({
       className: NSFW_CLASSES[topkIndices[i]],
