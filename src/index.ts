@@ -203,10 +203,16 @@ export class NSFWJS {
       }
 
       const totalFrames: number = Math.floor(totalTimeInMs / 1000 * config.fps)
-      const interval: number = Math.floor(frameData.length / totalFrames)
 
-      for (let i = 0; i <= totalFrames; i++) {
-        acceptedFrames.push(i * interval)
+      if (totalFrames <= 1) {
+        acceptedFrames = [Math.floor(frameData.length / 2)]
+      } else if (totalFrames >= frameData.length) {
+        acceptedFrames = frameData.map((_e, i) => i)
+      } else {
+        const interval: number = Math.floor(frameData.length / totalFrames)
+        for (let i = 0; i < totalFrames; i++) {
+          acceptedFrames.push(i * interval)
+        }
       }
     } else {
       acceptedFrames = frameData.map((_e, i) => i)
