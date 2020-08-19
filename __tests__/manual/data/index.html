@@ -1,0 +1,148 @@
+
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Manual testing</title>
+  </head>
+  <body>
+    <div class="main">
+      <pre>Please wait ~10 secs and checkout console.log output for results</pre>
+
+      <div class="main-item">
+        <h3>Images</h3>
+        <div class="wrapper">
+          <div class="item">
+            <p>JPG image</p>
+            <img
+              crossorigin="anonymous"
+              class='images'
+              width="280"
+              height="250"
+              src="http://localhost/data/images/smile.jpg"
+            ></img>
+          </div>
+
+          <div class="item">
+            <p>PNG image</p>
+            <img
+              crossorigin="anonymous"
+              class='images'
+              width="280"
+              height="250"
+              src="http://localhost/data/images/glasses.png"
+            ></img>
+          </div>
+
+          <div class="item">
+            <p>WebP image</p>
+            <img
+              crossorigin="anonymous"
+              class='images'
+              width="280"
+              height="250"
+              src="http://localhost/data/images/house.webp"
+            ></img>
+          </div>
+
+          <div class="item">
+            <p>SVG image</p>
+            <img
+              crossorigin="anonymous"
+              class='images'
+              width="280"
+              height="250"
+              src="http://localhost/data/images/cat.svg"
+            ></img>
+          </div>
+        </div>
+      </div>
+
+      <div class="main-item">
+        <h3>Animations</h3>
+        <div class="wrapper">
+          <div class="item">
+            <p>GIF animation</p>
+            <img crossorigin="anonymous" class='animations' width="280" height="250" src="http://localhost/data/animations/smile.gif"></img>
+          </div>
+
+          <div class="item">
+            <p>WebP animation</p>
+            <img crossorigin="anonymous" class='animations' width="280" height="250" src="http://localhost/data/animations/smile.webp"></img>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      .main {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .wrapper {
+        display: flex;
+        justify-content: flex-start;
+      }
+
+      .item {
+        flex-direction: column;
+        margin-right: 40px;
+      }
+    </style>
+
+    <script
+      src="https://unpkg.com/@tensorflow/tfjs@1.7.4"
+      type="text/javascript"
+    ></script>
+    <script src="dist/nsfwjs.min.js"></script>
+
+    <script>
+      nsfwjs.load().then(model => {
+        const images = document.querySelectorAll('img')
+        for (let i = 0; i < images.length; i++) {
+          if (images[i].classList[0] === 'images') {
+            model.classify(images[i], 3)
+              .then(predictions => showResults(images[i], predictions, true))
+              .catch(error => showError(images[i], error))
+          }
+
+          if (images[i].classList[0] === 'animations') {
+            model.classifyGif(images[i], { topk: 3, fps: 1 })
+              .then(predictions => showResults(images[i], predictions))
+              .catch(error => showError(images[i], error))
+          }
+        }
+      })
+
+      function showResults(mediaElement, predictions, isSingle = false) {
+        if (isSingle) {
+          const html = predictions.map(({className, probability}) =>
+            `${className}: ${Math.round(probability * 10000) / 10000} `).join('')
+
+          const el = document.createElement('p')
+          el.style.cssText = 'font-size:13px;'
+          el.innerHTML = html
+          mediaElement.parentElement.append(el)
+        } else {
+          for (let j = 0; j < predictions.length; j++) {
+            const html = predictions[j].map(({className, probability}) =>
+              `${className}: ${Math.round(probability * 10000) / 10000} `).join('')
+
+            const el = document.createElement('p')
+            el.style.cssText = 'font-size:13px;'
+            el.innerHTML = html
+            mediaElement.parentElement.append(el)
+          }
+        }
+      }
+
+      function showError(mediaElement, error) {
+        const el = document.createElement('p')
+        el.style.cssText = 'font-size:13px;'
+        el.innerHTML = error.message
+        mediaElement.parentElement.append(el)
+        throw error
+      }
+    </script>
+  </body>
+</html>

@@ -3,3 +3,9 @@ dist/
 yarn-error.log
 .vscode
 .DS_Store
+
+__tests__/manual/data/*
+!__tests__/manual/data/index.html
+!__tests__/manual/data/animations/
+!__tests__/manual/data/images/
+!__tests__/manual/data/videos/
