@@ -1,6 +1,6 @@
 {
-  "name": "nsfwjs",
-  "version": "2.2.0",
+  "name": "@nsfw-filter/nsfwjs",
+  "version": "3.0.0",
   "unpkg": "dist/nsfwjs.min.js",
   "description": "Detect NSFW content client side",
   "main": "dist/index.js",
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/infinitered/nsfwjs.git"
+    "url": "git+https://github.com/nsfw-filter/nsfwjs.git"
   },
   "dependencies": {
     "gif-frames": "^1.0.1"
