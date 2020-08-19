@@ -1,5 +1,5 @@
 {
-  "name": "@nsfw-filter/nsfwjs",
+  "name": "nsfw-filter-nsfwjs",
   "version": "3.0.0",
   "unpkg": "dist/nsfwjs.min.js",
   "description": "Detect NSFW content client side",
