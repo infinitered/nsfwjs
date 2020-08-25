@@ -1,5 +1,5 @@
 {
-  "name": "nsfwjs",
+  "name": "@nsfw-filter/nsfwjs",
   "version": "2.2.0",
   "unpkg": "dist/nsfwjs.min.js",
   "description": "Detect NSFW content client side",
@@ -21,7 +21,7 @@
     "url": "git+https://github.com/infinitered/nsfwjs.git"
   },
   "dependencies": {
-    "gif-frames": "^1.0.1"
+    "@nsfw-filter/gif-frames": "1.0.2"
   },
   "peerDependencies": {
     "@tensorflow/tfjs": "^1.7.4"

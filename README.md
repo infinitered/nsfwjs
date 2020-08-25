@@ -159,9 +159,12 @@ Example of passing a configuration:
 // returns top 1 prediction of each GIF frame, and logs the status to console
 const myConfig = {
   topk: 1,
-  setGifControl: (gifControl) => console.log(gifControl),
-  onFrame: ({ index, totalFrames, predictions }) =>
-    console.log(index, totalFrames, predictions),
+  fps: 1,
+  onFrame: ({ index, totalFrames, predictions, image }) => {
+    console.log({ index, totalFrames, predictions })
+    // document.body.appendChild(image)
+    // require('fs').writeFileSync(`./file.jpeg`, require('jpeg-js').encode(image).data)
+  }
 }
 const framePredictions = await classifyGif(img, myConfig)
 ```
@@ -171,11 +174,12 @@ const framePredictions = await classifyGif(img, myConfig)
 - Image element to check
 - Configuration object with the following possible key/values:
   - `topk` - Number of results to return per frame (default all 5)
-  - `setGifControl` - Function callback receives SuperGif object as an argument, allows a user to save it for later use
+  - `fps` - Frames per seconds, frames picks proportionally from the middle (default all frames)
   - `onFrame` - Function callback on each frame - Param is an object with the following key/values:
-    - `index` - the current GIF frame that was classified (starting at 1)
+    - `index` - the current GIF frame that was classified (starting at 0)
     - `totalFrames` - the complete number of frames for this GIF (for progress calculations)
     - `predictions` - an array of length `topk`, returning top results from classify
+    - `image` - an image of specific frame
 
 **Returns**
 
@@ -313,7 +317,7 @@ You can also use [`lovell/sharp`](https://github.com/lovell/sharp) for preproces
 
 ### NSFW Filter
 
-[**NSFW Filter**](https://github.com/navendu-pottekkat/nsfw-filter) is a web extension that uses NSFWJS for filtering out NSFW images from your browser. 
+[**NSFW Filter**](https://github.com/navendu-pottekkat/nsfw-filter) is a web extension that uses NSFWJS for filtering out NSFW images from your browser.
 
 It is currently available for Chrome and Firefox and is completely open-source.
 
