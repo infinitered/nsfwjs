@@ -71,7 +71,6 @@ describe('NSFWJS classify GIF', () => {
   // Takes too long
   it.skip("All frames", async () => {
       const predictions = await model.classifyGif(buffer, { topk: 3 })
-      console.log(predictions.length)
       expect(predictions.length).toBe(190)
     },
     timeoutMS
