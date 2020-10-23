@@ -160,6 +160,16 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "YegorZaremba",
+      "name": "Yegor <3",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/31797554?v=4",
+      "profile": "https://github.com/YegorZaremba",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ],
   "contributorsPerLine": 7,
