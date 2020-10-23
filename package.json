@@ -1,8 +1,8 @@
 {
   "name": "nsfwjs",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "unpkg": "dist/nsfwjs.min.js",
-  "description": "Detect NSFW content client side",
+  "description": "Detect NSFW content client-side",
   "main": "dist/index.js",
   "scripts": {
     "test": "yarn build && jest",
@@ -14,7 +14,7 @@
     "contributors:generate": "all-contributors generate",
     "prep": "yarn && yarn build && cd example/nsfw_demo/ && yarn add ../../ && cd -",
     "scriptbundle": "browserify ./dist/nsfwjs.js --standalone nsfwjs --outfile ./dist/bundle.js",
-    "minbundle": "uglifyjs dist/bundle.js --compress --output dist/nsfwjs.min.js"
+    "minbundle": "terser dist/bundle.js --compress --mangle --output dist/nsfwjs.min.js"
   },
   "repository": {
     "type": "git",
@@ -24,10 +24,10 @@
     "@nsfw-filter/gif-frames": "1.0.2"
   },
   "peerDependencies": {
-    "@tensorflow/tfjs": "^1.7.4"
+    "@tensorflow/tfjs": "^2.6.0"
   },
   "devDependencies": {
-    "@tensorflow/tfjs": "^1.7.4",
+    "@tensorflow/tfjs": "^2.6.0",
     "@types/jest": "^26.0.0",
     "all-contributors-cli": "^6.1.2",
     "babel-core": "^6.26.0",
@@ -42,8 +42,8 @@
     "ts-jest": "^25.2.1",
     "ts-node": "~8.10.1",
     "tslint": "~6.1.0",
-    "typescript": "3.9.7",
-    "uglify-js": "^3.6.0"
+    "terser": "^5.3.8",
+    "typescript": "3.9.7"
   },
   "keywords": [
     "NSFW",

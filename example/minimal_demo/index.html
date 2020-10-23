@@ -1,26 +1,26 @@
 <!-- Load TensorFlow.js. This is required -->
 <script
-  src="https://unpkg.com/@tensorflow/tfjs@1.2.8"
+  src="https://unpkg.com/@tensorflow/tfjs@2.6.0"
   type="text/javascript"
 ></script>
-<script src="https://unpkg.com/nsfwjs@2.1.0" type="text/javascript"></script>
+<script src="https://unpkg.com/nsfwjs@2.3.0" type="text/javascript"></script>
 
 <!-- For testing: Load from local bundle `yarn scriptbundle && yarn minbundle` -->
 <!-- <script src="../../dist/nsfwjs.min.js"></script> -->
 
 <script>
   // const nsfwjs = require('nsfwjs')
-  const img = new Image()
-  img.crossOrigin = 'anonymous'
+  const img = new Image();
+  img.crossOrigin = "anonymous";
   // some image here
-  img.src = 'https://i.imgur.com/Kwxetau.jpg'
+  img.src = "https://i.imgur.com/Kwxetau.jpg";
 
   // Load the model.
-  nsfwjs.load().then(model => {
+  nsfwjs.load().then((model) => {
     // Classify the image.
-    model.classify(img).then(predictions => {
-      console.log('Predictions', predictions)
-    })
-  })
+    model.classify(img).then((predictions) => {
+      console.log("Predictions", predictions);
+    });
+  });
 </script>
 <pre>Checkout console.log output for results!</pre>
