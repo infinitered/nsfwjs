@@ -170,6 +170,15 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "navendu-pottekkat",
+      "name": "Navendu Pottekkat",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/49474499?v=4",
+      "profile": "http://navendu.me",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
