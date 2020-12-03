@@ -40,7 +40,7 @@
     "np": "^5.0.0",
     "seedrandom": "~3.0.3",
     "ts-jest": "^25.2.1",
-    "ts-node": "~8.10.1",
+    "ts-node": "~9.1.0",
     "tslint": "~6.1.0",
     "terser": "^5.3.8",
     "typescript": "3.9.7"
