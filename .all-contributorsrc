@@ -179,6 +179,16 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "VladStepanov",
+      "name": "Vladislav",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/49880862?v=4",
+      "profile": "https://github.com/VladStepanov",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
