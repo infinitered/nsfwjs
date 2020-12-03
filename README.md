@@ -77,12 +77,14 @@ const img = document.getElementById('img')
 
 // Load model from my S3.
 // See the section hosting the model files on your site.
-nsfwjs.load().then(function (model) {
-  model.classify(img).then(function (predictions) {
+nsfwjs.load()
+  .then(function (model) {
     // Classify the image
+    return model.classify(img)
+  })
+  .then(function (predictions) {
     console.log('Predictions: ', predictions)
   })
-})
 ```
 
 ## Library API
