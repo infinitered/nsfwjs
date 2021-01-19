@@ -189,6 +189,15 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "nacht42",
+      "name": "Nacht",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/37903575?v=4",
+      "profile": "https://github.com/nacht42",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
