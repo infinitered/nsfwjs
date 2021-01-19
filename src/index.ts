@@ -21,7 +21,7 @@ interface nsfwjsOptions {
 }
 
 export type predictionType = {
-  className: string
+  className: typeof NSFW_CLASSES[keyof typeof NSFW_CLASSES]
   probability: number
 }
 
