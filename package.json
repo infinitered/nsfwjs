@@ -43,7 +43,7 @@
     "ts-node": "~9.1.0",
     "tslint": "~6.1.0",
     "terser": "^5.3.8",
-    "typescript": "3.9.8"
+    "typescript": "3.9.9"
   },
   "keywords": [
     "NSFW",
