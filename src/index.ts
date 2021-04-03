@@ -65,7 +65,11 @@ export class NSFWJS {
     this.options = options;
     this.normalizationOffset = tf.scalar(255);
 
-    if (typeof modelPathBaseOrIOHandler === "string") {
+    if (
+      typeof modelPathBaseOrIOHandler === "string" &&
+      !modelPathBaseOrIOHandler.startsWith("indexeddb://") &&
+      !modelPathBaseOrIOHandler.startsWith("localstorage://")
+    ) {  
       this.pathOrIOHandler = `${modelPathBaseOrIOHandler}model.json`;
     } else {
       this.pathOrIOHandler = modelPathBaseOrIOHandler;
