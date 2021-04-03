@@ -50,12 +50,11 @@ interface IOHandler {
 
 export class NSFWJS {
   public endpoints: string[];
+  public model: tf.LayersModel | tf.GraphModel;
 
   private options: nsfwjsOptions;
   private pathOrIOHandler: string | IOHandler;
-  private model: tf.LayersModel | tf.GraphModel;
   private intermediateModels: { [layerName: string]: tf.LayersModel } = {};
-
   private normalizationOffset: tf.Scalar;
 
   constructor(
