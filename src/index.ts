@@ -50,12 +50,11 @@ interface IOHandler {
 
 export class NSFWJS {
   public endpoints: string[];
+  public model: tf.LayersModel | tf.GraphModel;
 
   private options: nsfwjsOptions;
   private pathOrIOHandler: string | IOHandler;
-  private model: tf.LayersModel | tf.GraphModel;
   private intermediateModels: { [layerName: string]: tf.LayersModel } = {};
-
   private normalizationOffset: tf.Scalar;
 
   constructor(
@@ -65,7 +64,11 @@ export class NSFWJS {
     this.options = options;
     this.normalizationOffset = tf.scalar(255);
 
-    if (typeof modelPathBaseOrIOHandler === "string") {
+    if (
+      typeof modelPathBaseOrIOHandler === "string" &&
+      !modelPathBaseOrIOHandler.startsWith("indexeddb://") &&
+      !modelPathBaseOrIOHandler.startsWith("localstorage://")
+    ) {  
       this.pathOrIOHandler = `${modelPathBaseOrIOHandler}model.json`;
     } else {
       this.pathOrIOHandler = modelPathBaseOrIOHandler;

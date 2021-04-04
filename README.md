@@ -115,6 +115,14 @@ Model example - [Graph](https://github.com/infinitered/nsfwjs/tree/master/exampl
 const model = nsfwjs.load('/path/to/different/model/', { type: 'graph' })
 ```
 
+If you're using in the browser and you'd like to subsequently load from indexed db or local storage you can save the underlying model using the appropriate scheme and load from there.
+
+```js
+const initialLoad = await nsfwjs.load('/path/to/different/model')
+await initialLoad.model.save('indexeddb://model')
+const model = await nsfwjs.load('indexeddb://model')
+```
+
 **Parameters**
 
 - optional URL to the `model.json` folder.
