@@ -198,6 +198,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "kateinkim",
+      "name": "kateinkim",
+      "avatar_url": "https://avatars.githubusercontent.com/u/53795920?v=4",
+      "profile": "https://github.com/kateinkim",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
