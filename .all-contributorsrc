@@ -208,6 +208,15 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "JanPoonthong",
+      "name": "jan",
+      "avatar_url": "https://avatars.githubusercontent.com/u/56725335?v=4",
+      "profile": "https://janpoonthong.github.io/portfolio/",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
