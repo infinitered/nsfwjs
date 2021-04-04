@@ -1,6 +1,6 @@
 {
   "name": "nsfwjs",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "unpkg": "dist/nsfwjs.min.js",
   "description": "Detect NSFW content client-side",
   "main": "dist/index.js",
@@ -39,10 +39,10 @@
     "node-fetch": "^2.3.0",
     "np": "^5.0.0",
     "seedrandom": "~3.0.3",
+    "terser": "^5.3.8",
     "ts-jest": "^25.2.1",
     "ts-node": "~9.1.0",
     "tslint": "~6.1.0",
-    "terser": "^5.3.8",
     "typescript": "3.9.9"
   },
   "keywords": [
