@@ -333,6 +333,12 @@ It is currently available for Chrome and Firefox and is completely open-source.
 
 Check out the project [here](https://github.com/navendu-pottekkat/nsfw-filter).
 
+## Learn TensorFlow.js
+
+Learn how to write your own library like NSFWJS with my O'Reilly book "Learning TensorFlow.js" available on [O'Reilly](https://learning.oreilly.com/library/view/learning-tensorflowjs/9781492090786/) and [Amazon](https://amzn.to/3dR3vpY).
+
+[![Learning TensorFlow.js JavaScript Book Red](_art/red_mockup_top.jpg)](https://amzn.to/3dR3vpY)
+
 ## More!
 
 An [FAQ](https://github.com/infinitered/nsfwjs/wiki/FAQ:-NSFW-JS) page is available.
