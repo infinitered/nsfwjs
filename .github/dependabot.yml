@@ -1,0 +1,20 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "13:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: np
+    versions:
+    - 7.3.0
+    - 7.4.0
+    - 7.5.0
+  - dependency-name: "@types/jest"
+    versions:
+    - 26.0.23
+  - dependency-name: "@tensorflow/tfjs"
+    versions:
+    - 3.0.0
