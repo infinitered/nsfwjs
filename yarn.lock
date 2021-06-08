@@ -2296,15 +2296,15 @@ diffie-hellman@^5.0.0:
     randombytes "^2.0.0"
 
 doctoc@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/doctoc/-/doctoc-2.0.0.tgz#3c5c51ba89acb9b8e1924cc429500d6de2dfb90e"
-  integrity sha512-thvCndtwVPe3GCDUG09NYPu9D72Ons3MFh/Fe5A3bePMHGa1XSMgJWyL04bkxa0DyyaylEB2UrqigbQM0fcj7w==
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/doctoc/-/doctoc-2.0.1.tgz#d5aee2bce65a438ff8717d9e51df3d540caa3b78"
+  integrity sha512-JsxnSVZtLCThKehjFPBDhP1+ZLmdfXQynZH/0ABAwrnd1Zf3AV6LigC9oWJyaZ+c6RXCDnlGUNJ7I+1v8VaaRg==
   dependencies:
     "@textlint/markdown-to-ast" "~6.1.7"
     anchor-markdown-header "~0.5.7"
     htmlparser2 "~4.1.0"
     minimist "~1.2.5"
-    underscore "~1.10.2"
+    underscore "~1.12.1"
     update-section "~0.3.3"
 
 dom-serializer@^1.0.1:
@@ -6531,10 +6531,10 @@ undeclared-identifiers@^1.1.2:
     simple-concat "^1.0.0"
     xtend "^4.0.1"
 
-underscore@~1.10.2:
-  version "1.10.2"
-  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.10.2.tgz#73d6aa3668f3188e4adb0f1943bd12cfd7efaaaf"
-  integrity sha512-N4P+Q/BuyuEKFJ43B9gYuOj4TQUHXX+j2FqguVOpjkssLUUrnJofCcBccJSCoeturDoZU6GorDTHSvUDlSQbTg==
+underscore@~1.12.1:
+  version "1.12.1"
+  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.12.1.tgz#7bb8cc9b3d397e201cf8553336d262544ead829e"
+  integrity sha512-hEQt0+ZLDVUMhebKxL4x1BTtDY7bavVofhZ9KZ4aI26X9SRaE+Y3m83XUL1UP2jn8ynjndwCCpEHdUG+9pP1Tw==
 
 unherit@^1.0.4:
   version "1.1.3"
