@@ -391,7 +391,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://janpoonthong.github.io/portfolio/"><img src="https://avatars.githubusercontent.com/u/56725335?v=4" width="100px;" alt=""/><br /><sub><b>jan</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=JanPoonthong" title="Documentation">📖</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/roerohan"><img src="https://avatars.githubusercontent.com/u/42958812?v=4" width="100px;" alt=""/><br /><sub><b>Rohan Mukherjee</b></sub></a><br /><a href="#question-roerohan" title="Answering Questions">💬</a> <a href="#infra-roerohan" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-roerohan" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://github.com/roerohan"><img src="https://avatars.githubusercontent.com/u/42958812?v=4" width="100px;" alt=""/><br /><sub><b>Rohan Mukherjee</b></sub></a><br /><a href="#question-roerohan" title="Answering Questions">💬</a> <a href="#infra-roerohan" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-roerohan" title="Maintenance">🚧</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=roerohan" title="Code">💻</a></td>
   </tr>
 </table>
 

@@ -226,7 +226,8 @@
       "contributions": [
         "question",
         "infra",
-        "maintenance"
+        "maintenance",
+        "code"
       ]
     }
   ],
