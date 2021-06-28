@@ -217,7 +217,7 @@ footer {
   color: white;
   font-size: 1.2em;
   align-items: center;
-  padding-bottom: 50px;
+  padding-bottom: 100px;
 }
 
 .modelPicker p {
@@ -259,7 +259,7 @@ footer a:hover {
   }
 
   #camDescription:after {
-    content: "Cam";
+    content: 'Cam';
   }
 
   #blurDescription span {
@@ -267,7 +267,7 @@ footer a:hover {
   }
 
   #blurDescription:after {
-    content: "Protection";
+    content: 'Protection';
   }
 
   #switchStation {
@@ -275,7 +275,7 @@ footer a:hover {
   }
 
   #topMessage:after {
-    content: " - On mobile tap to add";
+    content: ' - On mobile tap to add';
   }
 
   #predictions {
