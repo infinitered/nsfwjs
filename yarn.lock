@@ -2336,9 +2336,9 @@ diffie-hellman@^5.0.0:
     randombytes "^2.0.0"
 
 doctoc@^2.0.0:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/doctoc/-/doctoc-2.0.1.tgz#d5aee2bce65a438ff8717d9e51df3d540caa3b78"
-  integrity sha512-JsxnSVZtLCThKehjFPBDhP1+ZLmdfXQynZH/0ABAwrnd1Zf3AV6LigC9oWJyaZ+c6RXCDnlGUNJ7I+1v8VaaRg==
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/doctoc/-/doctoc-2.1.0.tgz#e7cbcd1f9e65519c295461423b2e7195d9e0d7ab"
+  integrity sha512-0darEVEuWKLyIlpGOzE5cILf/pgUu25qUs6YwCqLqfxb8+3b9Cl4iakA8vwYrBQOkJ5SwpHKEPVMu2KOMrTA7A==
   dependencies:
     "@textlint/markdown-to-ast" "~6.1.7"
     anchor-markdown-header "~0.5.7"
