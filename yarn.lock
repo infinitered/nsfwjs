@@ -6317,9 +6317,9 @@ terminal-link@^2.0.0:
     supports-hyperlinks "^2.0.0"
 
 terser@^5.3.8:
-  version "5.8.0"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.8.0.tgz#c6d352f91aed85cc6171ccb5e84655b77521d947"
-  integrity sha512-f0JH+6yMpneYcRJN314lZrSwu9eKkUFEHLN/kNy8ceh8gaRiLgFPJqrB9HsXjhEGdv4e/ekjTOFxIlL6xlma8A==
+  version "5.10.0"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.10.0.tgz#b86390809c0389105eb0a0b62397563096ddafcc"
+  integrity sha512-AMmF99DMfEDiRJfxfY5jj5wNH/bYO09cniSqhfoyxc8sFoYIgkJy86G04UoZU5VjlpnplVu0K6Tx6E9b5+DlHA==
   dependencies:
     commander "^2.20.0"
     source-map "~0.7.2"
