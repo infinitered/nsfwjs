@@ -351,9 +351,12 @@ The [model was trained in Keras over several days](https://medium.freecodecamp.o
 
 NSFWJS, as open source, is free to use and always will be :heart:. It's MIT licensed, and we'll always do our best to help and quickly answer issues. If you'd like to get a hold of us, join our [community slack](http://community.infinite.red).
 
-#### Premium
+#### Need the experts? Hire Infinite Red for your next project
 
-[Infinite Red](https://infinite.red/) offers premium training and support. Email us at [hello@infinite.red](mailto:hello@infinite.red) to get in touch.
+If your project's calling for the experts in all things React Native, Infinite Red’s here to help! Our experienced team of software engineers have worked with companies like Microsoft, Zoom, and Mercari to bring even some of the most complex projects to life.
+
+Whether it’s running a full project or training a team on React Native, we can help you solve your company’s toughest engineering challenges – and make it a great experience at the same time.
+Ready to see how we can work together? [Send us a message](mailto:hello@infinite.red)
 
 ## Contributors
 
