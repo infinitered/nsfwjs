@@ -69,7 +69,7 @@ export class NSFWJS {
       !modelPathBaseOrIOHandler.startsWith("indexeddb://") &&
       !modelPathBaseOrIOHandler.startsWith("localstorage://")
     ) {
-      if (modelPathBaseOrIOHandler.includes("model.json")) {
+      if (modelPathBaseOrIOHandler.endsWith("model.json")) {
         this.pathOrIOHandler = modelPathBaseOrIOHandler;
       } else {
         this.pathOrIOHandler = `${modelPathBaseOrIOHandler}model.json`;
