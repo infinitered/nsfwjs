@@ -68,8 +68,12 @@ export class NSFWJS {
       typeof modelPathBaseOrIOHandler === "string" &&
       !modelPathBaseOrIOHandler.startsWith("indexeddb://") &&
       !modelPathBaseOrIOHandler.startsWith("localstorage://")
-    ) {  
-      this.pathOrIOHandler = `${modelPathBaseOrIOHandler}model.json`;
+    ) {
+      if (modelPathBaseOrIOHandler.endsWith("model.json")) {
+        this.pathOrIOHandler = modelPathBaseOrIOHandler;
+      } else {
+        this.pathOrIOHandler = `${modelPathBaseOrIOHandler}model.json`;
+      }
     } else {
       this.pathOrIOHandler = modelPathBaseOrIOHandler;
     }
