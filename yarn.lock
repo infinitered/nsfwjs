@@ -2011,7 +2011,7 @@ core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
 
-cosmiconfig@^5.1.0:
+cosmiconfig@^5.2.1:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/cosmiconfig/-/cosmiconfig-5.2.1.tgz#040f726809c591e77a17c0a3626ca45b4f168b1a"
   integrity sha512-H65gsXo1SKjf8zmrJ67eJk8aIRKV5ff2D4uKZIBZShbhGSpEmsQOPW/SKMKYhSTrqR7ufy6RP69rPogdaPh/kA==
@@ -4636,17 +4636,18 @@ normalize-url@^3.1.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-3.3.0.tgz#b2e1c4dc4f7c6d57743df733a4f5978d18650559"
 
-np@5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/np/-/np-5.0.1.tgz#54ac5347691d3dfc3ee0f0780d5a425ee2a692c1"
-  integrity sha512-2TiY5X0hbQEevPV0WjJ4Os0hjt+Ja3P7cDtiAqBU3jSgyT33Uv6P0g8lIkwLzeTaA8KJe9ykpszjB8DOo27m5Q==
+np@5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/np/-/np-5.0.2.tgz#3a01ba5dca317ba2435e11bf4496b9bab6ef8d1f"
+  integrity sha512-LH+cjmoenSP8d8SB15RXcNQHNDihh9o6YLP3I/bmnetgxG18RmWPdFdOxzTyHcOfFPpFB9aylypwUx5PfoMxwA==
   dependencies:
     "@samverschueren/stream-to-observable" "^0.3.0"
     any-observable "^0.3.0"
     async-exit-hook "^2.0.1"
     chalk "^2.3.0"
-    cosmiconfig "^5.1.0"
+    cosmiconfig "^5.2.1"
     del "^4.1.0"
+    escape-string-regexp "^2.0.0"
     execa "^1.0.0"
     github-url-from-git "^1.5.0"
     has-yarn "^2.1.0"
