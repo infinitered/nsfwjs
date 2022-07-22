@@ -4,11 +4,6 @@
   "unpkg": "dist/nsfwjs.min.js",
   "description": "Detect NSFW content client-side",
   "main": "dist/index.js",
-  "engines": {
-		"node": ">=8",
-		"npm": ">=6.8.0",
-		"yarn": ">=1.7.0"
-	},
   "scripts": {
     "test": "yarn build && jest",
     "lint": "tslint -p . -t verbose",
@@ -42,7 +37,7 @@
     "jest": "^28.1.3",
     "jpeg-js": "^0.4.4",
     "node-fetch": "^2.6.7",
-    "np": "^7.6.2",
+    "np": "^5.0.0",
     "seedrandom": "~3.0.5",
     "terser": "^5.14.2",
     "ts-jest": "^28.0.7",
