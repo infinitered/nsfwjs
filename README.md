@@ -4,7 +4,7 @@
 </p>
 
 [![All Contributors](https://img.shields.io/badge/all_contributors-15-green.svg?style=flat-square)](#contributors)
-[![Travis CI](https://travis-ci.com/infinitered/nsfwjs.svg?branch=master)](https://travis-ci.com/github/infinitered/nsfwjs)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/infinitered/nsfwjs/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/infinitered/nsfwjs/tree/master)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/72d19dc0-d316-4f75-9904-a33d833ff628/deploy-status)](https://app.netlify.com/sites/nsfwjs/deploys)
 
 A simple JavaScript library to help you quickly identify unseemly images; all in the client's browser. NSFWJS isn't perfect, but it's pretty accurate (~90% with small and ~93% with midsized model)... and it's getting more accurate all the time.
