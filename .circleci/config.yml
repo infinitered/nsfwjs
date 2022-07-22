@@ -1,0 +1,53 @@
+version: 2.1
+
+jobs:
+  lint:
+    docker:
+      - image: cimg/node:14.19
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore node modules
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}-{{ arch }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+      - run:
+          name: Install dependencies
+          command: yarn install
+      - save_cache:
+          name: Save node modules
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}-{{ arch }}
+      - run:
+          name: Lint
+          command: yarn lint
+  test:
+    docker:
+      - image: cimg/node:14.19
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore node modules
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}-{{ arch }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+      - run:
+          name: Install dependencies
+          command: yarn install
+      - save_cache:
+          name: Save node modules
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}-{{ arch }}
+      - run:
+          name: Test
+          command: yarn test
+
+workflows:
+  nsfw-ci:
+    jobs:
+      - lint
+      - test
