@@ -1049,12 +1049,12 @@ all-contributors-cli@^6.20.0:
     pify "^5.0.0"
     yargs "^15.0.1"
 
-anchor-markdown-header@^0.5.7:
-  version "0.5.7"
-  resolved "https://registry.yarnpkg.com/anchor-markdown-header/-/anchor-markdown-header-0.5.7.tgz#045063d76e6a1f9cd327a57a0126aa0fdec371a7"
-  integrity sha1-BFBj125qH5zTJ6V6ASaqD97Dcac=
+anchor-markdown-header@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/anchor-markdown-header/-/anchor-markdown-header-0.6.0.tgz#908f2031281766f44ac350380ca0de77ab7065b8"
+  integrity sha512-v7HJMtE1X7wTpNFseRhxsY/pivP4uAJbidVhPT+yhz4i/vV1+qx371IXuV9V7bN6KjFtheLJxqaSm0Y/8neJTA==
   dependencies:
-    emoji-regex "~6.1.0"
+    emoji-regex "~10.1.0"
 
 ansi-align@^2.0.0:
   version "2.0.0"
@@ -2297,12 +2297,12 @@ diffie-hellman@^5.0.0:
     randombytes "^2.0.0"
 
 doctoc@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/doctoc/-/doctoc-2.2.0.tgz#27f23eb75d109d29722d449efbcde3854cb0eabf"
-  integrity sha512-PtiyaS+S3kcMbpx6x2V0S+PeDKisxmjEFnZsuYkkj4Lh3ObozJuuYh9dM4+sX02Ouuty8RF2LOCnIbpu/hWy/A==
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/doctoc/-/doctoc-2.2.1.tgz#83f6a6bf4df97defbe027c9a82d13091a138ffe2"
+  integrity sha512-qNJ1gsuo7hH40vlXTVVrADm6pdg30bns/Mo7Nv1SxuXSM1bwF9b4xQ40a6EFT/L1cI+Yylbyi8MPI4G4y7XJzQ==
   dependencies:
     "@textlint/markdown-to-ast" "^12.1.1"
-    anchor-markdown-header "^0.5.7"
+    anchor-markdown-header "^0.6.0"
     htmlparser2 "^7.2.0"
     minimist "^1.2.6"
     underscore "^1.13.2"
@@ -2417,10 +2417,10 @@ emoji-regex@^8.0.0:
   resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-8.0.0.tgz#e818fd69ce5ccfcb404594f842963bf53164cc37"
   integrity sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==
 
-emoji-regex@~6.1.0:
-  version "6.1.3"
-  resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-6.1.3.tgz#ec79a3969b02d2ecf2b72254279bf99bc7a83932"
-  integrity sha1-7HmjlpsC0uzytyJUJ5v5m8eoOTI=
+emoji-regex@~10.1.0:
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-10.1.0.tgz#d50e383743c0f7a5945c47087295afc112e3cf66"
+  integrity sha512-xAEnNCT3w2Tg6MA7ly6QqYJvEoY1tm9iIjJ3yMKK9JPlWuRHAMoe5iETwQnx3M9TVbFMfsrBgWKR+IsmswwNjg==
 
 end-of-stream@^1.1.0:
   version "1.4.1"
