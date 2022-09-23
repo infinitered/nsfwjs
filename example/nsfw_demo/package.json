@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@tensorflow/tfjs": "^2.6.0",
-    "nsfwjs": "../../",
+    "nsfwjs": "2.4.2",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-dropdown": "^1.6.4",

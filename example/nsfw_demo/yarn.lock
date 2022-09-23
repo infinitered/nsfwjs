@@ -6033,8 +6033,10 @@ npmlog@^4.0.2:
     gauge "~2.7.3"
     set-blocking "~2.0.0"
 
-nsfwjs@../../:
-  version "2.4.1"
+nsfwjs@2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/nsfwjs/-/nsfwjs-2.4.2.tgz#dd8656705f79f53d789245eaf317d6b6818a0032"
+  integrity sha512-i4Pp2yt59qPQgeZFyg3wXFBX52uSeu/hkDoqdZfe+sILRxNBUu0VDogj7Lmqak0GlrXviS/wLiVeIx40IDUu7A==
   dependencies:
     "@nsfw-filter/gif-frames" "1.0.2"
 
