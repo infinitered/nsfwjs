@@ -9,19 +9,22 @@
     "react-dom": "^16.8.1",
     "react-dropdown": "^1.6.4",
     "react-dropzone": "^7.0.1",
-    "react-scripts": "2.1.5",
+    "react-scripts": "5.0.0",
     "react-spinkit": "^3.0.0",
     "react-switch": "^4.1.0",
     "react-webcam": "^1.1.0",
     "seedrandom": "^3.0.1",
     "tether-drop": "^1.4.2",
-    "victory": "^36.0.0"
+    "victory": "^36.0.0",
+    "@snyk/protect": "latest"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts --openssl-legacy-provider build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prepare": "yarn run snyk-protect",
+    "snyk-protect": "snyk-protect"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -31,5 +34,6 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "snyk": true
 }
