@@ -24,10 +24,10 @@
     "@nsfw-filter/gif-frames": "1.0.2"
   },
   "peerDependencies": {
-    "@tensorflow/tfjs": "^3.18.0"
+    "@tensorflow/tfjs": "^4.0.0"
   },
   "devDependencies": {
-    "@tensorflow/tfjs": "^3.18.0",
+    "@tensorflow/tfjs": "^4.0.0",
     "@types/jest": "^28.1.6",
     "all-contributors-cli": "^6.20.0",
     "babel-core": "^6.26.3",
