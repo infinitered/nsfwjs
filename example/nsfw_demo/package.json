@@ -9,7 +9,7 @@
     "react-dom": "^16.8.1",
     "react-dropdown": "^1.6.4",
     "react-dropzone": "^7.0.1",
-    "react-scripts": "2.1.5",
+    "react-scripts": "4.0.0",
     "react-spinkit": "^3.0.0",
     "react-switch": "^4.1.0",
     "react-webcam": "^1.1.0",
