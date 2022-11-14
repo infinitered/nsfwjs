@@ -30,7 +30,7 @@ const BASE_PATH =
   "https://d1zv2aa70wpiur.cloudfront.net/tfjs_quant_nsfw_mobilenet/";
 const IMAGE_SIZE = 224; // default to Mobilenet v2
 
-export async function load(base = BASE_PATH, options = { size: IMAGE_SIZE }) {
+export async function load(base = BASE_PATH, options: nsfwjsOptions = { size: IMAGE_SIZE }) {
   if (tf == null) {
     throw new Error(
       `Cannot find TensorFlow.js. If you are using a <script> tag, please ` +
