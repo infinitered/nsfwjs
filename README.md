@@ -218,7 +218,7 @@ $ yarn add @tensorflow/tfjs
 $ yarn add nsfwjs
 ```
 
-For script tags add <script type="text/javascript" src="https://unpkg.com/nsfwjs"></script>. Then simply access the nsfwjs global variable. This requires that you've already imported TensorFlow.js as well.
+For script tags add `<script type="text/javascript" src="https://unpkg.com/nsfwjs"></script>`. Then simply access the nsfwjs global variable. This requires that you've already imported TensorFlow.js as well.
 
 #### Host your own model
 
