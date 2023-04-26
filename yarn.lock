@@ -1033,9 +1033,9 @@ ajv@^6.5.5:
     uri-js "^4.2.2"
 
 all-contributors-cli@^6.20.0:
-  version "6.24.0"
-  resolved "https://registry.yarnpkg.com/all-contributors-cli/-/all-contributors-cli-6.24.0.tgz#25c480c5c6e921532873114c2d6487816e6c22e0"
-  integrity sha512-7oSKr2PnqxsOotuSwciltcFTS1eVRdjR0cn99hbElfff7gRQBShVhsf/XBprY41sLcgqTk0l0MKgKv6QNgZdMg==
+  version "6.25.0"
+  resolved "https://registry.yarnpkg.com/all-contributors-cli/-/all-contributors-cli-6.25.0.tgz#e6bcd79e8ad51826250a70933bad8f9628a927f9"
+  integrity sha512-vsMPLmpnYxzUV0Em/4RNmrnmCruUnIWcY10I0QNRUU9A0275VEuJTVhICi/L2V6foIemwog3ZeNfNV9qeetfsw==
   dependencies:
     "@babel/runtime" "^7.7.6"
     async "^3.1.0"
