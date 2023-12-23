@@ -224,6 +224,11 @@ For script tags add `<script type="text/javascript" src="https://unpkg.com/nsfwj
 
 The magic that powers NSFWJS is the [NSFW detection model](https://github.com/gantman/nsfw_model). By default, this node module is pulling from my S3, but I make no guarantees that I'll keep that download link available forever. It's best for the longevity of your project that you download and host your own version of [the model files](https://github.com/infinitered/nsfwjs/tree/master/example/nsfw_demo/public/model). You can then pass the relative URL to your hosted files in the `load` function. If you can come up with a way to bundle the model into the NPM package, I'd love to see a PR to this repo!
 
+Here is how to install the default model on a website:
+1. Download the project directly into a subdomain such as labs.site.com: `git clone https://github.com/infinitered/nsfwjs.git`. Do not download it as a zip file or manually; this is important.
+2. Retrieve the URL (example: https://labs.site.com/nsfwjs/example/nsfw_demo/public/quant_nsfw_mobilenet/) and put it into `nsfwjs.load('<url>')`.
+3. It should work normally by launching `node server`.
+
 ## Run the Examples
 
 ### Tensorflow.js in the browser
