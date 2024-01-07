@@ -1,16 +1,16 @@
-import React, { Component } from 'react'
-import logo from './logo.svg'
-import './App.css'
 import * as nsfwjs from 'nsfwjs'
+import React, { Component } from 'react'
 import Dropzone from 'react-dropzone'
 import Webcam from 'react-webcam'
+import './App.css'
+import logo from './logo.svg'
 
 // components
-import Underdrop from './components/Underdrop'
-import Loading from './components/Loading'
-import Header from './components/Header'
 import Footer from './components/Footer'
+import Header from './components/Header'
+import Loading from './components/Loading'
 import Results from './components/Results'
+import Underdrop from './components/Underdrop'
 
 const blurred = { filter: 'blur(30px)', WebkitFilter: 'blur(30px)' }
 const clean = {}
@@ -18,12 +18,6 @@ const loadingMessage = 'Loading NSFWJS Model'
 const dragMessage = 'Drag and drop an image to check'
 const camMessage = 'Cam active'
 const DETECTION_PERIOD = 1000
-
-const availableModels = {
-  mobilenetv2: ['/quant_nsfw_mobilenet/'],
-  mobilenetMid: ['/quant_mid/', { type: 'graph' }],
-  inceptionv3: ['/model/', { size: 299 }],
-}
 
 class App extends Component {
   state = {
@@ -39,7 +33,7 @@ class App extends Component {
     fileType: null,
     hardReset: false,
     gifControl: null,
-    currentModelName: 'mobilenetMid',
+    currentModelName: 'MobileNetMid',
   }
 
   componentDidMount() {
@@ -50,7 +44,7 @@ class App extends Component {
     this.setState({ currentModelName: value }, this._loadModel)
   }
 
-  _loadModel = () => {
+  _loadModel = async () => {
     this.setState({
       titleMessage: 'Please hold, the model is loading...',
       message: loadingMessage,
@@ -61,8 +55,8 @@ class App extends Component {
       loading: true,
     })
     // Load model from public folder
-    nsfwjs
-      .load(...availableModels[this.state.currentModelName])
+    await nsfwjs
+      .load(this.state.currentModelName)
       .then((model) => {
         this.setState({
           model,

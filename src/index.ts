@@ -1,51 +1,179 @@
+import gifFrames, {
+  GifFrameBuffer,
+  GifFrameCanvas,
+} from "@nsfw-filter/gif-frames";
 import * as tf from "@tensorflow/tfjs";
 import { NSFW_CLASSES } from "./nsfw_classes";
-import gifFrames, { GifFrameCanvas, GifFrameBuffer } from "@nsfw-filter/gif-frames";
+
+type IOHandler = tf.io.IOHandler;
+type ModelJSON = tf.io.ModelJSON;
+type ModelArtifacts = tf.io.ModelArtifacts;
+type WeightDataBase64 = { [x: string]: string };
 
 export type frameResult = {
   index: number;
   totalFrames: number;
   predictions: Array<predictionType>;
   image: HTMLCanvasElement | ImageData;
-}
+};
 
 export type classifyConfig = {
   topk?: number;
   fps?: number;
   onFrame?: (result: frameResult) => any;
-}
+};
 
-interface nsfwjsOptions {
+export interface nsfwjsOptions {
   size?: number;
   type?: string;
 }
 
 export type predictionType = {
-  className: typeof NSFW_CLASSES[keyof typeof NSFW_CLASSES]
-  probability: number
-}
+  className: (typeof NSFW_CLASSES)[keyof typeof NSFW_CLASSES];
+  probability: number;
+};
 
-const BASE_PATH =
-  // OLD S3 "https://s3.amazonaws.com/ir_public/nsfwjscdn/TFJS_nsfw_mobilenet/tfjs_quant_nsfw_mobilenet/";
-  "https://d1zv2aa70wpiur.cloudfront.net/tfjs_quant_nsfw_mobilenet/";
+export type ModelName = "MobileNetV2" | "MobileNetMid" | "InceptionV3";
+
+type ModelConfig = {
+  [key in ModelName]: {
+    path: string;
+    numOfWeightFiles: number;
+    options?: nsfwjsOptions;
+  };
+};
+
+const availableModels: ModelConfig = {
+  MobileNetV2: { path: "quant_nsfw_mobilenet", numOfWeightFiles: 1 },
+  MobileNetMid: {
+    path: "quant_mid",
+    numOfWeightFiles: 2,
+    options: { type: "graph" },
+  },
+  InceptionV3: { path: "model", numOfWeightFiles: 6, options: { size: 299 } },
+};
+
+const DEFAULT_MODEL_NAME: ModelName = "MobileNetV2";
 const IMAGE_SIZE = 224; // default to Mobilenet v2
 
-export async function load(base = BASE_PATH, options: nsfwjsOptions = { size: IMAGE_SIZE }) {
+function isModelName(name?: string): name is ModelName {
+  return !!name && name in availableModels;
+}
+
+async function loadWeights(
+  path: string,
+  numOfWeightFiles: number
+): Promise<WeightDataBase64> {
+  const promises = [...Array(numOfWeightFiles)].map(async (_, index) => {
+    const num = index + 1;
+    const filename = `group1-shard${num}of${numOfWeightFiles}`;
+    const weight = await import(`../models/${path}/${filename}.json`);
+    return { [filename]: weight.default };
+  });
+
+  const data = await Promise.all(promises);
+  return Object.assign({}, ...data);
+}
+
+async function loadModel(modelName: ModelName | string) {
+  if (!isModelName(modelName)) return modelName;
+  const { path, numOfWeightFiles } = availableModels[modelName];
+  const modelJson = await import(`../models/${path}/model.json`);
+  const weightData = await loadWeights(path, numOfWeightFiles);
+  const handler = new JSONHandler(modelJson.default, weightData);
+  return handler;
+}
+
+export async function load(
+  modelOrUrl?: ModelName,
+  options?: nsfwjsOptions
+): Promise<NSFWJS>;
+export async function load(
+  modelOrUrl?: string,
+  options?: nsfwjsOptions
+): Promise<NSFWJS>;
+export async function load(
+  modelOrUrl: string = DEFAULT_MODEL_NAME,
+  options: nsfwjsOptions = { size: IMAGE_SIZE }
+) {
   if (tf == null) {
     throw new Error(
       `Cannot find TensorFlow.js. If you are using a <script> tag, please ` +
         `also include @tensorflow/tfjs on the page before using this model.`
     );
   }
+  if (isModelName(modelOrUrl)) {
+    options = { ...options, ...availableModels[modelOrUrl].options };
+  }
   // Default size is IMAGE_SIZE - needed if just type option is used
   options.size = options.size || IMAGE_SIZE;
-  const nsfwnet = new NSFWJS(base, options);
+  const modelUrlOrHandler = await loadModel(modelOrUrl);
+  const nsfwnet = new NSFWJS(modelUrlOrHandler, options);
   await nsfwnet.load();
   return nsfwnet;
 }
 
-interface IOHandler {
-  load: () => any;
+class JSONHandler implements IOHandler {
+  private modelJson: ModelJSON;
+  private weightDataBase64: WeightDataBase64;
+
+  constructor(modelJson: ModelJSON, weightDataBase64: WeightDataBase64) {
+    this.modelJson = modelJson;
+    this.weightDataBase64 = weightDataBase64;
+  }
+
+  arrayBufferFromBase64(base64: string) {
+    const binaryString = Buffer.from(base64, "base64").toString("binary");
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes.buffer;
+  }
+
+  async load() {
+    const modelArtifacts: ModelArtifacts = {
+      modelTopology: this.modelJson.modelTopology,
+      format: this.modelJson.format,
+      generatedBy: this.modelJson.generatedBy,
+      convertedBy: this.modelJson.convertedBy,
+    };
+
+    if (this.modelJson.weightsManifest != null) {
+      const weightSpecs: ModelArtifacts["weightSpecs"] = [];
+      const weightData: Uint8Array[] = [];
+      for (const group of this.modelJson.weightsManifest) {
+        for (const path of group.paths) {
+          const base64 = this.weightDataBase64[path];
+          const buffer = this.arrayBufferFromBase64(base64);
+          weightData.push(new Uint8Array(buffer));
+        }
+        weightSpecs.push(...group.weights);
+      }
+      modelArtifacts.weightSpecs = weightSpecs;
+
+      const weightDataConcat = new Uint8Array(
+        weightData.reduce((a, b) => a + b.byteLength, 0)
+      );
+      let offset = 0;
+      for (let i = 0; i < weightData.length; i++) {
+        weightDataConcat.set(weightData[i], offset);
+        offset += weightData[i].byteLength;
+      }
+      modelArtifacts.weightData = weightDataConcat.buffer;
+    }
+
+    if (this.modelJson.trainingConfig != null) {
+      modelArtifacts.trainingConfig = this.modelJson.trainingConfig;
+    }
+
+    if (this.modelJson.userDefinedMetadata != null) {
+      modelArtifacts.userDefinedMetadata = this.modelJson.userDefinedMetadata;
+    }
+
+    return modelArtifacts;
+  }
 }
 
 export class NSFWJS {
@@ -53,45 +181,40 @@ export class NSFWJS {
   public model: tf.LayersModel | tf.GraphModel;
 
   private options: nsfwjsOptions;
-  private pathOrIOHandler: string | IOHandler;
+  private urlOrIOHandler: string | IOHandler;
   private intermediateModels: { [layerName: string]: tf.LayersModel } = {};
   private normalizationOffset: tf.Scalar;
 
-  constructor(
-    modelPathBaseOrIOHandler: string | IOHandler,
-    options: nsfwjsOptions
-  ) {
+  constructor(modelUrlOrIOHandler: string | IOHandler, options: nsfwjsOptions) {
     this.options = options;
     this.normalizationOffset = tf.scalar(255);
+    this.urlOrIOHandler = modelUrlOrIOHandler;
 
     if (
-      typeof modelPathBaseOrIOHandler === "string" &&
-      !modelPathBaseOrIOHandler.startsWith("indexeddb://") &&
-      !modelPathBaseOrIOHandler.startsWith("localstorage://")
+      typeof modelUrlOrIOHandler === "string" &&
+      !modelUrlOrIOHandler.startsWith("indexeddb://") &&
+      !modelUrlOrIOHandler.startsWith("localstorage://") &&
+      !modelUrlOrIOHandler.endsWith("model.json")
     ) {
-      if (modelPathBaseOrIOHandler.endsWith("model.json")) {
-        this.pathOrIOHandler = modelPathBaseOrIOHandler;
-      } else {
-        this.pathOrIOHandler = `${modelPathBaseOrIOHandler}model.json`;
-      }
+      this.urlOrIOHandler = `${modelUrlOrIOHandler}model.json`;
     } else {
-      this.pathOrIOHandler = modelPathBaseOrIOHandler;
+      this.urlOrIOHandler = modelUrlOrIOHandler;
     }
   }
 
   async load() {
     const { size, type } = this.options;
     if (type === "graph") {
-      this.model = await tf.loadGraphModel(this.pathOrIOHandler);
+      this.model = await tf.loadGraphModel(this.urlOrIOHandler);
     } else {
       // this is a Layers Model
-      this.model = await tf.loadLayersModel(this.pathOrIOHandler);
+      this.model = await tf.loadLayersModel(this.urlOrIOHandler);
       this.endpoints = this.model.layers.map((l) => l.name);
     }
 
     // Warmup the model.
     const result = tf.tidy(() =>
-      this.model.predict(tf.zeros([1, size, size, 3]))
+      this.model.predict(tf.zeros([1, size!, size!, 3]))
     ) as tf.Tensor;
     await result.data();
     result.dispose();
@@ -117,8 +240,7 @@ export class NSFWJS {
   ): tf.Tensor {
     if (endpoint != null && this.endpoints.indexOf(endpoint) === -1) {
       throw new Error(
-        `Unknown endpoint ${endpoint}. Available endpoints: ` +
-          `${this.endpoints}.`
+        `Unknown endpoint ${endpoint}. Available endpoints: ${this.endpoints}.`
       );
     }
 
@@ -140,13 +262,13 @@ export class NSFWJS {
         const alignCorners = true;
         resized = tf.image.resizeBilinear(
           normalized,
-          [size, size],
+          [size!, size!],
           alignCorners
         );
       }
 
       // Reshape to a single-element batch so we can pass it to predict.
-      const batched = resized.reshape([1, size, size, 3]);
+      const batched = resized.reshape([1, size!, size!, 3]);
 
       let model: tf.LayersModel | tf.GraphModel;
       if (endpoint == null) {
@@ -209,47 +331,59 @@ export class NSFWJS {
     gif: HTMLImageElement | Buffer,
     config: classifyConfig = { topk: 5 }
   ): Promise<Array<Array<predictionType>>> {
-    let frameData: (GifFrameCanvas | GifFrameBuffer)[] = []
+    let frameData: (GifFrameCanvas | GifFrameBuffer)[] = [];
 
     if (Buffer.isBuffer(gif)) {
-      frameData = await gifFrames({ url: gif, frames: 'all', outputType: 'jpg' });
+      frameData = await gifFrames({
+        url: gif,
+        frames: "all",
+        outputType: "jpg",
+      });
     } else {
-      frameData = await gifFrames({ url: gif.src, frames: 'all', outputType: 'canvas' });
+      frameData = await gifFrames({
+        url: gif.src,
+        frames: "all",
+        outputType: "canvas",
+      });
     }
 
     let acceptedFrames: number[] = [];
-    if (typeof config.fps !== 'number') {
+    if (typeof config.fps !== "number") {
       acceptedFrames = frameData.map((_element, index) => index);
     } else {
       let totalTimeInMs = 0;
       for (let i = 0; i < frameData.length; i++) {
-        totalTimeInMs = totalTimeInMs + (frameData[i].frameInfo.delay * 10);
+        totalTimeInMs = totalTimeInMs + frameData[i].frameInfo.delay * 10;
       }
 
-      const totalFrames: number = Math.floor(totalTimeInMs / 1000 * config.fps);
+      const totalFrames: number = Math.floor(
+        (totalTimeInMs / 1000) * config.fps
+      );
       if (totalFrames <= 1) {
         acceptedFrames = [Math.floor(frameData.length / 2)];
       } else if (totalFrames >= frameData.length) {
         acceptedFrames = frameData.map((_element, index) => index);
       } else {
-        const interval: number = Math.floor(frameData.length / (totalFrames + 1));
+        const interval: number = Math.floor(
+          frameData.length / (totalFrames + 1)
+        );
         for (let i = 1; i <= totalFrames; i++) {
           acceptedFrames.push(i * interval);
         }
       }
     }
 
-    const arrayOfPredictions: predictionType[][] = []
+    const arrayOfPredictions: predictionType[][] = [];
     for (let i = 0; i < acceptedFrames.length; i++) {
-      const image = frameData[acceptedFrames[i]].getImage()
+      const image = frameData[acceptedFrames[i]].getImage();
       const predictions = await this.classify(image, config.topk);
 
-      if (typeof config.onFrame === 'function') {
+      if (typeof config.onFrame === "function") {
         config.onFrame({
           index: acceptedFrames[i],
           totalFrames: frameData.length,
           predictions,
-          image
+          image,
         });
       }
 
@@ -266,7 +400,10 @@ async function getTopKClasses(
 ): Promise<Array<predictionType>> {
   const values = await logits.data();
 
-  const valuesAndIndices = [];
+  const valuesAndIndices: {
+    value: (typeof values)[number];
+    index: number;
+  }[] = [];
   for (let i = 0; i < values.length; i++) {
     valuesAndIndices.push({ value: values[i], index: i });
   }

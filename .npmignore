@@ -20,8 +20,8 @@ bundle.js
 
 # Ignore intermediate browserify files
 # Mountpoint
-dist/nsfwjs.d.ts
-dist/nsfwjs.js
+dist/**/nsfwjs.d.ts
+dist/**/nsfwjs.js
 # Unminified bundle
 dist/bundle.js
 
