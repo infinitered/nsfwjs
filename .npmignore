@@ -17,11 +17,24 @@ _art/
 yarn-error.log
 bundle.js
 .DS_Store
+.all-contributorsrc
+.editorconfig
+.gitignore
+bundle-model.mjs
+jest.config.js
+tsconfig.cjs.json
+tsconfig.esm.json
+tsconfig.json
+
+# Models
+models/
 
 # Ignore intermediate browserify files
 # Mountpoint
-dist/**/nsfwjs.d.ts
-dist/**/nsfwjs.js
+dist/cjs/nsfwjs.d.ts
+dist/cjs/nsfwjs.js
+dist/esm/nsfwjs.d.ts
+dist/esm/nsfwjs.js
 # Unminified bundle
-dist/bundle.js
+dist/browser/bundle.js
 
