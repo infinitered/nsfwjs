@@ -94,10 +94,13 @@
       src="https://unpkg.com/@tensorflow/tfjs@1.7.4"
       type="text/javascript"
     ></script>
-    <script src="dist/nsfwjs.min.js"></script>
+    <script src="../../../dist/models/mobilenet_v2_mid/model.min.js" type="text/javascript"></script>
+    <script src="../../../dist/models/mobilenet_v2_mid/group1-shard1of2.min.js" type="text/javascript"></script>
+    <script src="../../../dist/models/mobilenet_v2_mid/group1-shard2of2.min.js" type="text/javascript"></script>
+    <script src="../../../dist/browser/nsfwjs.min.js"></script>
 
     <script>
-      nsfwjs.load().then(model => {
+      nsfwjs.load("MobileNetV2Mid").then(model => {
         const images = document.querySelectorAll('img')
         for (let i = 0; i < images.length; i++) {
           if (images[i].classList[0] === 'images') {
