@@ -5,6 +5,14 @@ import gifFrames, {
 import * as tf from "@tensorflow/tfjs";
 import { NSFW_CLASSES } from "./nsfw_classes";
 
+declare global {
+  namespace NodeJS {
+    interface Global {
+      [x: string]: any;
+    }
+  }
+}
+
 type IOHandler = tf.io.IOHandler;
 type ModelJSON = tf.io.ModelJSON;
 type ModelArtifacts = tf.io.ModelArtifacts;
@@ -33,24 +41,28 @@ export type predictionType = {
   probability: number;
 };
 
-export type ModelName = "MobileNetV2" | "MobileNetMid" | "InceptionV3";
+export type ModelName = "MobileNetV2" | "MobileNetV2Mid" | "InceptionV3";
 
 type ModelConfig = {
   [key in ModelName]: {
     path: string;
-    numOfWeightFiles: number;
+    numOfWeightBundles: number;
     options?: nsfwjsOptions;
   };
 };
 
 const availableModels: ModelConfig = {
-  MobileNetV2: { path: "quant_nsfw_mobilenet", numOfWeightFiles: 1 },
-  MobileNetMid: {
-    path: "quant_mid",
-    numOfWeightFiles: 2,
+  MobileNetV2: { path: "mobilenet_v2", numOfWeightBundles: 1 },
+  MobileNetV2Mid: {
+    path: "mobilenet_v2_mid",
+    numOfWeightBundles: 2,
     options: { type: "graph" },
   },
-  InceptionV3: { path: "model", numOfWeightFiles: 6, options: { size: 299 } },
+  InceptionV3: {
+    path: "inception_v3",
+    numOfWeightBundles: 6,
+    options: { size: 299 },
+  },
 };
 
 const DEFAULT_MODEL_NAME: ModelName = "MobileNetV2";
@@ -62,13 +74,23 @@ function isModelName(name?: string): name is ModelName {
 
 async function loadWeights(
   path: string,
-  numOfWeightFiles: number
+  numOfWeightBundles: number
 ): Promise<WeightDataBase64> {
-  const promises = [...Array(numOfWeightFiles)].map(async (_, index) => {
+  const promises = [...Array(numOfWeightBundles)].map(async (_, index) => {
     const num = index + 1;
-    const filename = `group1-shard${num}of${numOfWeightFiles}`;
-    const weight = await import(`../models/${path}/${filename}.json`);
-    return { [filename]: weight.default };
+    const bundle = `group1-shard${num}of${numOfWeightBundles}`;
+    const identifier = bundle.replace(/-/g, "_");
+
+    try {
+      const weight =
+        global[identifier] ||
+        (await import(`../models/${path}/${bundle}.min.js`)).default;
+      return { [bundle]: weight };
+    } catch {
+      throw new Error(
+        `Could not load the weight data. Make sure you are importing the ${bundle}.min.js bundle.`
+      );
+    }
   });
 
   const data = await Promise.all(promises);
@@ -77,10 +99,20 @@ async function loadWeights(
 
 async function loadModel(modelName: ModelName | string) {
   if (!isModelName(modelName)) return modelName;
-  const { path, numOfWeightFiles } = availableModels[modelName];
-  const modelJson = await import(`../models/${path}/model.json`);
-  const weightData = await loadWeights(path, numOfWeightFiles);
-  const handler = new JSONHandler(modelJson.default, weightData);
+  const { path, numOfWeightBundles } = availableModels[modelName];
+  let modelJson;
+
+  try {
+    modelJson =
+      global.model || (await import(`../models/${path}/model.min.js`)).default;
+  } catch {
+    throw new Error(
+      `Could not load the model. Make sure you are importing the model.min.js bundle.`
+    );
+  }
+
+  const weightData = await loadWeights(path, numOfWeightBundles);
+  const handler = new JSONHandler(modelJson, weightData);
   return handler;
 }
 
@@ -146,6 +178,11 @@ class JSONHandler implements IOHandler {
       for (const group of this.modelJson.weightsManifest) {
         for (const path of group.paths) {
           const base64 = this.weightDataBase64[path];
+          if (!base64) {
+            throw new Error(
+              `Could not find the weight data. Make sure you are importing the correct weight bundle for the model: ${path}.min.js.`
+            );
+          }
           const buffer = this.arrayBufferFromBase64(base64);
           weightData.push(new Uint8Array(buffer));
         }
@@ -154,7 +191,7 @@ class JSONHandler implements IOHandler {
       modelArtifacts.weightSpecs = weightSpecs;
 
       const weightDataConcat = new Uint8Array(
-        weightData.reduce((a, b) => a + b.byteLength, 0)
+        weightData.reduce((a, b) => a + b.length, 0)
       );
       let offset = 0;
       for (let i = 0; i < weightData.length; i++) {

@@ -12,7 +12,7 @@ const options = [
         label: '90% Accurate - 2.6MB',
       },
       {
-        value: 'MobileNetMid',
+        value: 'MobileNetV2Mid',
         label: '93% Accurate - 4.2MB',
       },
     ],

@@ -33,7 +33,7 @@ class App extends Component {
     fileType: null,
     hardReset: false,
     gifControl: null,
-    currentModelName: 'MobileNetMid',
+    currentModelName: 'MobileNetV2Mid',
   }
 
   componentDidMount() {
