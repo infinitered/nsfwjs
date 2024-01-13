@@ -12,7 +12,7 @@ dist/**/*.js.map
 .npmignore
 tslint.json
 yarn.lock
-example/
+examples/
 _art/
 yarn-error.log
 bundle.js

@@ -18,7 +18,7 @@
     "toc": "doctoc .",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
-    "prep": "yarn && yarn build && cd example/nsfw_demo/ && yarn add ../../ && cd -",
+    "prep": "yarn && yarn build && cd examples/nsfw_demo/ && yarn add ../../ && cd -",
     "scriptbundle": "browserify ./dist/cjs/nsfwjs.js -s nsfwjs -o ./dist/browser/bundle.js",
     "minbundle": "terser dist/browser/bundle.js -c -m -o dist/browser/nsfwjs.min.js",
     "bundle:mobilenet_v2": "node bundle-model.mjs mobilenet_v2 1",

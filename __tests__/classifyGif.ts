@@ -1,4 +1,4 @@
-import { load, predictionType, NSFWJS } from '../src/index'
+import { NSFWJS, load, predictionType } from '../src/index';
 const fs = require('fs');
 
 // Fix for JEST
@@ -6,7 +6,7 @@ const globalAny: any = global
 globalAny.fetch = require('node-fetch')
 const timeoutMS = 10000
 
-const path = `${__dirname}/../example/manual-testing/data/animations/smile.gif`
+const path = `${__dirname}/../examples/manual-testing/data/animations/smile.gif`
 
 const roundPredicitonProbability = ({ className, probability }: predictionType) => {
   return {className, probability: Math.floor(probability * 10000) / 10000}
