@@ -6,7 +6,7 @@ const globalAny: any = global
 globalAny.fetch = require('node-fetch')
 const timeoutMS = 10000
 
-const path = `${__dirname}/../examples/manual-testing/data/animations/smile.gif`
+const path = `${__dirname}/../examples/manual_testing/data/animations/smile.gif`
 
 const roundPredicitonProbability = ({ className, probability }: predictionType) => {
   return {className, probability: Math.floor(probability * 10000) / 10000}
