@@ -16,26 +16,29 @@ Why would this be useful? [Check out the announcement blog post](https://shift.i
 </p>
 
 ## **Table of Contents**
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [QUICK: How to use the module](#quick-how-to-use-the-module)
 - [Library API](#library-api)
-    - [`load` the model](#load-the-model)
-    - [`classify` an image](#classify-an-image)
-    - [`classifyGif`](#classifygif)
+  - [`load` the model](#load-the-model)
+  - [Caching](#caching)
+  - [`classify` an image](#classify-an-image)
+  - [`classifyGif`](#classifygif)
 - [Production](#production)
 - [Install](#install)
-    - [Host your own model](#host-your-own-model)
+  - [Host your own model](#host-your-own-model)
 - [Run the Examples](#run-the-examples)
   - [Tensorflow.js in the browser](#tensorflowjs-in-the-browser)
   - [Browserify](#browserify)
   - [React Native](#react-native)
   - [Node JS App](#node-js-app)
-  - [NSFW Filter(Browser Extension)](#nsfw-filter)
+  - [NSFW Filter](#nsfw-filter)
+- [Learn TensorFlow.js](#learn-tensorflowjs)
 - [More!](#more)
-    - [Open Source](#open-source)
-    - [Premium](#premium)
+  - [Open Source](#open-source)
+  - [Need the experts? Hire Infinite Red for your next project](#need-the-experts-hire-infinite-red-for-your-next-project)
 - [Contributors](#contributors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -48,79 +51,94 @@ The library categorizes image probabilities in the following 5 classes:
 - `Porn` - pornographic images, sexual acts
 - `Sexy` - sexually explicit images, not pornography
 
-> _The demo is a continuous deployment source - Give it a go: http://nsfwjs.com/_
+> _The demo is a continuous deployment source - Give it a go: http://nsfwjs.com_
 
 ## QUICK: How to use the module
 
 With `async/await` support:
 
 ```js
-import * as nsfwjs from 'nsfwjs'
+import * as nsfwjs from "nsfwjs";
 
-const img = document.getElementById('img')
+const img = document.getElementById("img");
 
-// Load model from my S3.
-// See the section hosting the model files on your site.
-const model = await nsfwjs.load()
+// If you want to host models on your own or use different model from the ones available, see the section "Host your own model".
+const model = await nsfwjs.load();
 
 // Classify the image
-const predictions = await model.classify(img)
-console.log('Predictions: ', predictions)
+const predictions = await model.classify(img);
+console.log("Predictions: ", predictions);
 ```
 
 Without `async/await` support:
 
 ```js
-import * as nsfwjs from 'nsfwjs'
+import * as nsfwjs from "nsfwjs";
 
-const img = document.getElementById('img')
+const img = document.getElementById("img");
 
-// Load model from my S3.
-// See the section hosting the model files on your site.
-nsfwjs.load()
+// If you want to host models on your own or use different model from the ones available, see the section "Host your own model".
+nsfwjs
+  .load()
   .then(function (model) {
     // Classify the image
-    return model.classify(img)
+    return model.classify(img);
   })
   .then(function (predictions) {
-    console.log('Predictions: ', predictions)
-  })
+    console.log("Predictions: ", predictions);
+  });
 ```
 
 ## Library API
 
 #### `load` the model
 
-Before you can classify any image, you'll need to load the model. You should use the optional first parameter and load the model from your website, as explained in the install directions.
-
-Model example - [224x224](https://github.com/infinitered/nsfwjs/blob/master/example/nsfw_demo/public/quant_nsfw_mobilenet/)
+Before you can classify any image, you'll need to load the model.
 
 ```js
-const model = nsfwjs.load('/path/to/model/directory/')
+const model = nsfwjs.load(); // Default: "MobileNetV2"
+```
+
+You can use the optional first parameter to specify which model you want to use from the three that are bundled together. Defaults to: `"MobileNetV2"`. This supports tree-shaking on supported bundlers like Webpack, so you will only be loading the model you are using.
+
+```js
+const model = nsfwjs.load("MobileNetV2Mid"); // "MobileNetV2" | "MobileNetV2Mid" | "InceptionV3"
+```
+
+You can also use same parameter and load the model from your website/server, as explained in the [Host your own model](#host-your-own-model) section. Doing so could reduce the bundle size for loading the model by approximately 1.33 times (33%) since you can directly use the binary files instead of the base64 that are bundled with the package. i.e. The `"MobileNetV2"` model bundled into the package is 3.5MB instead of 2.6MB for hosted binary files. This would only make a difference if you are loading the model every time (without [caching](#caching)) on the client-side browser since on the server-side, you'd only be loading the model once at the server start.
+
+Model MobileNetV2 - [224x224](https://github.com/infinitered/nsfwjs/blob/master/models/mobilenet_v2/)
+
+```js
+const model = nsfwjs.load("/path/to/model/directory/");
 ```
 
 If you're using a model that needs an image of dimension other than 224x224, you can pass the size in the options parameter.
 
-Model example - [299x299](https://github.com/infinitered/nsfwjs/tree/master/example/nsfw_demo/public/model)
+Model MobileNetV2Mid - [299x299](https://github.com/infinitered/nsfwjs/tree/master/models/inception_v3)
 
 ```js
-const model = nsfwjs.load('/path/to/different/model/', { size: 299 })
+const model = nsfwjs.load("/path/to/different/model/", { size: 299 });
 ```
 
 If you're using a graph model, you cannot use the infer method, and you'll need to tell model load that you're dealing with a graph model in options.
 
-Model example - [Graph](https://github.com/infinitered/nsfwjs/tree/master/example/nsfw_demo/public/quant_mid)
+Model InceptionV3 - [Graph](https://github.com/infinitered/nsfwjs/tree/master/models/mobilenet_v2_mid)
 
 ```js
-const model = nsfwjs.load('/path/to/different/model/', { type: 'graph' })
+const model = nsfwjs.load("/path/to/different/model/", { type: "graph" });
 ```
+
+#### Caching
 
 If you're using in the browser and you'd like to subsequently load from indexed db or local storage you can save the underlying model using the appropriate scheme and load from there.
 
 ```js
-const initialLoad = await nsfwjs.load('/path/to/different/model')
-await initialLoad.model.save('indexeddb://model')
-const model = await nsfwjs.load('indexeddb://model')
+const initialLoad = await nsfwjs.load(
+  "/path/to/different/model" /*{ ...options }*/
+);
+await initialLoad.model.save("indexeddb://model");
+const model = await nsfwjs.load("indexeddb://model" /*{ ...options }*/);
 ```
 
 **Parameters**
@@ -138,7 +156,7 @@ This function can take any browser-based image elements (`<img>`, `<video>`, `<c
 
 ```js
 // Return top 3 guesses (instead of all 5)
-const predictions = await model.classify(img, 3)
+const predictions = await model.classify(img, 3);
 ```
 
 **Parameters**
@@ -158,7 +176,7 @@ This function can take a browser-based image element (`<img>`) that is a GIF, an
 
 ```js
 // Returns all predictions of each GIF frame
-const framePredictions = await model.classifyGif(img)
+const framePredictions = await model.classifyGif(img);
 ```
 
 If you're looking to update the user on status (_e.g. progress bar_) or change the number of top results per frame, then you can utilize the configuration parameter.
@@ -171,12 +189,12 @@ const myConfig = {
   topk: 1,
   fps: 1,
   onFrame: ({ index, totalFrames, predictions, image }) => {
-    console.log({ index, totalFrames, predictions })
+    console.log({ index, totalFrames, predictions });
     // document.body.appendChild(image)
     // require('fs').writeFileSync(`./file.jpeg`, require('jpeg-js').encode(image).data)
-  }
-}
-const framePredictions = await classifyGif(img, myConfig)
+  },
+};
+const framePredictions = await classifyGif(img, myConfig);
 ```
 
 **Parameters**
@@ -200,11 +218,11 @@ const framePredictions = await classifyGif(img, myConfig)
 Tensorflow.js offers two flags, `enableProdMode` and `enableDebugMode`. If you're going to use NSFWJS in production, be sure to enable prod mode before loading the NSFWJS model.
 
 ```js
-import * as tf from '@tensorflow/tfjs'
-import * as nsfwjs from 'nsfwjs'
-tf.enableProdMode()
+import * as tf from "@tensorflow/tfjs";
+import * as nsfwjs from "nsfwjs";
+tf.enableProdMode();
 //...
-let model = await nsfwjs.load(`${urlToNSFWJSModel}`)
+let model = await nsfwjs.load(`${urlToNSFWJSModel}`);
 ```
 
 ## Install
@@ -218,22 +236,23 @@ $ yarn add @tensorflow/tfjs
 $ yarn add nsfwjs
 ```
 
-For script tags add `<script type="text/javascript" src="https://unpkg.com/nsfwjs"></script>`. Then simply access the nsfwjs global variable. This requires that you've already imported TensorFlow.js as well.
+For script tags include all the bundles as shown [here](#browserify). Then simply access the nsfwjs global variable. This requires that you've already imported TensorFlow.js as well.
 
 #### Host your own model
 
-The magic that powers NSFWJS is the [NSFW detection model](https://github.com/gantman/nsfw_model). By default, this node module is pulling from my S3, but I make no guarantees that I'll keep that download link available forever. It's best for the longevity of your project that you download and host your own version of [the model files](https://github.com/infinitered/nsfwjs/tree/master/example/nsfw_demo/public/model). You can then pass the relative URL to your hosted files in the `load` function. If you can come up with a way to bundle the model into the NPM package, I'd love to see a PR to this repo!
+The magic that powers NSFWJS is the [NSFW detection model](https://github.com/gantman/nsfw_model). By default, the models are bundled into this package. But you may want to host the models on your own server to reduce bundle size by loading them as raw binary files or to host your own custom model. If you want to host your own version of [the model files](https://github.com/infinitered/nsfwjs/tree/master/models), you can do so by following the steps below. You can then pass the relative URL to your hosted files in the `load` function along with the `options` if necessary.
 
 Here is how to install the default model on a website:
-1. Download the project directly into a subdomain such as labs.site.com: `git clone https://github.com/infinitered/nsfwjs.git`. Do not download it as a zip file or manually; this is important.
-2. Retrieve the URL (example: https://labs.site.com/nsfwjs/example/nsfw_demo/public/quant_nsfw_mobilenet/) and put it into `nsfwjs.load('<url>')`.
-3. It should work normally by launching `node server`.
+
+1. Download the project by either cloning `git clone https://github.com/infinitered/nsfwjs.git` or download zip. **_If downloading as zip does not work use cloning._**
+2. Extract the `models` folder from the root of the project and drop it in the `public` directory of your web application to serve them as static files along side your website. (You can host it anywhere such as on a s3 bucket as long as you can access it via URL).
+3. Retrieve the URL and put it into `nsfwjs.load()`. For example: `nsfwjs.load(https://yourwebsite.com/models/mobilenet_v2/model.json)`.
 
 ## Run the Examples
 
 ### Tensorflow.js in the browser
 
-The demo that powers https://nsfwjs.com/ is available in the `nsfw_demo` example folder.
+The demo that powers https://nsfwjs.com/ is available in the `examples/nsfw_demo` folder.
 
 To run the demo, run `yarn prep` which will copy the latest code into the demo. After that's done, you can `cd` into the demo folder and run with `yarn start`.
 
@@ -241,7 +260,14 @@ To run the demo, run `yarn prep` which will copy the latest code into the demo. 
 
 A browserified version using nothing but promises and script tags is available in the `minimal_demo` folder.
 
-Please do not use the script tags hosted in this demo as a CDN. This can and should be hosted in your project along side the model files.
+```js
+<script src="/path/to/model/directory/model.min.js"></script>
+<script src="/path/to/model/directory/group1-shard1of2.min.js"></script>
+<script src="/path/to/model/directory/group1-shard2of2.min.js"></script>
+<script src="/path/to/bundle/nsfwjs.min.js"></script>
+```
+
+You should host the `nsfwjs.min.js` file and all the model bundles that you want to use alongside your project, and reference them using the `src` attribute in the script tags.
 
 ### React Native
 
@@ -260,70 +286,70 @@ $ npm install @tensorflow/tfjs-node
 ```
 
 ```javascript
-const axios = require('axios') //you can use any http client
-const tf = require('@tensorflow/tfjs-node')
-const nsfw = require('nsfwjs')
+const axios = require("axios"); //you can use any http client
+const tf = require("@tensorflow/tfjs-node");
+const nsfw = require("nsfwjs");
 async function fn() {
   const pic = await axios.get(`link-to-picture`, {
-    responseType: 'arraybuffer',
-  })
-  const model = await nsfw.load() // To load a local model, nsfw.load('file://./path/to/model/')
+    responseType: "arraybuffer",
+  });
+  const model = await nsfw.load(); // To load a local model, nsfw.load('file://./path/to/model/')
   // Image must be in tf.tensor3d format
   // you can convert image to tf.tensor3d with tf.node.decodeImage(Uint8Array,channels)
-  const image = await tf.node.decodeImage(pic.data,3)
-  const predictions = await model.classify(image)
-  image.dispose() // Tensor memory must be managed explicitly (it is not sufficient to let a tf.Tensor go out of scope for its memory to be released).
-  console.log(predictions)
+  const image = await tf.node.decodeImage(pic.data, 3);
+  const predictions = await model.classify(image);
+  image.dispose(); // Tensor memory must be managed explicitly (it is not sufficient to let a tf.Tensor go out of scope for its memory to be released).
+  console.log(predictions);
 }
-fn()
+fn();
 ```
 
-Here is another full example of a [multipart/form-data POST using Express](example/node_demo), supposing you are using JPG format.
+Here is another full example of a [multipart/form-data POST using Express](examples/node_demo), supposing you are using JPG format.
 
 ```javascript
-const express = require('express')
-const multer = require('multer')
-const jpeg = require('jpeg-js')
+const express = require("express");
+const multer = require("multer");
+const jpeg = require("jpeg-js");
 
-const tf = require('@tensorflow/tfjs-node')
-const nsfw = require('nsfwjs')
+const tf = require("@tensorflow/tfjs-node");
+const nsfw = require("nsfwjs");
 
-const app = express()
-const upload = multer()
+const app = express();
+const upload = multer();
 
-let _model
+let _model;
 
 const convert = async (img) => {
   // Decoded image in UInt8 Byte array
-  const image = await jpeg.decode(img, { useTArray: true })
+  const image = await jpeg.decode(img, { useTArray: true });
 
-  const numChannels = 3
-  const numPixels = image.width * image.height
-  const values = new Int32Array(numPixels * numChannels)
+  const numChannels = 3;
+  const numPixels = image.width * image.height;
+  const values = new Int32Array(numPixels * numChannels);
 
   for (let i = 0; i < numPixels; i++)
     for (let c = 0; c < numChannels; ++c)
-      values[i * numChannels + c] = image.data[i * 4 + c]
+      values[i * numChannels + c] = image.data[i * 4 + c];
 
-  return tf.tensor3d(values, [image.height, image.width, numChannels], 'int32')
-}
+  return tf.tensor3d(values, [image.height, image.width, numChannels], "int32");
+};
 
-app.post('/nsfw', upload.single('image'), async (req, res) => {
-  if (!req.file) res.status(400).send('Missing image multipart/form-data')
+app.post("/nsfw", upload.single("image"), async (req, res) => {
+  if (!req.file) res.status(400).send("Missing image multipart/form-data");
   else {
-    const image = await convert(req.file.buffer)
-    const predictions = await _model.classify(image)
-    image.dispose()
-    res.json(predictions)
+    const image = await convert(req.file.buffer);
+    const predictions = await _model.classify(image);
+    image.dispose();
+    res.json(predictions);
   }
-})
+});
 
 const load_model = async () => {
-  _model = await nsfw.load()
-}
+  _model = await nsfw.load();
+};
 
 // Keep the model in memory, make sure it's loaded only once
-load_model().then(() => app.listen(8080))
+load_model().then(() => app.listen(8080));
 
 // curl --request POST localhost:8080/nsfw --header 'Content-Type: multipart/form-data' --data-binary 'image=@/full/path/to/picture.jpg'
 ```
@@ -371,40 +397,43 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 <table>
-  <tr>
-    <td align="center"><a href="http://gantlaborde.com/"><img src="https://avatars0.githubusercontent.com/u/997157?v=4" width="100px;" alt=""/><br /><sub><b>Gant Laborde</b></sub></a><br /><a href="#question-GantMan" title="Answering Questions">💬</a> <a href="#blog-GantMan" title="Blogposts">📝</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=GantMan" title="Code">💻</a> <a href="#example-GantMan" title="Examples">💡</a> <a href="#ideas-GantMan" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-GantMan" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/infinitered/nsfwjs/pulls?q=is%3Apr+reviewed-by%3AGantMan" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=GantMan" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://jamonholmgren.com"><img src="https://avatars3.githubusercontent.com/u/1479215?v=4" width="100px;" alt=""/><br /><sub><b>Jamon Holmgren</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=jamonholmgren" title="Documentation">📖</a> <a href="#ideas-jamonholmgren" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=jamonholmgren" title="Code">💻</a> <a href="#content-jamonholmgren" title="Content">🖋</a></td>
-    <td align="center"><a href="https://github.com/jstudenski"><img src="https://avatars0.githubusercontent.com/u/7350279?v=4" width="100px;" alt=""/><br /><sub><b>Jeff Studenski</b></sub></a><br /><a href="#design-jstudenski" title="Design">🎨</a></td>
-    <td align="center"><a href="https://github.com/fvonhoven"><img src="https://avatars2.githubusercontent.com/u/10098988?v=4" width="100px;" alt=""/><br /><sub><b>Frank von Hoven III</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=fvonhoven" title="Documentation">📖</a> <a href="#ideas-fvonhoven" title="Ideas, Planning, & Feedback">🤔</a></td>
-    <td align="center"><a href="https://github.com/sandeshsoni"><img src="https://avatars3.githubusercontent.com/u/3761745?v=4" width="100px;" alt=""/><br /><sub><b>Sandesh Soni</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=sandeshsoni" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/seannam1218"><img src="https://avatars1.githubusercontent.com/u/24437898?v=4" width="100px;" alt=""/><br /><sub><b>Sean Nam</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=seannam1218" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/emer7"><img src="https://avatars1.githubusercontent.com/u/21377166?v=4" width="100px;" alt=""/><br /><sub><b>Gilbert Emerson</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=emer7" title="Code">💻</a></td>
-  </tr>
-  <tr>
-    <td align="center"><a href="https://github.com/xilaraux"><img src="https://avatars2.githubusercontent.com/u/17703730?v=4" width="100px;" alt=""/><br /><sub><b>Oleksandr Kozlov</b></sub></a><br /><a href="#infra-xilaraux" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=xilaraux" title="Tests">⚠️</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=xilaraux" title="Code">💻</a></td>
-    <td align="center"><a href="http://morganlaco.com"><img src="https://avatars2.githubusercontent.com/u/4466642?v=4" width="100px;" alt=""/><br /><sub><b>Morgan</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=mlaco" title="Code">💻</a> <a href="#ideas-mlaco" title="Ideas, Planning, & Feedback">🤔</a></td>
-    <td align="center"><a href="http://mycaule.github.io/"><img src="https://avatars2.githubusercontent.com/u/6161385?v=4" width="100px;" alt=""/><br /><sub><b>Michel Hua</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=mycaule" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=mycaule" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://www.infinite.red"><img src="https://avatars2.githubusercontent.com/u/1771152?v=4" width="100px;" alt=""/><br /><sub><b>Kevin VanGelder</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=kevinvangelder" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=kevinvangelder" title="Documentation">📖</a></td>
-    <td align="center"><a href="http://technikempire.com"><img src="https://avatars2.githubusercontent.com/u/11234763?v=4" width="100px;" alt=""/><br /><sub><b>Jesse Nicholson</b></sub></a><br /><a href="#data-TechnikEmpire" title="Data">🔣</a> <a href="#ideas-TechnikEmpire" title="Ideas, Planning, & Feedback">🤔</a></td>
-    <td align="center"><a href="https://github.com/camhart"><img src="https://avatars0.githubusercontent.com/u/3038809?v=4" width="100px;" alt=""/><br /><sub><b>camhart</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=camhart" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/Cameron-Burkholder"><img src="https://avatars2.githubusercontent.com/u/13265710?v=4" width="100px;" alt=""/><br /><sub><b>Cameron Burkholder</b></sub></a><br /><a href="#design-Cameron-Burkholder" title="Design">🎨</a></td>
-  </tr>
-  <tr>
-    <td align="center"><a href="https://qwertyforce.ru"><img src="https://avatars0.githubusercontent.com/u/44163887?v=4" width="100px;" alt=""/><br /><sub><b>qwertyforce</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=qwertyforce" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/YegorZaremba"><img src="https://avatars3.githubusercontent.com/u/31797554?v=4" width="100px;" alt=""/><br /><sub><b>Yegor <3</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=YegorZaremba" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=YegorZaremba" title="Tests">⚠️</a></td>
-    <td align="center"><a href="http://navendu.me"><img src="https://avatars1.githubusercontent.com/u/49474499?v=4" width="100px;" alt=""/><br /><sub><b>Navendu Pottekkat</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=navendu-pottekkat" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/VladStepanov"><img src="https://avatars0.githubusercontent.com/u/49880862?v=4" width="100px;" alt=""/><br /><sub><b>Vladislav</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=VladStepanov" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=VladStepanov" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/nacht42"><img src="https://avatars1.githubusercontent.com/u/37903575?v=4" width="100px;" alt=""/><br /><sub><b>Nacht</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=nacht42" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/kateinkim"><img src="https://avatars.githubusercontent.com/u/53795920?v=4" width="100px;" alt=""/><br /><sub><b>kateinkim</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=kateinkim" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=kateinkim" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://janpoonthong.github.io/portfolio/"><img src="https://avatars.githubusercontent.com/u/56725335?v=4" width="100px;" alt=""/><br /><sub><b>jan</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=JanPoonthong" title="Documentation">📖</a></td>
-  </tr>
-  <tr>
-    <td align="center"><a href="https://github.com/roerohan"><img src="https://avatars.githubusercontent.com/u/42958812?v=4" width="100px;" alt=""/><br /><sub><b>Rohan Mukherjee</b></sub></a><br /><a href="#question-roerohan" title="Answering Questions">💬</a> <a href="#infra-roerohan" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-roerohan" title="Maintenance">🚧</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=roerohan" title="Code">💻</a></td>
-  </tr>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="http://gantlaborde.com/"><img src="https://avatars0.githubusercontent.com/u/997157?v=4?s=100" width="100px;" alt="Gant Laborde"/><br /><sub><b>Gant Laborde</b></sub></a><br /><a href="#question-GantMan" title="Answering Questions">💬</a> <a href="#blog-GantMan" title="Blogposts">📝</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=GantMan" title="Code">💻</a> <a href="#example-GantMan" title="Examples">💡</a> <a href="#ideas-GantMan" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-GantMan" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/infinitered/nsfwjs/pulls?q=is%3Apr+reviewed-by%3AGantMan" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=GantMan" title="Tests">⚠️</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://jamonholmgren.com"><img src="https://avatars3.githubusercontent.com/u/1479215?v=4?s=100" width="100px;" alt="Jamon Holmgren"/><br /><sub><b>Jamon Holmgren</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=jamonholmgren" title="Documentation">📖</a> <a href="#ideas-jamonholmgren" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=jamonholmgren" title="Code">💻</a> <a href="#content-jamonholmgren" title="Content">🖋</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/jstudenski"><img src="https://avatars0.githubusercontent.com/u/7350279?v=4?s=100" width="100px;" alt="Jeff Studenski"/><br /><sub><b>Jeff Studenski</b></sub></a><br /><a href="#design-jstudenski" title="Design">🎨</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/fvonhoven"><img src="https://avatars2.githubusercontent.com/u/10098988?v=4?s=100" width="100px;" alt="Frank von Hoven III"/><br /><sub><b>Frank von Hoven III</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=fvonhoven" title="Documentation">📖</a> <a href="#ideas-fvonhoven" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/sandeshsoni"><img src="https://avatars3.githubusercontent.com/u/3761745?v=4?s=100" width="100px;" alt="Sandesh Soni"/><br /><sub><b>Sandesh Soni</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=sandeshsoni" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/seannam1218"><img src="https://avatars1.githubusercontent.com/u/24437898?v=4?s=100" width="100px;" alt="Sean Nam"/><br /><sub><b>Sean Nam</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=seannam1218" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/emer7"><img src="https://avatars1.githubusercontent.com/u/21377166?v=4?s=100" width="100px;" alt="Gilbert Emerson"/><br /><sub><b>Gilbert Emerson</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=emer7" title="Code">💻</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/xilaraux"><img src="https://avatars2.githubusercontent.com/u/17703730?v=4?s=100" width="100px;" alt="Oleksandr Kozlov"/><br /><sub><b>Oleksandr Kozlov</b></sub></a><br /><a href="#infra-xilaraux" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=xilaraux" title="Tests">⚠️</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=xilaraux" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://morganlaco.com"><img src="https://avatars2.githubusercontent.com/u/4466642?v=4?s=100" width="100px;" alt="Morgan"/><br /><sub><b>Morgan</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=mlaco" title="Code">💻</a> <a href="#ideas-mlaco" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://mycaule.github.io/"><img src="https://avatars2.githubusercontent.com/u/6161385?v=4?s=100" width="100px;" alt="Michel Hua"/><br /><sub><b>Michel Hua</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=mycaule" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=mycaule" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://www.infinite.red"><img src="https://avatars2.githubusercontent.com/u/1771152?v=4?s=100" width="100px;" alt="Kevin VanGelder"/><br /><sub><b>Kevin VanGelder</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=kevinvangelder" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=kevinvangelder" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://technikempire.com"><img src="https://avatars2.githubusercontent.com/u/11234763?v=4?s=100" width="100px;" alt="Jesse Nicholson"/><br /><sub><b>Jesse Nicholson</b></sub></a><br /><a href="#data-TechnikEmpire" title="Data">🔣</a> <a href="#ideas-TechnikEmpire" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/camhart"><img src="https://avatars0.githubusercontent.com/u/3038809?v=4?s=100" width="100px;" alt="camhart"/><br /><sub><b>camhart</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=camhart" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Cameron-Burkholder"><img src="https://avatars2.githubusercontent.com/u/13265710?v=4?s=100" width="100px;" alt="Cameron Burkholder"/><br /><sub><b>Cameron Burkholder</b></sub></a><br /><a href="#design-Cameron-Burkholder" title="Design">🎨</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://qwertyforce.ru"><img src="https://avatars0.githubusercontent.com/u/44163887?v=4?s=100" width="100px;" alt="qwertyforce"/><br /><sub><b>qwertyforce</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=qwertyforce" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/YegorZaremba"><img src="https://avatars3.githubusercontent.com/u/31797554?v=4?s=100" width="100px;" alt="Yegor <3"/><br /><sub><b>Yegor <3</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=YegorZaremba" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=YegorZaremba" title="Tests">⚠️</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://navendu.me"><img src="https://avatars1.githubusercontent.com/u/49474499?v=4?s=100" width="100px;" alt="Navendu Pottekkat"/><br /><sub><b>Navendu Pottekkat</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=navendu-pottekkat" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/VladStepanov"><img src="https://avatars0.githubusercontent.com/u/49880862?v=4?s=100" width="100px;" alt="Vladislav"/><br /><sub><b>Vladislav</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=VladStepanov" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=VladStepanov" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/nacht42"><img src="https://avatars1.githubusercontent.com/u/37903575?v=4?s=100" width="100px;" alt="Nacht"/><br /><sub><b>Nacht</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=nacht42" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/kateinkim"><img src="https://avatars.githubusercontent.com/u/53795920?v=4?s=100" width="100px;" alt="kateinkim"/><br /><sub><b>kateinkim</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=kateinkim" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=kateinkim" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://janpoonthong.github.io/portfolio/"><img src="https://avatars.githubusercontent.com/u/56725335?v=4?s=100" width="100px;" alt="jan"/><br /><sub><b>jan</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=JanPoonthong" title="Documentation">📖</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/roerohan"><img src="https://avatars.githubusercontent.com/u/42958812?v=4?s=100" width="100px;" alt="Rohan Mukherjee"/><br /><sub><b>Rohan Mukherjee</b></sub></a><br /><a href="#question-roerohan" title="Answering Questions">💬</a> <a href="#infra-roerohan" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-roerohan" title="Maintenance">🚧</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=roerohan" title="Code">💻</a></td>
+    </tr>
+  </tbody>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
