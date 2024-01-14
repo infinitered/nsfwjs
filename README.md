@@ -427,11 +427,12 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/roerohan"><img src="https://avatars.githubusercontent.com/u/42958812?v=4?s=100" width="100px;" alt="Rohan Mukherjee"/><br /><sub><b>Rohan Mukherjee</b></sub></a><br /><a href="#question-roerohan" title="Answering Questions">💬</a> <a href="#infra-roerohan" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-roerohan" title="Maintenance">🚧</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=roerohan" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://hazya.dev"><img src="https://avatars.githubusercontent.com/u/63403456?v=4?s=100" width="100px;" alt="haZya"/><br /><sub><b>haZya</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=haZya" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=haZya" title="Documentation">📖</a> <a href="#example-haZya" title="Examples">💡</a> <a href="#ideas-haZya" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-haZya" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
     </tr>
   </tbody>
 </table>
 
-<!-- markdownlint-enable -->
+<!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->

@@ -229,6 +229,19 @@
         "maintenance",
         "code"
       ]
+    },
+    {
+      "login": "haZya",
+      "name": "haZya",
+      "avatar_url": "https://avatars.githubusercontent.com/u/63403456?v=4",
+      "profile": "https://hazya.dev",
+      "contributions": [
+        "code",
+        "doc",
+        "example",
+        "ideas",
+        "infra"
+      ]
     }
   ],
   "contributorsPerLine": 7,
