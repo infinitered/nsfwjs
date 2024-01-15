@@ -25,6 +25,9 @@ jest.config.js
 tsconfig.cjs.json
 tsconfig.esm.json
 tsconfig.json
+.circleci/
+.github/
+__tests__/
 
 # Models
 models/
