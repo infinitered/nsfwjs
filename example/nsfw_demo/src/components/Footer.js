@@ -40,17 +40,15 @@ export default (props) => (
       />
     </div>
     <footer>
-      <div>Copyright Now(ish)</div>
+      <div>Copyright 2024 Infinite Red, Inc.</div>
       <div>
-        <a href="https://store.infinite.red/products/nsfw-js-black-shirt">
-          Buy the Shirt
-        </a>
+        <a href="https://github.com/infinitered/nsfwjs">NSFW.js Github</a>
       </div>
       <div>
-        <a href="https://github.com/infinitered/nsfwjs">NSFWJS GitHub</a>
+        <a href="https://github.com/infinitered/nsfwjs/tree/master/example/nsfw_demo">Website Github</a>
       </div>
       <div>
-        <a href="https://github.com/gantman/nsfw_model">Model Repo</a>
+        <a href="https://github.com/gantman/nsfw_model">NSFW Model Github</a>
       </div>
       <div>
         <a href="https://shift.infinite.red/avoid-nightmares-nsfw-js-ab7b176978b1">
@@ -58,7 +56,7 @@ export default (props) => (
         </a>
       </div>
       <div>
-        <a href="https://github.com/infinitered/nsfwjs-mobile">Mobile Demo</a>
+        <a href="https://github.com/infinitered/nsfwjs-mobile">Mobile Demo Github</a>
       </div>
       <div>
         <a href="https://infinite.red">
