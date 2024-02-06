@@ -37,6 +37,9 @@ export async function load(base = BASE_PATH, options: nsfwjsOptions = { size: IM
         `also include @tensorflow/tfjs on the page before using this model.`
     );
   }
+  if (base === BASE_PATH) {
+    console.warn("Looks like you are using the default model. Please consider using your own model.")
+  }
   // Default size is IMAGE_SIZE - needed if just type option is used
   options.size = options.size || IMAGE_SIZE;
   const nsfwnet = new NSFWJS(base, options);
