@@ -19,7 +19,6 @@ Why would this be useful? [Check out the announcement blog post](https://shift.i
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [**Table of Contents**](#table-of-contents)
 - [QUICK: How to use the module](#quick-how-to-use-the-module)
 - [Library API](#library-api)
     - [`load` the model](#load-the-model)
