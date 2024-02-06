@@ -29,3 +29,13 @@ it(
   },
   timeoutMS
 )
+
+it(
+  "NSFWJS console warns user if no host model is passed",
+  async () => {
+    const consoleWarnSpy = jest.spyOn(console, 'warn')
+    await load()
+    expect(consoleWarnSpy).toBeCalled()
+  },
+  timeoutMS
+)
