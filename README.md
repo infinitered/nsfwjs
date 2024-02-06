@@ -32,10 +32,11 @@ Why would this be useful? [Check out the announcement blog post](https://shift.i
   - [Browserify](#browserify)
   - [React Native](#react-native)
   - [Node JS App](#node-js-app)
-  - [NSFW Filter(Browser Extension)](#nsfw-filter)
+  - [NSFW Filter](#nsfw-filter)
+- [Learn TensorFlow.js](#learn-tensorflowjs)
 - [More!](#more)
     - [Open Source](#open-source)
-    - [Premium](#premium)
+    - [Need the experts? Hire Infinite Red for your next project](#need-the-experts-hire-infinite-red-for-your-next-project)
 - [Contributors](#contributors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -206,6 +207,8 @@ tf.enableProdMode()
 //...
 let model = await nsfwjs.load(`${urlToNSFWJSModel}`)
 ```
+
+**NOTE:** Please be sure to download and host the model before releasing to production ([instructions](#host-your-own-model)). The hosted model can be moved without notice.
 
 ## Install
 

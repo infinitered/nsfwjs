@@ -30,16 +30,19 @@ const BASE_PATH =
   "https://d1zv2aa70wpiur.cloudfront.net/tfjs_quant_nsfw_mobilenet/";
 const IMAGE_SIZE = 224; // default to Mobilenet v2
 
-export async function load(base = BASE_PATH, options: nsfwjsOptions = { size: IMAGE_SIZE }) {
+export async function load(base?: string, options: nsfwjsOptions = { size: IMAGE_SIZE }) {
   if (tf == null) {
     throw new Error(
       `Cannot find TensorFlow.js. If you are using a <script> tag, please ` +
         `also include @tensorflow/tfjs on the page before using this model.`
     );
   }
+  if (base === undefined) {
+    console.warn("By passing no model path, you're using the model hosted by Infinite.red - Please download and host the model before releasing this in production. See NSFWJS docs for instructions.");
+  }
   // Default size is IMAGE_SIZE - needed if just type option is used
   options.size = options.size || IMAGE_SIZE;
-  const nsfwnet = new NSFWJS(base, options);
+  const nsfwnet = new NSFWJS(base ?? BASE_PATH, options);
   await nsfwnet.load();
   return nsfwnet;
 }
