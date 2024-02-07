@@ -23,7 +23,6 @@ Why would this be useful? [Check out the announcement blog post](https://shift.i
 - [Library API](#library-api)
     - [`load` the model](#load-the-model)
     - [`classify` an image](#classify-an-image)
-    - [`classifyGif`](#classifygif)
 - [Production](#production)
 - [Install](#install)
     - [Host your own model](#host-your-own-model)
@@ -150,51 +149,6 @@ const predictions = await model.classify(img, 3)
 **Returns**
 
 - Array of objects that contain `className` and `probability`. Array size is determined by the second parameter in the `classify` function.
-
-#### `classifyGif`
-
-![Gif Example](./_art/gif_scrub.gif)
-
-This function can take a browser-based image element (`<img>`) that is a GIF, and returns an array of prediction arrays. It breaks a GIF into its frames and runs `classify` on each with a given configuration. This can take a while, as GIFs are frequently hundreds of frames.
-
-```js
-// Returns all predictions of each GIF frame
-const framePredictions = await model.classifyGif(img)
-```
-
-If you're looking to update the user on status (_e.g. progress bar_) or change the number of top results per frame, then you can utilize the configuration parameter.
-
-Example of passing a configuration:
-
-```js
-// returns top 1 prediction of each GIF frame, and logs the status to console
-const myConfig = {
-  topk: 1,
-  fps: 1,
-  onFrame: ({ index, totalFrames, predictions, image }) => {
-    console.log({ index, totalFrames, predictions })
-    // document.body.appendChild(image)
-    // require('fs').writeFileSync(`./file.jpeg`, require('jpeg-js').encode(image).data)
-  }
-}
-const framePredictions = await classifyGif(img, myConfig)
-```
-
-**Parameters**
-
-- Image element to check
-- Configuration object with the following possible key/values:
-  - `topk` - Number of results to return per frame (default all 5)
-  - `fps` - Frames per seconds, frames picks proportionally from the middle (default all frames)
-  - `onFrame` - Function callback on each frame - Param is an object with the following key/values:
-    - `index` - the current GIF frame that was classified (starting at 0)
-    - `totalFrames` - the complete number of frames for this GIF (for progress calculations)
-    - `predictions` - an array of length `topk`, returning top results from classify
-    - `image` - an image of specific frame
-
-**Returns**
-
-- Array of the same order as number of frames in GIF. Each index corresponding to that frame, an returns array of objects that contain `className` and `probability`; sorted by probability and limited by topk config parameter.
 
 ## Production
 
@@ -374,40 +328,44 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 <table>
-  <tr>
-    <td align="center"><a href="http://gantlaborde.com/"><img src="https://avatars0.githubusercontent.com/u/997157?v=4" width="100px;" alt=""/><br /><sub><b>Gant Laborde</b></sub></a><br /><a href="#question-GantMan" title="Answering Questions">💬</a> <a href="#blog-GantMan" title="Blogposts">📝</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=GantMan" title="Code">💻</a> <a href="#example-GantMan" title="Examples">💡</a> <a href="#ideas-GantMan" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-GantMan" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/infinitered/nsfwjs/pulls?q=is%3Apr+reviewed-by%3AGantMan" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=GantMan" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://jamonholmgren.com"><img src="https://avatars3.githubusercontent.com/u/1479215?v=4" width="100px;" alt=""/><br /><sub><b>Jamon Holmgren</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=jamonholmgren" title="Documentation">📖</a> <a href="#ideas-jamonholmgren" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=jamonholmgren" title="Code">💻</a> <a href="#content-jamonholmgren" title="Content">🖋</a></td>
-    <td align="center"><a href="https://github.com/jstudenski"><img src="https://avatars0.githubusercontent.com/u/7350279?v=4" width="100px;" alt=""/><br /><sub><b>Jeff Studenski</b></sub></a><br /><a href="#design-jstudenski" title="Design">🎨</a></td>
-    <td align="center"><a href="https://github.com/fvonhoven"><img src="https://avatars2.githubusercontent.com/u/10098988?v=4" width="100px;" alt=""/><br /><sub><b>Frank von Hoven III</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=fvonhoven" title="Documentation">📖</a> <a href="#ideas-fvonhoven" title="Ideas, Planning, & Feedback">🤔</a></td>
-    <td align="center"><a href="https://github.com/sandeshsoni"><img src="https://avatars3.githubusercontent.com/u/3761745?v=4" width="100px;" alt=""/><br /><sub><b>Sandesh Soni</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=sandeshsoni" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/seannam1218"><img src="https://avatars1.githubusercontent.com/u/24437898?v=4" width="100px;" alt=""/><br /><sub><b>Sean Nam</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=seannam1218" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/emer7"><img src="https://avatars1.githubusercontent.com/u/21377166?v=4" width="100px;" alt=""/><br /><sub><b>Gilbert Emerson</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=emer7" title="Code">💻</a></td>
-  </tr>
-  <tr>
-    <td align="center"><a href="https://github.com/xilaraux"><img src="https://avatars2.githubusercontent.com/u/17703730?v=4" width="100px;" alt=""/><br /><sub><b>Oleksandr Kozlov</b></sub></a><br /><a href="#infra-xilaraux" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=xilaraux" title="Tests">⚠️</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=xilaraux" title="Code">💻</a></td>
-    <td align="center"><a href="http://morganlaco.com"><img src="https://avatars2.githubusercontent.com/u/4466642?v=4" width="100px;" alt=""/><br /><sub><b>Morgan</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=mlaco" title="Code">💻</a> <a href="#ideas-mlaco" title="Ideas, Planning, & Feedback">🤔</a></td>
-    <td align="center"><a href="http://mycaule.github.io/"><img src="https://avatars2.githubusercontent.com/u/6161385?v=4" width="100px;" alt=""/><br /><sub><b>Michel Hua</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=mycaule" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=mycaule" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://www.infinite.red"><img src="https://avatars2.githubusercontent.com/u/1771152?v=4" width="100px;" alt=""/><br /><sub><b>Kevin VanGelder</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=kevinvangelder" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=kevinvangelder" title="Documentation">📖</a></td>
-    <td align="center"><a href="http://technikempire.com"><img src="https://avatars2.githubusercontent.com/u/11234763?v=4" width="100px;" alt=""/><br /><sub><b>Jesse Nicholson</b></sub></a><br /><a href="#data-TechnikEmpire" title="Data">🔣</a> <a href="#ideas-TechnikEmpire" title="Ideas, Planning, & Feedback">🤔</a></td>
-    <td align="center"><a href="https://github.com/camhart"><img src="https://avatars0.githubusercontent.com/u/3038809?v=4" width="100px;" alt=""/><br /><sub><b>camhart</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=camhart" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/Cameron-Burkholder"><img src="https://avatars2.githubusercontent.com/u/13265710?v=4" width="100px;" alt=""/><br /><sub><b>Cameron Burkholder</b></sub></a><br /><a href="#design-Cameron-Burkholder" title="Design">🎨</a></td>
-  </tr>
-  <tr>
-    <td align="center"><a href="https://qwertyforce.ru"><img src="https://avatars0.githubusercontent.com/u/44163887?v=4" width="100px;" alt=""/><br /><sub><b>qwertyforce</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=qwertyforce" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/YegorZaremba"><img src="https://avatars3.githubusercontent.com/u/31797554?v=4" width="100px;" alt=""/><br /><sub><b>Yegor <3</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=YegorZaremba" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=YegorZaremba" title="Tests">⚠️</a></td>
-    <td align="center"><a href="http://navendu.me"><img src="https://avatars1.githubusercontent.com/u/49474499?v=4" width="100px;" alt=""/><br /><sub><b>Navendu Pottekkat</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=navendu-pottekkat" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/VladStepanov"><img src="https://avatars0.githubusercontent.com/u/49880862?v=4" width="100px;" alt=""/><br /><sub><b>Vladislav</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=VladStepanov" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=VladStepanov" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/nacht42"><img src="https://avatars1.githubusercontent.com/u/37903575?v=4" width="100px;" alt=""/><br /><sub><b>Nacht</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=nacht42" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/kateinkim"><img src="https://avatars.githubusercontent.com/u/53795920?v=4" width="100px;" alt=""/><br /><sub><b>kateinkim</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=kateinkim" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=kateinkim" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://janpoonthong.github.io/portfolio/"><img src="https://avatars.githubusercontent.com/u/56725335?v=4" width="100px;" alt=""/><br /><sub><b>jan</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=JanPoonthong" title="Documentation">📖</a></td>
-  </tr>
-  <tr>
-    <td align="center"><a href="https://github.com/roerohan"><img src="https://avatars.githubusercontent.com/u/42958812?v=4" width="100px;" alt=""/><br /><sub><b>Rohan Mukherjee</b></sub></a><br /><a href="#question-roerohan" title="Answering Questions">💬</a> <a href="#infra-roerohan" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-roerohan" title="Maintenance">🚧</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=roerohan" title="Code">💻</a></td>
-  </tr>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="http://gantlaborde.com/"><img src="https://avatars0.githubusercontent.com/u/997157?v=4?s=100" width="100px;" alt="Gant Laborde"/><br /><sub><b>Gant Laborde</b></sub></a><br /><a href="#question-GantMan" title="Answering Questions">💬</a> <a href="#blog-GantMan" title="Blogposts">📝</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=GantMan" title="Code">💻</a> <a href="#example-GantMan" title="Examples">💡</a> <a href="#ideas-GantMan" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-GantMan" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/infinitered/nsfwjs/pulls?q=is%3Apr+reviewed-by%3AGantMan" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=GantMan" title="Tests">⚠️</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://jamonholmgren.com"><img src="https://avatars3.githubusercontent.com/u/1479215?v=4?s=100" width="100px;" alt="Jamon Holmgren"/><br /><sub><b>Jamon Holmgren</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=jamonholmgren" title="Documentation">📖</a> <a href="#ideas-jamonholmgren" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=jamonholmgren" title="Code">💻</a> <a href="#content-jamonholmgren" title="Content">🖋</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/mazenchami"><img src="https://avatars.githubusercontent.com/u/9324607?v=4?s=100" width="100px;" alt="Mazen Chami"/><br /><sub><b>Mazen Chami</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=mazenchami" title="Documentation">📖</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=mazenchami" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/pulls?q=is%3Apr+reviewed-by%3Amazenchami" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=mazenchami" title="Tests">⚠️</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/jstudenski"><img src="https://avatars0.githubusercontent.com/u/7350279?v=4?s=100" width="100px;" alt="Jeff Studenski"/><br /><sub><b>Jeff Studenski</b></sub></a><br /><a href="#design-jstudenski" title="Design">🎨</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/fvonhoven"><img src="https://avatars2.githubusercontent.com/u/10098988?v=4?s=100" width="100px;" alt="Frank von Hoven III"/><br /><sub><b>Frank von Hoven III</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=fvonhoven" title="Documentation">📖</a> <a href="#ideas-fvonhoven" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/sandeshsoni"><img src="https://avatars3.githubusercontent.com/u/3761745?v=4?s=100" width="100px;" alt="Sandesh Soni"/><br /><sub><b>Sandesh Soni</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=sandeshsoni" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/seannam1218"><img src="https://avatars1.githubusercontent.com/u/24437898?v=4?s=100" width="100px;" alt="Sean Nam"/><br /><sub><b>Sean Nam</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=seannam1218" title="Documentation">📖</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/emer7"><img src="https://avatars1.githubusercontent.com/u/21377166?v=4?s=100" width="100px;" alt="Gilbert Emerson"/><br /><sub><b>Gilbert Emerson</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=emer7" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/xilaraux"><img src="https://avatars2.githubusercontent.com/u/17703730?v=4?s=100" width="100px;" alt="Oleksandr Kozlov"/><br /><sub><b>Oleksandr Kozlov</b></sub></a><br /><a href="#infra-xilaraux" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=xilaraux" title="Tests">⚠️</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=xilaraux" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://morganlaco.com"><img src="https://avatars2.githubusercontent.com/u/4466642?v=4?s=100" width="100px;" alt="Morgan"/><br /><sub><b>Morgan</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=mlaco" title="Code">💻</a> <a href="#ideas-mlaco" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://mycaule.github.io/"><img src="https://avatars2.githubusercontent.com/u/6161385?v=4?s=100" width="100px;" alt="Michel Hua"/><br /><sub><b>Michel Hua</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=mycaule" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=mycaule" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://www.infinite.red"><img src="https://avatars2.githubusercontent.com/u/1771152?v=4?s=100" width="100px;" alt="Kevin VanGelder"/><br /><sub><b>Kevin VanGelder</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=kevinvangelder" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=kevinvangelder" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://technikempire.com"><img src="https://avatars2.githubusercontent.com/u/11234763?v=4?s=100" width="100px;" alt="Jesse Nicholson"/><br /><sub><b>Jesse Nicholson</b></sub></a><br /><a href="#data-TechnikEmpire" title="Data">🔣</a> <a href="#ideas-TechnikEmpire" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/camhart"><img src="https://avatars0.githubusercontent.com/u/3038809?v=4?s=100" width="100px;" alt="camhart"/><br /><sub><b>camhart</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=camhart" title="Documentation">📖</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Cameron-Burkholder"><img src="https://avatars2.githubusercontent.com/u/13265710?v=4?s=100" width="100px;" alt="Cameron Burkholder"/><br /><sub><b>Cameron Burkholder</b></sub></a><br /><a href="#design-Cameron-Burkholder" title="Design">🎨</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://qwertyforce.ru"><img src="https://avatars0.githubusercontent.com/u/44163887?v=4?s=100" width="100px;" alt="qwertyforce"/><br /><sub><b>qwertyforce</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=qwertyforce" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/YegorZaremba"><img src="https://avatars3.githubusercontent.com/u/31797554?v=4?s=100" width="100px;" alt="Yegor <3"/><br /><sub><b>Yegor <3</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=YegorZaremba" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=YegorZaremba" title="Tests">⚠️</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://navendu.me"><img src="https://avatars1.githubusercontent.com/u/49474499?v=4?s=100" width="100px;" alt="Navendu Pottekkat"/><br /><sub><b>Navendu Pottekkat</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=navendu-pottekkat" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/VladStepanov"><img src="https://avatars0.githubusercontent.com/u/49880862?v=4?s=100" width="100px;" alt="Vladislav"/><br /><sub><b>Vladislav</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=VladStepanov" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=VladStepanov" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/nacht42"><img src="https://avatars1.githubusercontent.com/u/37903575?v=4?s=100" width="100px;" alt="Nacht"/><br /><sub><b>Nacht</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=nacht42" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/kateinkim"><img src="https://avatars.githubusercontent.com/u/53795920?v=4?s=100" width="100px;" alt="kateinkim"/><br /><sub><b>kateinkim</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=kateinkim" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=kateinkim" title="Documentation">📖</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://janpoonthong.github.io/portfolio/"><img src="https://avatars.githubusercontent.com/u/56725335?v=4?s=100" width="100px;" alt="jan"/><br /><sub><b>jan</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=JanPoonthong" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/roerohan"><img src="https://avatars.githubusercontent.com/u/42958812?v=4?s=100" width="100px;" alt="Rohan Mukherjee"/><br /><sub><b>Rohan Mukherjee</b></sub></a><br /><a href="#question-roerohan" title="Answering Questions">💬</a> <a href="#infra-roerohan" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-roerohan" title="Maintenance">🚧</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=roerohan" title="Code">💻</a></td>
+    </tr>
+  </tbody>
 </table>
 
-<!-- markdownlint-enable -->
+<!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
