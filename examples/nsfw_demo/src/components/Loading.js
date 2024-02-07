@@ -1,7 +1,7 @@
 import React from 'react'
 import * as Spinner from 'react-spinkit'
 
-export default ({ showLoading }) => {
+const Loading = ({ showLoading }) => {
   if (showLoading) {
     return (
       <div id="spinContainer">
@@ -12,3 +12,5 @@ export default ({ showLoading }) => {
 
   return null
 }
+
+export default Loading

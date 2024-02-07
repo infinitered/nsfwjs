@@ -12,7 +12,7 @@
     "toc": "doctoc .",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
-    "prep": "yarn && yarn build && cd example/nsfw_demo/ && yarn add ../../ && cd -",
+    "prep": "yarn && yarn build && cd examples/nsfw_demo/ && yarn add ../../ && cd -",
     "scriptbundle": "browserify ./dist/nsfwjs.js --standalone nsfwjs --outfile ./dist/bundle.js",
     "minbundle": "terser dist/bundle.js --compress --mangle --output dist/nsfwjs.min.js"
   },

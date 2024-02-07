@@ -29,7 +29,7 @@ const options = [
   },
 ]
 
-export default (props) => (
+const Footer = (props) => (
   <div>
     <div className="modelPicker">
       <p>Currently Using:</p>
@@ -45,7 +45,7 @@ export default (props) => (
         <a href="https://github.com/infinitered/nsfwjs">NSFW.js Github</a>
       </div>
       <div>
-        <a href="https://github.com/infinitered/nsfwjs/tree/master/example/nsfw_demo">Website Github</a>
+        <a href="https://github.com/infinitered/nsfwjs/tree/master/examples/nsfw_demo">Website Github</a>
       </div>
       <div>
         <a href="https://github.com/gantman/nsfw_model">NSFW Model Github</a>
@@ -66,3 +66,5 @@ export default (props) => (
     </footer>
   </div>
 )
+
+export default Footer

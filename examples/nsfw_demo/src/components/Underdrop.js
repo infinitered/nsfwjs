@@ -47,6 +47,7 @@ export default class Underdrop extends Component {
                     <a
                       href="https://github.com/alexkimxyz/nsfw_data_scrapper"
                       target="_blank"
+                      rel="noreferrer"
                     >
                       Contribute to the Data Scraper
                     </a>{' '}
@@ -59,6 +60,7 @@ export default class Underdrop extends Component {
                     <a
                       href="https://github.com/gantman/nsfw_model"
                       target="_blank"
+                      rel="noreferrer"
                     >
                       Contribute to the Trainer
                     </a>{' '}
@@ -69,7 +71,8 @@ export default class Underdrop extends Component {
                 <a
                   href="https://medium.freecodecamp.org/machine-learning-how-to-go-from-zero-to-hero-40e26f8aa6da"
                   target="_blank"
-                >
+                  rel="noreferrer"
+                  >
                   <strong>Learn more about how Machine Learning works!</strong>
                 </a>
               </div>

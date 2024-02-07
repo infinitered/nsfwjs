@@ -2,7 +2,7 @@ import React from 'react'
 import tflogo from '../tflogo.jpg'
 import logo from '../logo.svg'
 
-export default () => (
+const Header = () => (
   <header>
     <img src={logo} className="App-logo" alt="logo" />
     <h1>Client-side indecent content checking</h1>
@@ -14,3 +14,5 @@ export default () => (
     </div>
   </header>
 )
+
+export default Header

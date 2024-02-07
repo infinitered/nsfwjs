@@ -89,6 +89,9 @@ class App extends Component {
         case 'Porn':
         case 'Sexy':
           droppedImageStyle = blurred
+          break
+        default:
+          break
       }
     }
     return droppedImageStyle
