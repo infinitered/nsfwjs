@@ -60,10 +60,6 @@
       <div class="main-item">
         <h3>Animations</h3>
         <div class="wrapper">
-          <div class="item">
-            <p>GIF animation</p>
-            <img crossorigin="anonymous" class='animations' width="280" height="250" src="http://localhost/data/animations/smile.gif"></img>
-          </div>
 
           <div class="item">
             <p>WebP animation</p>
@@ -103,12 +99,6 @@
           if (images[i].classList[0] === 'images') {
             model.classify(images[i], 3)
               .then(predictions => showResults(images[i], predictions, true))
-              .catch(error => showError(images[i], error))
-          }
-
-          if (images[i].classList[0] === 'animations') {
-            model.classifyGif(images[i], { topk: 3, fps: 1 })
-              .then(predictions => showResults(images[i], predictions))
               .catch(error => showError(images[i], error))
           }
         }
