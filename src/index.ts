@@ -1,7 +1,3 @@
-import gifFrames, {
-  GifFrameBuffer,
-  GifFrameCanvas,
-} from "@nsfw-filter/gif-frames";
 import * as tf from "@tensorflow/tfjs";
 import { NSFW_CLASSES } from "./nsfw_classes";
 
@@ -31,7 +27,7 @@ export type classifyConfig = {
   onFrame?: (result: frameResult) => any;
 };
 
-export interface nsfwjsOptions {
+interface nsfwjsOptions {
   size?: number;
   type?: string;
 }
@@ -116,16 +112,15 @@ async function loadModel(modelName: ModelName | string) {
   return handler;
 }
 
-export async function load(
-  modelOrUrl?: ModelName,
-  options?: nsfwjsOptions
-): Promise<NSFWJS>;
+export async function load(modelOrUrl?: ModelName): Promise<NSFWJS>;
+
 export async function load(
   modelOrUrl?: string,
   options?: nsfwjsOptions
 ): Promise<NSFWJS>;
+
 export async function load(
-  modelOrUrl: string = DEFAULT_MODEL_NAME,
+  modelOrUrl?: string,
   options: nsfwjsOptions = { size: IMAGE_SIZE }
 ) {
   if (tf == null) {
@@ -134,11 +129,21 @@ export async function load(
         `also include @tensorflow/tfjs on the page before using this model.`
     );
   }
-  if (isModelName(modelOrUrl)) {
-    options = { ...options, ...availableModels[modelOrUrl].options };
+  if (modelOrUrl === undefined) {
+    modelOrUrl = DEFAULT_MODEL_NAME;
+    console.info(
+      `%cBy not specifying 'modelOrUrl' parameter, you're using the default model: '${modelOrUrl}'. See NSFWJS docs for instructions on hosting your own model (https://github.com/infinitered/nsfwjs?tab=readme-ov-file#host-your-own-model).`,
+      "color: lightblue"
+    );
+  } else if (isModelName(modelOrUrl)) {
+    console.info(
+      `%cYou're using the model: '${modelOrUrl}'. See NSFWJS docs for instructions on hosting your own model (https://github.com/infinitered/nsfwjs?tab=readme-ov-file#host-your-own-model).`,
+      "color: lightblue"
+    );
+    options = availableModels[modelOrUrl].options ?? options;
   }
   // Default size is IMAGE_SIZE - needed if just type option is used
-  options.size = options.size || IMAGE_SIZE;
+  options.size = options?.size || IMAGE_SIZE;
   const modelUrlOrHandler = await loadModel(modelOrUrl);
   const nsfwnet = new NSFWJS(modelUrlOrHandler, options);
   await nsfwnet.load();
@@ -355,79 +360,6 @@ export class NSFWJS {
     logits.dispose();
 
     return classes;
-  }
-
-  /**
-   * Classifies a gif from the 5 classes returning a map of
-   * the most likely class names to their probability.
-   *
-   * @param gif The gif to classify. DOM element image
-   * @param config param configuration for run
-   */
-  async classifyGif(
-    gif: HTMLImageElement | Buffer,
-    config: classifyConfig = { topk: 5 }
-  ): Promise<Array<Array<predictionType>>> {
-    let frameData: (GifFrameCanvas | GifFrameBuffer)[] = [];
-
-    if (Buffer.isBuffer(gif)) {
-      frameData = await gifFrames({
-        url: gif,
-        frames: "all",
-        outputType: "jpg",
-      });
-    } else {
-      frameData = await gifFrames({
-        url: gif.src,
-        frames: "all",
-        outputType: "canvas",
-      });
-    }
-
-    let acceptedFrames: number[] = [];
-    if (typeof config.fps !== "number") {
-      acceptedFrames = frameData.map((_element, index) => index);
-    } else {
-      let totalTimeInMs = 0;
-      for (let i = 0; i < frameData.length; i++) {
-        totalTimeInMs = totalTimeInMs + frameData[i].frameInfo.delay * 10;
-      }
-
-      const totalFrames: number = Math.floor(
-        (totalTimeInMs / 1000) * config.fps
-      );
-      if (totalFrames <= 1) {
-        acceptedFrames = [Math.floor(frameData.length / 2)];
-      } else if (totalFrames >= frameData.length) {
-        acceptedFrames = frameData.map((_element, index) => index);
-      } else {
-        const interval: number = Math.floor(
-          frameData.length / (totalFrames + 1)
-        );
-        for (let i = 1; i <= totalFrames; i++) {
-          acceptedFrames.push(i * interval);
-        }
-      }
-    }
-
-    const arrayOfPredictions: predictionType[][] = [];
-    for (let i = 0; i < acceptedFrames.length; i++) {
-      const image = frameData[acceptedFrames[i]].getImage();
-      const predictions = await this.classify(image, config.topk);
-
-      if (typeof config.onFrame === "function") {
-        config.onFrame({
-          index: acceptedFrames[i],
-          totalFrames: frameData.length,
-          predictions,
-          image,
-        });
-      }
-
-      arrayOfPredictions.push(predictions);
-    }
-
-    return arrayOfPredictions;
   }
 }
 

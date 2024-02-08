@@ -25,7 +25,6 @@ Why would this be useful? [Check out the announcement blog post](https://shift.i
   - [`load` the model](#load-the-model)
   - [Caching](#caching)
   - [`classify` an image](#classify-an-image)
-  - [`classifyGif`](#classifygif)
 - [Production](#production)
 - [Install](#install)
   - [Host your own model](#host-your-own-model)
@@ -91,7 +90,7 @@ nsfwjs
 
 ## Library API
 
-#### `load` the model
+### `load` the model
 
 Before you can classify any image, you'll need to load the model.
 
@@ -105,7 +104,7 @@ You can use the optional first parameter to specify which model you want to use 
 const model = nsfwjs.load("MobileNetV2Mid"); // "MobileNetV2" | "MobileNetV2Mid" | "InceptionV3"
 ```
 
-You can also use same parameter and load the model from your website/server, as explained in the [Host your own model](#host-your-own-model) section. Doing so could reduce the bundle size for loading the model by approximately 1.33 times (33%) since you can directly use the binary files instead of the base64 that are bundled with the package. i.e. The `"MobileNetV2"` model bundled into the package is 3.5MB instead of 2.6MB for hosted binary files. This would only make a difference if you are loading the model every time (without [caching](#caching)) on the client-side browser since on the server-side, you'd only be loading the model once at the server start.
+You can also use same parameter and load the model from your website/server, as explained in the [Host your own model](#host-your-own-model) section. Doing so could reduce the bundle size for loading the model by approximately 1.33 times (33%) since you can directly use the binary files instead of the base64 that are bundled with the package. i.e. The `"MobileNetV2"` model bundled into the package is 3.5MB instead of 2.6MB for hosted binary files. This would only make a difference if you are loading the model every time (without [Caching](#caching)) on the client-side browser since on the server-side, you'd only be loading the model once at the server start.
 
 Model MobileNetV2 - [224x224](https://github.com/infinitered/nsfwjs/blob/master/models/mobilenet_v2/)
 
@@ -129,7 +128,7 @@ Model InceptionV3 - [Graph](https://github.com/infinitered/nsfwjs/tree/master/mo
 const model = nsfwjs.load("/path/to/different/model/", { type: "graph" });
 ```
 
-#### Caching
+### Caching
 
 If you're using in the browser and you'd like to subsequently load from indexed db or local storage you can save the underlying model using the appropriate scheme and load from there.
 
@@ -150,7 +149,7 @@ const model = await nsfwjs.load("indexeddb://model" /*{ ...options }*/);
 
 - Ready to use NSFWJS model object
 
-#### `classify` an image
+### `classify` an image
 
 This function can take any browser-based image elements (`<img>`, `<video>`, `<canvas>`) and returns an array of most likely predictions and their confidence levels.
 
@@ -168,51 +167,6 @@ const predictions = await model.classify(img, 3);
 
 - Array of objects that contain `className` and `probability`. Array size is determined by the second parameter in the `classify` function.
 
-#### `classifyGif`
-
-![Gif Example](./_art/gif_scrub.gif)
-
-This function can take a browser-based image element (`<img>`) that is a GIF, and returns an array of prediction arrays. It breaks a GIF into its frames and runs `classify` on each with a given configuration. This can take a while, as GIFs are frequently hundreds of frames.
-
-```js
-// Returns all predictions of each GIF frame
-const framePredictions = await model.classifyGif(img);
-```
-
-If you're looking to update the user on status (_e.g. progress bar_) or change the number of top results per frame, then you can utilize the configuration parameter.
-
-Example of passing a configuration:
-
-```js
-// returns top 1 prediction of each GIF frame, and logs the status to console
-const myConfig = {
-  topk: 1,
-  fps: 1,
-  onFrame: ({ index, totalFrames, predictions, image }) => {
-    console.log({ index, totalFrames, predictions });
-    // document.body.appendChild(image)
-    // require('fs').writeFileSync(`./file.jpeg`, require('jpeg-js').encode(image).data)
-  },
-};
-const framePredictions = await classifyGif(img, myConfig);
-```
-
-**Parameters**
-
-- Image element to check
-- Configuration object with the following possible key/values:
-  - `topk` - Number of results to return per frame (default all 5)
-  - `fps` - Frames per seconds, frames picks proportionally from the middle (default all frames)
-  - `onFrame` - Function callback on each frame - Param is an object with the following key/values:
-    - `index` - the current GIF frame that was classified (starting at 0)
-    - `totalFrames` - the complete number of frames for this GIF (for progress calculations)
-    - `predictions` - an array of length `topk`, returning top results from classify
-    - `image` - an image of specific frame
-
-**Returns**
-
-- Array of the same order as number of frames in GIF. Each index corresponding to that frame, an returns array of objects that contain `className` and `probability`; sorted by probability and limited by topk config parameter.
-
 ## Production
 
 Tensorflow.js offers two flags, `enableProdMode` and `enableDebugMode`. If you're going to use NSFWJS in production, be sure to enable prod mode before loading the NSFWJS model.
@@ -224,6 +178,8 @@ tf.enableProdMode();
 //...
 let model = await nsfwjs.load(`${urlToNSFWJSModel}`);
 ```
+
+**NOTE:** Consider downloading and hosting the model yourself before moving to production as explained in the [Host your own model](#host-your-own-model) section. This could potentially improve the initial load time of the model. Furthermore, consider [Caching](#caching) the model, if you are using it in the browser.
 
 ## Install
 
@@ -238,13 +194,13 @@ $ yarn add nsfwjs
 
 For script tags include all the bundles as shown [here](#browserify). Then simply access the nsfwjs global variable. This requires that you've already imported TensorFlow.js as well.
 
-#### Host your own model
+### Host your own model
 
 The magic that powers NSFWJS is the [NSFW detection model](https://github.com/gantman/nsfw_model). By default, the models are bundled into this package. But you may want to host the models on your own server to reduce bundle size by loading them as raw binary files or to host your own custom model. If you want to host your own version of [the model files](https://github.com/infinitered/nsfwjs/tree/master/models), you can do so by following the steps below. You can then pass the relative URL to your hosted files in the `load` function along with the `options` if necessary.
 
 Here is how to install the default model on a website:
 
-1. Download the project by either cloning `git clone https://github.com/infinitered/nsfwjs.git` or download zip. **_If downloading as zip does not work use cloning._**
+1. Download the project by either downloading as zip or cloning `git clone https://github.com/infinitered/nsfwjs.git`. **_If downloading as zip does not work use cloning._**
 2. Extract the `models` folder from the root of the project and drop it in the `public` directory of your web application to serve them as static files along side your website. (You can host it anywhere such as on a s3 bucket as long as you can access it via URL).
 3. Retrieve the URL and put it into `nsfwjs.load()`. For example: `nsfwjs.load(https://yourwebsite.com/models/mobilenet_v2/model.json)`.
 
@@ -378,11 +334,11 @@ More about NSFWJS and TensorFlow.js - https://youtu.be/uzQwmZwy3yw
 
 The [model was trained in Keras over several days](https://medium.freecodecamp.org/how-to-set-up-nsfw-content-detection-with-machine-learning-229a9725829c) and 60+ Gigs of data. Be sure to [check out the model code](https://github.com/GantMan/nsfw_model) which was trained on data provided by [Alexander Kim's](https://github.com/alexkimxyz) [nsfw_data_scraper](https://github.com/alexkimxyz/nsfw_data_scraper).
 
-#### Open Source
+### Open Source
 
 NSFWJS, as open source, is free to use and always will be :heart:. It's MIT licensed, and we'll always do our best to help and quickly answer issues. If you'd like to get a hold of us, join our [community slack](http://community.infinite.red).
 
-#### Need the experts? Hire Infinite Red for your next project
+### Need the experts? Hire Infinite Red for your next project
 
 If your project's calling for the experts in all things React Native, Infinite Red’s here to help! Our experienced team of software engineers have worked with companies like Microsoft, Zoom, and Mercari to bring even some of the most complex projects to life.
 
@@ -401,33 +357,34 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="http://gantlaborde.com/"><img src="https://avatars0.githubusercontent.com/u/997157?v=4?s=100" width="100px;" alt="Gant Laborde"/><br /><sub><b>Gant Laborde</b></sub></a><br /><a href="#question-GantMan" title="Answering Questions">💬</a> <a href="#blog-GantMan" title="Blogposts">📝</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=GantMan" title="Code">💻</a> <a href="#example-GantMan" title="Examples">💡</a> <a href="#ideas-GantMan" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-GantMan" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/infinitered/nsfwjs/pulls?q=is%3Apr+reviewed-by%3AGantMan" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=GantMan" title="Tests">⚠️</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://jamonholmgren.com"><img src="https://avatars3.githubusercontent.com/u/1479215?v=4?s=100" width="100px;" alt="Jamon Holmgren"/><br /><sub><b>Jamon Holmgren</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=jamonholmgren" title="Documentation">📖</a> <a href="#ideas-jamonholmgren" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=jamonholmgren" title="Code">💻</a> <a href="#content-jamonholmgren" title="Content">🖋</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/mazenchami"><img src="https://avatars.githubusercontent.com/u/9324607?v=4?s=100" width="100px;" alt="Mazen Chami"/><br /><sub><b>Mazen Chami</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=mazenchami" title="Documentation">📖</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=mazenchami" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/pulls?q=is%3Apr+reviewed-by%3Amazenchami" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=mazenchami" title="Tests">⚠️</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/jstudenski"><img src="https://avatars0.githubusercontent.com/u/7350279?v=4?s=100" width="100px;" alt="Jeff Studenski"/><br /><sub><b>Jeff Studenski</b></sub></a><br /><a href="#design-jstudenski" title="Design">🎨</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/fvonhoven"><img src="https://avatars2.githubusercontent.com/u/10098988?v=4?s=100" width="100px;" alt="Frank von Hoven III"/><br /><sub><b>Frank von Hoven III</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=fvonhoven" title="Documentation">📖</a> <a href="#ideas-fvonhoven" title="Ideas, Planning, & Feedback">🤔</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/sandeshsoni"><img src="https://avatars3.githubusercontent.com/u/3761745?v=4?s=100" width="100px;" alt="Sandesh Soni"/><br /><sub><b>Sandesh Soni</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=sandeshsoni" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/seannam1218"><img src="https://avatars1.githubusercontent.com/u/24437898?v=4?s=100" width="100px;" alt="Sean Nam"/><br /><sub><b>Sean Nam</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=seannam1218" title="Documentation">📖</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/emer7"><img src="https://avatars1.githubusercontent.com/u/21377166?v=4?s=100" width="100px;" alt="Gilbert Emerson"/><br /><sub><b>Gilbert Emerson</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=emer7" title="Code">💻</a></td>
     </tr>
     <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/emer7"><img src="https://avatars1.githubusercontent.com/u/21377166?v=4?s=100" width="100px;" alt="Gilbert Emerson"/><br /><sub><b>Gilbert Emerson</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=emer7" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/xilaraux"><img src="https://avatars2.githubusercontent.com/u/17703730?v=4?s=100" width="100px;" alt="Oleksandr Kozlov"/><br /><sub><b>Oleksandr Kozlov</b></sub></a><br /><a href="#infra-xilaraux" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=xilaraux" title="Tests">⚠️</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=xilaraux" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://morganlaco.com"><img src="https://avatars2.githubusercontent.com/u/4466642?v=4?s=100" width="100px;" alt="Morgan"/><br /><sub><b>Morgan</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=mlaco" title="Code">💻</a> <a href="#ideas-mlaco" title="Ideas, Planning, & Feedback">🤔</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://mycaule.github.io/"><img src="https://avatars2.githubusercontent.com/u/6161385?v=4?s=100" width="100px;" alt="Michel Hua"/><br /><sub><b>Michel Hua</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=mycaule" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=mycaule" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://www.infinite.red"><img src="https://avatars2.githubusercontent.com/u/1771152?v=4?s=100" width="100px;" alt="Kevin VanGelder"/><br /><sub><b>Kevin VanGelder</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=kevinvangelder" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=kevinvangelder" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://technikempire.com"><img src="https://avatars2.githubusercontent.com/u/11234763?v=4?s=100" width="100px;" alt="Jesse Nicholson"/><br /><sub><b>Jesse Nicholson</b></sub></a><br /><a href="#data-TechnikEmpire" title="Data">🔣</a> <a href="#ideas-TechnikEmpire" title="Ideas, Planning, & Feedback">🤔</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/camhart"><img src="https://avatars0.githubusercontent.com/u/3038809?v=4?s=100" width="100px;" alt="camhart"/><br /><sub><b>camhart</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=camhart" title="Documentation">📖</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Cameron-Burkholder"><img src="https://avatars2.githubusercontent.com/u/13265710?v=4?s=100" width="100px;" alt="Cameron Burkholder"/><br /><sub><b>Cameron Burkholder</b></sub></a><br /><a href="#design-Cameron-Burkholder" title="Design">🎨</a></td>
     </tr>
     <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Cameron-Burkholder"><img src="https://avatars2.githubusercontent.com/u/13265710?v=4?s=100" width="100px;" alt="Cameron Burkholder"/><br /><sub><b>Cameron Burkholder</b></sub></a><br /><a href="#design-Cameron-Burkholder" title="Design">🎨</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://qwertyforce.ru"><img src="https://avatars0.githubusercontent.com/u/44163887?v=4?s=100" width="100px;" alt="qwertyforce"/><br /><sub><b>qwertyforce</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=qwertyforce" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/YegorZaremba"><img src="https://avatars3.githubusercontent.com/u/31797554?v=4?s=100" width="100px;" alt="Yegor <3"/><br /><sub><b>Yegor <3</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=YegorZaremba" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=YegorZaremba" title="Tests">⚠️</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://navendu.me"><img src="https://avatars1.githubusercontent.com/u/49474499?v=4?s=100" width="100px;" alt="Navendu Pottekkat"/><br /><sub><b>Navendu Pottekkat</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=navendu-pottekkat" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/VladStepanov"><img src="https://avatars0.githubusercontent.com/u/49880862?v=4?s=100" width="100px;" alt="Vladislav"/><br /><sub><b>Vladislav</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=VladStepanov" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=VladStepanov" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/nacht42"><img src="https://avatars1.githubusercontent.com/u/37903575?v=4?s=100" width="100px;" alt="Nacht"/><br /><sub><b>Nacht</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=nacht42" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/kateinkim"><img src="https://avatars.githubusercontent.com/u/53795920?v=4?s=100" width="100px;" alt="kateinkim"/><br /><sub><b>kateinkim</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=kateinkim" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=kateinkim" title="Documentation">📖</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://janpoonthong.github.io/portfolio/"><img src="https://avatars.githubusercontent.com/u/56725335?v=4?s=100" width="100px;" alt="jan"/><br /><sub><b>jan</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=JanPoonthong" title="Documentation">📖</a></td>
     </tr>
     <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://janpoonthong.github.io/portfolio/"><img src="https://avatars.githubusercontent.com/u/56725335?v=4?s=100" width="100px;" alt="jan"/><br /><sub><b>jan</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=JanPoonthong" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/roerohan"><img src="https://avatars.githubusercontent.com/u/42958812?v=4?s=100" width="100px;" alt="Rohan Mukherjee"/><br /><sub><b>Rohan Mukherjee</b></sub></a><br /><a href="#question-roerohan" title="Answering Questions">💬</a> <a href="#infra-roerohan" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-roerohan" title="Maintenance">🚧</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=roerohan" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://hazya.dev"><img src="https://avatars.githubusercontent.com/u/63403456?v=4?s=100" width="100px;" alt="haZya"/><br /><sub><b>haZya</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=haZya" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=haZya" title="Documentation">📖</a> <a href="#example-haZya" title="Examples">💡</a> <a href="#ideas-haZya" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-haZya" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://hazya.dev"><img src="https://avatars.githubusercontent.com/u/63403456?v=4?s=100" width="100px;" alt="Hasitha Wickramasinghe"/><br /><sub><b>Hasitha Wickramasinghe</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=haZya" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=haZya" title="Documentation">📖</a> <a href="#example-haZya" title="Examples">💡</a> <a href="#ideas-haZya" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-haZya" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
     </tr>
   </tbody>
 </table>

@@ -32,7 +32,6 @@ class App extends Component {
     loading: true,
     fileType: null,
     hardReset: false,
-    gifControl: null,
     currentModelName: 'MobileNetV2Mid',
   }
 
@@ -78,76 +77,29 @@ class App extends Component {
 
   detectBlurStatus = (predictions, blurNSFW = this.state.blurNSFW) => {
     let droppedImageStyle = clean
-    if (this.state.fileType === 'image/gif') {
-      const deemedEvil = this.detectGifEvil(predictions)
-      droppedImageStyle = deemedEvil > 0 && blurNSFW ? blurred : clean
-    } else {
-      if (blurNSFW) {
-        switch (predictions[0].className) {
-          case 'Hentai':
-          case 'Porn':
-          case 'Sexy':
-            droppedImageStyle = blurred
-        }
+    if (blurNSFW) {
+      switch (predictions[0].className) {
+        case 'Hentai':
+        case 'Porn':
+        case 'Sexy':
+          droppedImageStyle = blurred
       }
     }
     return droppedImageStyle
   }
-
-  detectGifEvil = (predictions) =>
-    predictions
-      .filter((c) => {
-        return ['Hentai', 'Porn', 'Sexy'].includes(c[0].className)
-      })
-      .flat().length
 
   checkContent = async () => {
     // Sleep bc it's grabbing image before it's rendered
     // Not really a problem of this library
     await this.sleep(100)
     const img = this.refs.dropped
-    if (this.state.fileType === 'image/gif') {
-      this.setState({
-        message: `0% - Parsing GIF frames`,
-        predictions: [],
-        loading: true,
-      })
-      const predictions = await this.state.model.classifyGif(img, {
-        topk: 1,
-        setGifControl: (gifControl) => {
-          this.setState({
-            gifControl,
-          })
-        },
-        onFrame: ({ index, totalFrames, predictions }) => {
-          const percent = ((index / totalFrames) * 100).toFixed(0)
-          this.setState({
-            message: `${percent}% - Frame ${index} is ${predictions[0].className}`,
-          })
-        },
-      })
-      const deemedEvil = this.detectGifEvil(predictions)
-      // If any frame is NSFW, blur it (if blur is on)
-      const droppedImageStyle = this.detectBlurStatus(predictions)
-      const gifMessage =
-        deemedEvil > 0
-          ? `Detected ${deemedEvil} NSFW frames`
-          : 'All frames look clean'
-      this.setState({
-        message: `GIF Result: ${gifMessage}`,
-        predictions,
-        droppedImageStyle,
-        loading: false,
-      })
-    } else {
-      const predictions = await this.state.model.classify(img)
-      let droppedImageStyle = this.detectBlurStatus(predictions)
-      this.setState({
-        message: `Identified as ${predictions[0].className}`,
-        predictions,
-        droppedImageStyle,
-      })
-    }
+    const predictions = await this.state.model.classify(img)
+    let droppedImageStyle = this.detectBlurStatus(predictions)
+    this.setState({
+      message: `Identified as ${predictions[0].className}`,
+      predictions,
+      droppedImageStyle,
+    })
   }
 
   setFile = (file) => {
@@ -165,7 +117,7 @@ class App extends Component {
 
   onDrop = (accepted, rejected) => {
     if (rejected.length > 0) {
-      window.alert('JPG, PNG, WEBP, GIF only plz')
+      window.alert('JPG, PNG, WEBP only plz')
     } else {
       let droppedImageStyle = this.state.blurNSFW ? blurred : clean
       this.setState({
@@ -230,7 +182,6 @@ class App extends Component {
         />
       )
     } else {
-      // SuperGif kills our React Component
       // Only way I can seem to revive it is
       // to force a full re-render of Drop area
       if (this.state.hardReset) {
@@ -240,7 +191,7 @@ class App extends Component {
       return (
         <Dropzone
           id="dropBox"
-          accept="image/jpeg, image/png, image/gif, image/webp"
+          accept="image/jpeg, image/png, image/webp"
           className="photo-box"
           onDrop={this.onDrop.bind(this)}
         >
@@ -293,7 +244,6 @@ class App extends Component {
           <Loading showLoading={this.state.loading} />
           <Results
             message={this.state.message}
-            gifControl={this.state.gifControl}
             predictions={this.state.predictions}
           />
         </main>

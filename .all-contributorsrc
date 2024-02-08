@@ -38,6 +38,18 @@
       ]
     },
     {
+      "login": "mazenchami",
+      "name": "Mazen Chami",
+      "avatar_url": "https://avatars.githubusercontent.com/u/9324607?v=4",
+      "profile": "https://github.com/mazenchami",
+      "contributions": [
+        "doc",
+        "code",
+        "review",
+        "test"
+      ]
+    },
+    {
       "login": "jstudenski",
       "name": "Jeff Studenski",
       "avatar_url": "https://avatars0.githubusercontent.com/u/7350279?v=4",
@@ -232,7 +244,7 @@
     },
     {
       "login": "haZya",
-      "name": "haZya",
+      "name": "Hasitha Wickramasinghe",
       "avatar_url": "https://avatars.githubusercontent.com/u/63403456?v=4",
       "profile": "https://hazya.dev",
       "contributions": [

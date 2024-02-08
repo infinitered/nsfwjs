@@ -17,12 +17,11 @@
     "react-webcam": "^1.1.0",
     "seedrandom": "^3.0.1",
     "stream-browserify": "^3.0.0",
-    "tether-drop": "^1.4.2",
-    "victory": "^36.0.0"
+    "tether-drop": "^1.4.2"
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "build": "react-app-rewired --openssl-legacy-provider build",
+    "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
