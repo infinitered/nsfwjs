@@ -19,9 +19,11 @@ const renderPredictions = props => {
   }
 }
 
-export default props => (
+const Results = props => (
   <div id="results">
     <p>{props.message}</p>
     {renderPredictions(props)}
   </div>
 )
+
+export default Results
