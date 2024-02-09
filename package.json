@@ -7,7 +7,8 @@
   "scripts": {
     "test": "yarn build && jest",
     "lint": "tslint -p . -t verbose",
-    "shipit": "yarn build && yarn scriptbundle && yarn minbundle && np",
+    "shipit:precheck": "if [ \"$npm_config_user_agent\" != \"${npm_config_user_agent#*yarn}\" ]; then echo 'Use `npm run shipit` instead of yarn.' && exit 1;  fi",
+    "shipit": "npm run shipit:precheck && yarn build && yarn scriptbundle && yarn minbundle && np",
     "build": "tsc --skipLibCheck",
     "toc": "doctoc .",
     "contributors:add": "all-contributors add",
