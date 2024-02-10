@@ -1,6 +1,6 @@
 {
   "name": "nsfwjs",
-  "version": "2.4.2",
+  "version": "3.0.0",
   "unpkg": "dist/nsfwjs.min.js",
   "description": "Detect NSFW content client-side",
   "module": "dist/esm/index.js",
@@ -29,7 +29,8 @@
     "scriptbundle": "browserify ./dist/cjs/nsfwjs.js -s nsfwjs -o ./dist/browser/bundle.js",
     "minbundle": "terser dist/browser/bundle.js -c -m -o dist/browser/nsfwjs.min.js",
     "bundle": "yarn build && yarn scriptbundle && yarn minbundle",
-    "shipit": "yarn bundle && np"
+    "shipit:precheck": "if [ \"$npm_config_user_agent\" != \"${npm_config_user_agent#*yarn}\" ]; then echo 'Use `npm run shipit` instead of yarn.' && exit 1;  fi",
+    "shipit": "npm run shipit:precheck && yarn bundle && np"
   },
   "repository": {
     "type": "git",
@@ -49,7 +50,7 @@
     "doctoc": "^2.2.0",
     "jest": "^28.1.3",
     "jpeg-js": "^0.4.4",
-    "np": "5.0.2",
+    "np": "^9.2.0",
     "seedrandom": "~3.0.5",
     "terser": "^5.14.2",
     "ts-jest": "^28.0.7",
@@ -57,6 +58,7 @@
     "tslint": "~6.1.3",
     "typescript": "5.3.3"
   },
+  "packageManager": "yarn@1.22.19",
   "keywords": [
     "NSFW",
     "JavaScript",

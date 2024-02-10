@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   lint:
     docker:
-      - image: cimg/node:14.19
+      - image: cimg/node:20.9.0
     steps:
       - checkout
       - restore_cache:
@@ -25,7 +25,7 @@ jobs:
           command: yarn lint
   test:
     docker:
-      - image: cimg/node:14.19
+      - image: cimg/node:20.9.0
     steps:
       - checkout
       - restore_cache:
