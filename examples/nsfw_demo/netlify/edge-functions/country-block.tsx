@@ -15,13 +15,6 @@ export default async (request: Request, context: Context) => {
       }
     );
   }
-
-  // return new Response(
-  //   `Hello there! You can freely access our content from ${countryName}!`,
-  //   {
-  //     headers: { "content-type": "text/html" },
-  //   }
-  // );
 };
 
 export const config: Config = {
