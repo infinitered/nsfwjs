@@ -1,7 +1,6 @@
 import type { Context, Config } from "@netlify/edge-functions";
 
 export default async (request: Request, context: Context) => {
-  console.log({ request, context });
   const BLOCKED_COUNTRY_CODE = "RU";
   const countryCode = context.geo?.country?.code ?? "US";
   const countryName = context.geo?.country?.name ?? "United States of America";
