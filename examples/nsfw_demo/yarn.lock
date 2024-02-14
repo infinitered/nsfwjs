@@ -1498,6 +1498,11 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
+"@netlify/edge-functions@^2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@netlify/edge-functions/-/edge-functions-2.3.1.tgz#45dc30894e57948b47a6b4fe6f05f664ec55716c"
+  integrity sha512-3sJzP1DmzMZppkAZpUixdHA4ryiKD1NSpLMRViYStE9Oe10rZPSnM8yl6A90vTBqCYvbAF5S7W9oPf2ucrCCIQ==
+
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"
   resolved "https://registry.yarnpkg.com/@nicolo-ribaudo/eslint-scope-5-internals/-/eslint-scope-5-internals-5.1.1-v1.tgz#dbf733a965ca47b1973177dc0bb6c889edcfb129"
@@ -6119,7 +6124,7 @@ npm-run-path@^4.0.1:
     path-key "^3.0.0"
 
 nsfwjs@../../:
-  version "2.4.2"
+  version "3.0.0"
 
 nth-check@^1.0.2:
   version "1.0.2"
