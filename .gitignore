@@ -12,3 +12,6 @@ examples/manual-testing/data/*
 
 /models/**/*.js
 /models/**/*.min.js
+
+# Local Netlify folder
+.netlify

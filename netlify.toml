@@ -2,3 +2,8 @@
   base = "/"
   command = "npm run build && cd examples/nsfw_demo && npm i && npm run build"
   publish = "examples/nsfw_demo/build"
+  edge_functions = "examples/nsfw_demo/netlify/edge-functions"
+
+[[edge_functions]]
+  function = "country-block"
+  path = "/*"
