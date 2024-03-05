@@ -114,7 +114,7 @@ const model = nsfwjs.load("/path/to/model/directory/");
 
 If you're using a model that needs an image of dimension other than 224x224, you can pass the size in the options parameter.
 
-Model MobileNetV2Mid - [299x299](https://github.com/infinitered/nsfwjs/tree/master/models/inception_v3)
+Model MobileNetV2Mid - [299x299](https://github.com/infinitered/nsfwjs/tree/master/models/mobilenet_v2_mid)
 
 ```js
 const model = nsfwjs.load("/path/to/different/model/", { size: 299 });
@@ -122,7 +122,7 @@ const model = nsfwjs.load("/path/to/different/model/", { size: 299 });
 
 If you're using a graph model, you cannot use the infer method, and you'll need to tell model load that you're dealing with a graph model in options.
 
-Model InceptionV3 - [Graph](https://github.com/infinitered/nsfwjs/tree/master/models/mobilenet_v2_mid)
+Model InceptionV3 - [Graph](https://github.com/infinitered/nsfwjs/tree/master/models/inception_v3)
 
 ```js
 const model = nsfwjs.load("/path/to/different/model/", { type: "graph" });
