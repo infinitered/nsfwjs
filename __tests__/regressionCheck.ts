@@ -1,23 +1,23 @@
 import * as tf from "@tensorflow/tfjs";
-import { load } from "../src/index";
 import { exec } from "child_process";
-const fs = require("fs");
-const jpeg = require("jpeg-js");
+import fs from "fs";
+import jpeg from "jpeg-js";
+import { load } from "../src/index";
 
 // Fix for JEST
-const globalAny: any = global;
-globalAny.fetch = require("node-fetch");
 const timeoutMS = 10000;
 const NUMBER_OF_CHANNELS = 3;
 
 const readImage = (path: string) => {
   const buf = fs.readFileSync(path);
-  const pixels = jpeg.decode(buf, true);
+  const pixels = jpeg.decode(buf, { useTArray: true });
   return pixels;
 };
 
-// @ts-ignore
-const imageByteArray = (image, numChannels: number) => {
+const imageByteArray = (
+  image: ReturnType<typeof readImage>,
+  numChannels: number
+) => {
   const pixels = image.data;
   const numPixels = image.width * image.height;
   const values = new Int32Array(numPixels * numChannels);
@@ -31,8 +31,10 @@ const imageByteArray = (image, numChannels: number) => {
   return values;
 };
 
-// @ts-ignore
-const imageToInput = (image, numChannels: number) => {
+const imageToInput = (
+  image: ReturnType<typeof readImage>,
+  numChannels: number
+) => {
   const values = imageByteArray(image, numChannels);
   const outShape = [image.height, image.width, numChannels] as [
     number,
@@ -57,11 +59,11 @@ it(
 );
 
 it(
-  "Bundles and minifies",
+  "Builds, bundles and minifies",
   (done) => {
-    const cmd = "yarn scriptbundle && yarn minbundle";
+    const cmd = "yarn bundle";
     exec(cmd, (err) => {
-      if (err) done.fail("Failed to bundle and minify");
+      if (err) done.fail("Failed to build, bundle and minify");
       // All good!
       done();
     });

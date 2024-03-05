@@ -1,26 +1,26 @@
 {
-  "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "noImplicitAny": true,
-    "sourceMap": true,
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "declaration": true,
-    "target": "es5",
-    "lib": ["es2015", "dom"],
-    "outDir": "./dist",
-    "noUnusedLocals": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-    "noUnusedParameters": false,
-    "esModuleInterop": true,
-    "pretty": true,
-    "noFallthroughCasesInSwitch": true,
-    "allowUnreachableCode": false,
-    "experimentalDecorators": true
-  },
-  "include": ["src/"],
-  "exclude": ["node_modules/", "dist/"]
-}
+    "compilerOptions": {
+      "moduleResolution": "node",
+      "noImplicitAny": true,
+      "sourceMap": true,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "declaration": true,
+      "target": "es5",
+      "lib": ["es2015", "dom"],
+      "noUnusedLocals": true,
+      "noImplicitReturns": true,
+      "noImplicitThis": true,
+      "alwaysStrict": true,
+      "noUnusedParameters": false,
+      "esModuleInterop": true,
+      "pretty": true,
+      "noFallthroughCasesInSwitch": true,
+      "allowUnreachableCode": false,
+      "experimentalDecorators": true,
+      "skipLibCheck": true
+    },
+    "include": ["src/"],
+    "exclude": ["node_modules/", "dist/"]
+  }
+  
