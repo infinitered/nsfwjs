@@ -4551,7 +4551,7 @@ new-github-release-url@^2.0.0:
   dependencies:
     type-fest "^2.5.1"
 
-node-fetch@^2.6.0, node-fetch@^2.6.7, node-fetch@~2.6.1:
+node-fetch@^2.6.0, node-fetch@~2.6.1:
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.7.tgz#24de9fba827e3b4ae44dc8b20256a379160052ad"
   integrity sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==
@@ -5860,9 +5860,9 @@ terminal-link@^3.0.0:
     supports-hyperlinks "^2.2.0"
 
 terser@^5.14.2:
-  version "5.28.0"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.28.0.tgz#5b335fdb45f2ebf4061bf55df9e6600eb4d2b48e"
-  integrity sha512-UK1n2JZN6gqfwmjzcikRp+uF/7jdwPXO7M0k/Hnqxzj3T5POL4YBVrv5Y4MKixTzBq4OmH7FfEYRxcy/Eh7YhA==
+  version "5.28.1"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.28.1.tgz#bf00f7537fd3a798c352c2d67d67d65c915d1b28"
+  integrity sha512-wM+bZp54v/E9eRRGXb5ZFDvinrJIOaTapx3WUokyVGZu5ucVCK55zEgGd5Dl2fSr3jUo5sDiERErUWLY6QPFyA==
   dependencies:
     "@jridgewell/source-map" "^0.3.3"
     acorn "^8.8.2"

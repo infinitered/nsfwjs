@@ -3,10 +3,21 @@
   src="https://unpkg.com/@tensorflow/tfjs@2.6.0"
   type="text/javascript"
 ></script>
-<script src="https://unpkg.com/nsfwjs@2.3.0" type="text/javascript"></script>
-
-<!-- For testing: Load from local bundle `yarn scriptbundle && yarn minbundle` -->
-<!-- <script src="../../dist/nsfwjs.min.js"></script> -->
+<!-- <script src="https://unpkg.com/nsfwjs@2.3.0" type="text/javascript"></script> -->
+<!-- For testing: Load from local bundle `yarn bundle` -->
+<script
+  src="../../dist/models/mobilenet_v2_mid/model.min.js"
+  type="text/javascript"
+></script>
+<script
+  src="../../dist/models/mobilenet_v2_mid/group1-shard1of2.min.js"
+  type="text/javascript"
+></script>
+<script
+  src="../../dist/models/mobilenet_v2_mid/group1-shard2of2.min.js"
+  type="text/javascript"
+></script>
+<script src="../../dist/browser/nsfwjs.min.js" type="text/javascript"></script>
 
 <script>
   // const nsfwjs = require('nsfwjs')
@@ -15,12 +26,16 @@
   // some image here
   img.src = "https://i.imgur.com/Kwxetau.jpg";
 
-  // Load the model.
-  nsfwjs.load().then((model) => {
-    // Classify the image.
-    model.classify(img).then((predictions) => {
-      console.log("Predictions", predictions);
+  img.onload = function () {
+    // Load the model.
+    tf.setBackend("cpu"); //! https://github.com/tensorflow/tfjs/issues/1644
+
+    nsfwjs.load("MobileNetV2Mid").then((model) => {
+      // Classify the image.
+      model.classify(img).then((predictions) => {
+        console.log("Predictions", predictions);
+      });
     });
-  });
+  };
 </script>
 <pre>Checkout console.log output for results!</pre>

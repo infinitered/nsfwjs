@@ -1,18 +1,18 @@
 import React from 'react'
-import ir from '../ir.svg'
 import Dropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
+import ir from '../ir.svg'
 const options = [
   {
     type: 'group',
     name: 'Mobilenet v2 Model',
     items: [
       {
-        value: 'mobilenetv2',
+        value: 'MobileNetV2',
         label: '90% Accurate - 2.6MB',
       },
       {
-        value: 'mobilenetMid',
+        value: 'MobileNetV2Mid',
         label: '93% Accurate - 4.2MB',
       },
     ],
@@ -22,7 +22,7 @@ const options = [
     name: 'Inception v3 Model',
     items: [
       {
-        value: 'inceptionv3',
+        value: 'InceptionV3',
         label: '93% Accurate - Huge!',
       },
     ],
