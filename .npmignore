@@ -41,3 +41,4 @@ dist/esm/nsfwjs.js
 # Unminified bundle
 dist/browser/bundle.js
 
+netlify.toml
