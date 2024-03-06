@@ -30,7 +30,7 @@ tsconfig.json
 __tests__/
 
 # Models
-models/
+/models/
 
 # Ignore intermediate browserify files
 # Mountpoint
