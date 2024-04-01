@@ -117,9 +117,9 @@ If you're using a model that needs an image of dimension other than 224x224, you
 Model MobileNetV2Mid - [299x299](https://github.com/infinitered/nsfwjs/tree/master/models/mobilenet_v2_mid)
 
 ```js
-const model = nsfwjs.load("/path/to/different/model/", { size: 299 });
+const model = nsfwjs.load("/path/to/model/", { size: 299 });
 /* You may need to load this model with graph type */
-const model = nsfwjs.load("/path/to/different/model/", { type: 'graph' });
+const model = nsfwjs.load("/path/to/model/", { type: 'graph' });
 ```
 
 If you're using a graph model, you cannot use the infer method, and you'll need to tell model load that you're dealing with a graph model in options.
