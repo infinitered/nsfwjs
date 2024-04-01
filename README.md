@@ -119,7 +119,7 @@ Model MobileNetV2Mid - [299x299](https://github.com/infinitered/nsfwjs/tree/mast
 ```js
 const model = nsfwjs.load("/path/to/different/model/", { size: 299 });
 /* You may need to load this model with graph type */
-const model = nsfwjs.load("/path/to/different/model/", { type: graph });
+const model = nsfwjs.load("/path/to/different/model/", { type: 'graph' });
 ```
 
 If you're using a graph model, you cannot use the infer method, and you'll need to tell model load that you're dealing with a graph model in options.
