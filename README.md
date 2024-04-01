@@ -117,7 +117,9 @@ If you're using a model that needs an image of dimension other than 224x224, you
 Model MobileNetV2Mid - [299x299](https://github.com/infinitered/nsfwjs/tree/master/models/mobilenet_v2_mid)
 
 ```js
-const model = nsfwjs.load("/path/to/different/model/", { size: 299 });
+const model = nsfwjs.load("/path/to/model/", { size: 299 });
+/* You may need to load this model with graph type */
+const model = nsfwjs.load("/path/to/model/", { type: 'graph' });
 ```
 
 If you're using a graph model, you cannot use the infer method, and you'll need to tell model load that you're dealing with a graph model in options.
@@ -130,24 +132,36 @@ const model = nsfwjs.load("/path/to/different/model/", { type: "graph" });
 
 ### Caching
 
-If you're using in the browser and you'd like to subsequently load from indexed db or local storage you can save the underlying model using the appropriate scheme and load from there.
+If you're using in the browser and you'd like to subsequently load from indexed db or local storage (NOTE: model size may be too large for local storage!) you can save the underlying model using the appropriate scheme and load from there.
 
 ```js
 const initialLoad = await nsfwjs.load(
-  "/path/to/different/model" /*{ ...options }*/
+  "/path/to/different/model/" /*, { ...options }*/
 );
-await initialLoad.model.save("indexeddb://model");
-const model = await nsfwjs.load("indexeddb://model" /*{ ...options }*/);
+await initialLoad.model.save("indexeddb://exampleModel");
+const model = await nsfwjs.load("indexeddb://exampleModel" /*, { ...options }*/);
 ```
 
 **Parameters**
 
-- optional URL to the `model.json` folder.
-- optional object with size property that your model expects.
+Initial Load:
+1. URL or path to folder containing `model.json`.
+2. Optional object with size or type property that your model expects.
+
+Subsequent Load:
+1. IndexedDB path.
+2. Optional object with size or type property that your model expects.
+
 
 **Returns**
 
 - Ready to use NSFWJS model object
+  
+
+**Troubleshooting**
+
+- On the tab where the model is being loaded, inspect element and navigate to the the "Application" tab. On the left pane under the "Storage" section, there is a subsection named "IndexedDB". Here you can view if the model is being saved.
+  
 
 ### `classify` an image
 
