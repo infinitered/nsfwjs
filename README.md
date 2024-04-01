@@ -151,13 +151,16 @@ Initial Load:
 Subsequent Load:
 1. Optional object with size or type property that your model expects.
 
+
 **Returns**
 
 - Ready to use NSFWJS model object
+  
 
 **Troubleshooting**
 
 - On the tab where the model is being loaded, inspect element and navigate to the the "Application" tab. On the left pane under the "Storage" section, there is a subsection named "IndexedDB". Under this is how you view if the model is being saved.
+  
 
 ### `classify` an image
 
