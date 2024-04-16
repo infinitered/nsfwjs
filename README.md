@@ -15,6 +15,10 @@ Why would this be useful? [Check out the announcement blog post](https://shift.i
 <img src="https://github.com/infinitered/nsfwjs/raw/master/_art/nsfw_demo.gif" alt="demo example" width="800" align="center" />
 </p>
 
+## NOTE
+
+If you're trying to access the Cloudfront hosted model and are running into an error, it's likely due to the fact that the model has been moved to a new location. Please take a look at our [Host your own model](#host-your-own-model) section. We will be returning the model after some hotlinkers have been dealt with.
+
 ## **Table of Contents**
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
