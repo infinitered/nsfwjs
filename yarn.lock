@@ -5831,9 +5831,9 @@ terminal-link@^3.0.0:
     supports-hyperlinks "^2.2.0"
 
 terser@^5.14.2:
-  version "5.31.3"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.31.3.tgz#b24b7beb46062f4653f049eea4f0cd165d0f0c38"
-  integrity sha512-pAfYn3NIZLyZpa83ZKigvj6Rn9c/vd5KfYGX7cN1mnzqgDcxWvrU5ZtAfIKhEXz9nRecw4z3LXkjaq96/qZqAA==
+  version "5.31.5"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.31.5.tgz#e48b7c65f32d2808e7dad803e4586a0bc3829b87"
+  integrity sha512-YPmas0L0rE1UyLL/llTWA0SiDOqIcAQYLeUj7cJYzXHlRTAnMSg9pPe4VJ5PlKvTrPQsdVFuiRiwyeNlYgwh2Q==
   dependencies:
     "@jridgewell/source-map" "^0.3.3"
     acorn "^8.8.2"
