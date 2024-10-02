@@ -17,25 +17,25 @@ type ModelJSON = tf.io.ModelJSON;
 type ModelArtifacts = tf.io.ModelArtifacts;
 type WeightDataBase64 = { [x: string]: string };
 
-export type frameResult = {
+export type FrameResult = {
   index: number;
   totalFrames: number;
-  predictions: Array<predictionType>;
+  predictions: Array<PredictionType>;
   image: HTMLCanvasElement | ImageData;
 };
 
-export type classifyConfig = {
+export type ClassifyConfig = {
   topk?: number;
   fps?: number;
-  onFrame?: (result: frameResult) => any;
+  onFrame?: (result: FrameResult) => any;
 };
 
-interface nsfwjsOptions {
+interface NSFWJSOptions {
   size?: number;
   type?: string;
 }
 
-export type predictionType = {
+export type PredictionType = {
   className: (typeof NSFW_CLASSES)[keyof typeof NSFW_CLASSES];
   probability: number;
 };
@@ -46,7 +46,7 @@ type ModelConfig = {
   [key in ModelName]: {
     path: string;
     numOfWeightBundles: number;
-    options?: nsfwjsOptions;
+    options?: NSFWJSOptions;
   };
 };
 
@@ -132,12 +132,12 @@ export async function load(modelOrUrl?: ModelName): Promise<NSFWJS>;
 
 export async function load(
   modelOrUrl?: string,
-  options?: nsfwjsOptions
+  options?: NSFWJSOptions
 ): Promise<NSFWJS>;
 
 export async function load(
   modelOrUrl?: string,
-  options: nsfwjsOptions = { size: IMAGE_SIZE }
+  options: NSFWJSOptions = { size: IMAGE_SIZE }
 ) {
   if (tf == null) {
     throw new Error(
@@ -238,12 +238,12 @@ export class NSFWJS {
   public endpoints: string[];
   public model: tf.LayersModel | tf.GraphModel;
 
-  private options: nsfwjsOptions;
+  private options: NSFWJSOptions;
   private urlOrIOHandler: string | IOHandler;
   private intermediateModels: { [layerName: string]: tf.LayersModel } = {};
   private normalizationOffset: tf.Scalar;
 
-  constructor(modelUrlOrIOHandler: string | IOHandler, options: nsfwjsOptions) {
+  constructor(modelUrlOrIOHandler: string | IOHandler, options: NSFWJSOptions) {
     this.options = options;
     this.normalizationOffset = tf.scalar(255);
     this.urlOrIOHandler = modelUrlOrIOHandler;
@@ -368,7 +368,7 @@ export class NSFWJS {
       | HTMLCanvasElement
       | HTMLVideoElement,
     topk = 5
-  ): Promise<Array<predictionType>> {
+  ): Promise<Array<PredictionType>> {
     const logits = this.infer(img) as tf.Tensor2D;
 
     const classes = await getTopKClasses(logits, topk);
@@ -382,7 +382,7 @@ export class NSFWJS {
 async function getTopKClasses(
   logits: tf.Tensor2D,
   topK: number
-): Promise<Array<predictionType>> {
+): Promise<Array<PredictionType>> {
   const values = await logits.data();
 
   const valuesAndIndices: {
@@ -402,7 +402,7 @@ async function getTopKClasses(
     topkIndices[i] = valuesAndIndices[i].index;
   }
 
-  const topClassesAndProbs: predictionType[] = [];
+  const topClassesAndProbs: PredictionType[] = [];
   for (let i = 0; i < topkIndices.length; i++) {
     topClassesAndProbs.push({
       className: NSFW_CLASSES[topkIndices[i]],
