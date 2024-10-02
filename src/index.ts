@@ -7,6 +7,9 @@ declare global {
       [x: string]: any;
     }
   }
+  interface Window {
+    [x: string]: any;
+  }
 }
 
 type IOHandler = tf.io.IOHandler;
@@ -64,6 +67,18 @@ const availableModels: ModelConfig = {
 const DEFAULT_MODEL_NAME: ModelName = "MobileNetV2";
 const IMAGE_SIZE = 224; // default to Mobilenet v2
 
+const getGlobal = () => {
+  if (typeof globalThis !== "undefined")
+    return globalThis as typeof globalThis & NodeJS.Global & Window;
+  if (typeof global !== "undefined")
+    return global as typeof globalThis & NodeJS.Global & Window;
+  if (typeof window !== "undefined")
+    return window as typeof globalThis & NodeJS.Global & Window;
+  if (typeof self !== "undefined")
+    return self as typeof globalThis & NodeJS.Global & Window;
+  throw new Error("Unable to locate global object");
+};
+
 function isModelName(name?: string): name is ModelName {
   return !!name && name in availableModels;
 }
@@ -79,7 +94,7 @@ async function loadWeights(
 
     try {
       const weight =
-        global[identifier] ||
+        getGlobal()[identifier] ||
         (await import(`../models/${path}/${bundle}.min.js`)).default;
       return { [bundle]: weight };
     } catch {
@@ -100,7 +115,8 @@ async function loadModel(modelName: ModelName | string) {
 
   try {
     modelJson =
-      global.model || (await import(`../models/${path}/model.min.js`)).default;
+      getGlobal().model ||
+      (await import(`../models/${path}/model.min.js`)).default;
   } catch {
     throw new Error(
       `Could not load the model. Make sure you are importing the model.min.js bundle.`
