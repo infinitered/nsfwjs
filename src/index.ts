@@ -1,4 +1,5 @@
 import * as tf from "@tensorflow/tfjs";
+import { Buffer } from "buffer";
 import { NSFW_CLASSES } from "./nsfw_classes";
 
 declare global {
@@ -83,6 +84,41 @@ function isModelName(name?: string): name is ModelName {
   return !!name && name in availableModels;
 }
 
+const getModelJson = async (path: string) => {
+  const globalModel = getGlobal().model;
+
+  if (globalModel) {
+    // If the model is available globally (UMD via script tag), return it
+    return globalModel;
+  } else {
+    if (typeof module !== "undefined" && module.exports) {
+      // CJS environment, use UMD
+      return (await import(`../models/${path}/model.min.js`)).default;
+    } else {
+      // ESM environment
+      return (await import(`../models/${path}/model.esm.min.js`)).default;
+    }
+  }
+};
+
+const getWeightData = async (path: string, bundle: string) => {
+  const identifier = bundle.replace(/-/g, "_");
+  const weight = getGlobal()[identifier];
+
+  if (weight) {
+    // If the weight is available globally (UMD via script tag), return it
+    return weight;
+  } else {
+    if (typeof module !== "undefined" && module.exports) {
+      // CJS environment, use UMD
+      return (await import(`../models/${path}/${bundle}.min.js`)).default;
+    } else {
+      // ESM environment
+      return (await import(`../models/${path}/${bundle}.esm.min.js`)).default;
+    }
+  }
+};
+
 async function loadWeights(
   path: string,
   numOfWeightBundles: number
@@ -90,18 +126,16 @@ async function loadWeights(
   const promises = [...Array(numOfWeightBundles)].map(async (_, index) => {
     const num = index + 1;
     const bundle = `group1-shard${num}of${numOfWeightBundles}`;
-    const identifier = bundle.replace(/-/g, "_");
 
-    try {
-      const weight =
-        getGlobal()[identifier] ||
-        (await import(`../models/${path}/${bundle}.min.js`)).default;
-      return { [bundle]: weight };
-    } catch {
+    const weight = await getWeightData(path, bundle);
+
+    if (!weight) {
       throw new Error(
         `Could not load the weight data. Make sure you are importing the ${bundle}.min.js bundle.`
       );
     }
+
+    return { [bundle]: weight };
   });
 
   const data = await Promise.all(promises);
@@ -113,11 +147,9 @@ async function loadModel(modelName: ModelName | string) {
   const { path, numOfWeightBundles } = availableModels[modelName];
   let modelJson;
 
-  try {
-    modelJson =
-      getGlobal().model ||
-      (await import(`../models/${path}/model.min.js`)).default;
-  } catch {
+  modelJson = await getModelJson(path);
+
+  if (!modelJson) {
     throw new Error(
       `Could not load the model. Make sure you are importing the model.min.js bundle.`
     );

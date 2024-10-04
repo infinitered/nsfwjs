@@ -40,7 +40,7 @@ filenames.forEach((filename) => {
     binToJson(sourcePath, outputPath);
   }
 
-  // Browserify the .json file
+  // Step 1: Generate UMD version with Browserify
   const identifier = filename.replace(/-/g, "_");
   exec(
     `browserify ${outputPath}.json -s ${identifier} -o ${outputPath}.js`,
@@ -74,6 +74,22 @@ filenames.forEach((filename) => {
           unlinkSync(`${outputPath}.json`);
         }
       );
+    }
+  );
+
+  // Step 2: Generate ESM version using esbuild
+  exec(
+    `esbuild ${outputPath}.json --bundle --format=esm --minify --outfile=${outputPath}.esm.min.js --log-level=error`,
+    (error, stdout, stderr) => {
+      if (error) {
+        console.log(`Error: ${error.message}`);
+        return;
+      }
+      if (stderr) {
+        console.log(`stderr: ${stderr}`);
+        return;
+      }
+      console.log(`stdout: ${stdout}`);
     }
   );
 });
