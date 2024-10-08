@@ -12,9 +12,9 @@
   },
   "scripts": {
     "lint": "tslint -p . -t verbose",
-    "build:esm": "tsc -p ./tsconfig.esm.json",
+    "build:esm": "tsc -p ./tsconfig.esm.json && node ./scripts/add-extensions.mjs",
     "build:cjs": "tsc -p ./tsconfig.cjs.json",
-    "build": "yarn build:esm && yarn build:cjs",
+    "build": "yarn build:esm && yarn build:cjs && node ./scripts/add-nested-package-json.mjs",
     "bundle:mobilenet_v2": "node ./scripts/bundle-model.mjs mobilenet_v2 1",
     "bundle:mobilenet_v2_mid": "node ./scripts/bundle-model.mjs mobilenet_v2_mid 2",
     "bundle:inception_v3": "node ./scripts/bundle-model.mjs inception_v3 6",
@@ -38,7 +38,8 @@
     "url": "git+https://github.com/infinitered/nsfwjs.git"
   },
   "peerDependencies": {
-    "@tensorflow/tfjs": "^4.0.0"
+    "@tensorflow/tfjs": "^4.0.0",
+    "buffer": "^6.0.3"
   },
   "devDependencies": {
     "@tensorflow/tfjs": "^4.0.0",
@@ -75,5 +76,6 @@
   "bugs": {
     "url": "https://github.com/infinitered/nsfwjs/issues"
   },
-  "homepage": "https://nsfwjs.com"
+  "homepage": "https://nsfwjs.com",
+  "dependencies": {}
 }
