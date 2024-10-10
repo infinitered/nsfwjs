@@ -20,7 +20,6 @@ bundle.js
 .all-contributorsrc
 .editorconfig
 .gitignore
-bundle-model.mjs
 jest.config.js
 tsconfig.cjs.json
 tsconfig.esm.json

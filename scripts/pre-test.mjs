@@ -1,8 +1,8 @@
-import { copyFileSync, readdirSync } from "fs";
+import { copyFileSync, mkdirSync, readdirSync } from "fs";
 import { join } from "path";
 
-const srcDir = "./dist/models";
-const destDir = "./models";
+const srcDir = "./dist/cjs/models";
+const destDir = "./src/models";
 
 // Get the names of all subfolders in the srcDir
 const models = readdirSync(srcDir, { withFileTypes: true })
@@ -12,6 +12,8 @@ const models = readdirSync(srcDir, { withFileTypes: true })
 models.forEach((model) => {
   const modelSrcDir = join(srcDir, model);
   const modelDestDir = join(destDir, model);
+
+  mkdirSync(modelDestDir, { recursive: true });
 
   readdirSync(modelSrcDir, { withFileTypes: true })
     .filter((dirent) => dirent.isFile() && dirent.name.endsWith(".min.js"))

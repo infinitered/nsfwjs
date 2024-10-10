@@ -45,21 +45,18 @@ export type ModelName = "MobileNetV2" | "MobileNetV2Mid" | "InceptionV3";
 
 type ModelConfig = {
   [key in ModelName]: {
-    path: string;
     numOfWeightBundles: number;
     options?: NSFWJSOptions;
   };
 };
 
 const availableModels: ModelConfig = {
-  MobileNetV2: { path: "mobilenet_v2", numOfWeightBundles: 1 },
+  MobileNetV2: { numOfWeightBundles: 1 },
   MobileNetV2Mid: {
-    path: "mobilenet_v2_mid",
     numOfWeightBundles: 2,
     options: { type: "graph" },
   },
   InceptionV3: {
-    path: "inception_v3",
     numOfWeightBundles: 6,
     options: { size: 299 },
   },
@@ -84,80 +81,82 @@ function isModelName(name?: string): name is ModelName {
   return !!name && name in availableModels;
 }
 
-const getModelJson = async (path: string) => {
+const getModelJson = async (modelName: ModelName) => {
   const globalModel = getGlobal().model;
 
   if (globalModel) {
     // If the model is available globally (UMD via script tag), return it
     return globalModel;
-  } else {
-    if (typeof module !== "undefined" && module.exports) {
-      // CJS environment, use UMD
-      return (await import(`../models/${path}/model.min.js`)).default;
-    } else {
-      // ESM environment
-      return (await import(`../models/${path}/model.esm.min.js`)).default;
-    }
   }
+
+  let modelJson;
+
+  if (modelName === "MobileNetV2")
+    ({ modelJson } = await import("./model_imports/mobilenet_v2"));
+  else if (modelName === "MobileNetV2Mid")
+    ({ modelJson } = await import("./model_imports/mobilenet_v2_mid"));
+  else if (modelName === "InceptionV3")
+    ({ modelJson } = await import("./model_imports/inception_v3"));
+
+  return (await modelJson()).default;
 };
 
-const getWeightData = async (path: string, bundle: string) => {
-  const identifier = bundle.replace(/-/g, "_");
-  const weight = getGlobal()[identifier];
+const getWeightData = async (
+  modelName: ModelName
+): Promise<WeightDataBase64> => {
+  const { numOfWeightBundles } = availableModels[modelName];
+  const bundles: WeightDataBase64[] = [];
 
-  if (weight) {
-    // If the weight is available globally (UMD via script tag), return it
-    return weight;
-  } else {
-    if (typeof module !== "undefined" && module.exports) {
-      // CJS environment, use UMD
-      return (await import(`../models/${path}/${bundle}.min.js`)).default;
+  for (let i = 0; i < numOfWeightBundles; i++) {
+    const bundleName = `group1-shard${i + 1}of${numOfWeightBundles}`;
+    const identifier = bundleName.replace(/-/g, "_");
+
+    const globalWeight = getGlobal()[identifier];
+    if (globalWeight) {
+      // If the weight data bundle is available globally (UMD via script tag), use it
+      bundles.push({ [bundleName]: globalWeight });
     } else {
-      // ESM environment
-      return (await import(`../models/${path}/${bundle}.esm.min.js`)).default;
+      let weightBundles;
+
+      if (modelName === "MobileNetV2")
+        ({ weightBundles } = await import("./model_imports/mobilenet_v2"));
+      else if (modelName === "MobileNetV2Mid")
+        ({ weightBundles } = await import("./model_imports/mobilenet_v2_mid"));
+      else if (modelName === "InceptionV3")
+        ({ weightBundles } = await import("./model_imports/inception_v3"));
+
+      const weight = (await weightBundles[i]()).default;
+      bundles.push({ [bundleName]: weight });
     }
   }
+
+  return Object.assign({}, ...bundles);
 };
 
-async function loadWeights(
-  path: string,
-  numOfWeightBundles: number
-): Promise<WeightDataBase64> {
-  const promises = [...Array(numOfWeightBundles)].map(async (_, index) => {
-    const num = index + 1;
-    const bundle = `group1-shard${num}of${numOfWeightBundles}`;
-
-    const weight = await getWeightData(path, bundle);
-
-    if (!weight) {
-      throw new Error(
-        `Could not load the weight data. Make sure you are importing the ${bundle}.min.js bundle.`
-      );
-    }
-
-    return { [bundle]: weight };
-  });
-
-  const data = await Promise.all(promises);
-  return Object.assign({}, ...data);
+async function loadWeights(modelName: ModelName): Promise<WeightDataBase64> {
+  try {
+    const weightDataBundles = await getWeightData(modelName);
+    return weightDataBundles;
+  } catch {
+    throw new Error(
+      `Could not load the weight data. Make sure you are importing the correct shard files from the models directory. Ref: https://github.com/infinitered/nsfwjs?tab=readme-ov-file#browserify`
+    );
+  }
 }
 
 async function loadModel(modelName: ModelName | string) {
-  if (!isModelName(modelName)) return modelName;
-  const { path, numOfWeightBundles } = availableModels[modelName];
-  let modelJson;
+  if (!isModelName(modelName)) return modelName; // Custom url for the model provided
 
-  modelJson = await getModelJson(path);
-
-  if (!modelJson) {
+  try {
+    const modelJson = await getModelJson(modelName);
+    const weightData = await loadWeights(modelName);
+    const handler = new JSONHandler(modelJson, weightData);
+    return handler;
+  } catch {
     throw new Error(
-      `Could not load the model. Make sure you are importing the model.min.js bundle.`
+      `Could not load the model. Make sure you are importing the model.min.js bundle. Ref: https://github.com/infinitered/nsfwjs?tab=readme-ov-file#browserify`
     );
   }
-
-  const weightData = await loadWeights(path, numOfWeightBundles);
-  const handler = new JSONHandler(modelJson, weightData);
-  return handler;
 }
 
 export async function load(modelOrUrl?: ModelName): Promise<NSFWJS>;
