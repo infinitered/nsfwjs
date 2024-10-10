@@ -113,25 +113,24 @@ You can also use same parameter and load the model from your website/server, as 
 Model MobileNetV2 - [224x224](https://github.com/infinitered/nsfwjs/blob/master/models/mobilenet_v2/)
 
 ```js
-const model = nsfwjs.load("/path/to/model/directory/");
+const model = nsfwjs.load("/path/to/mobilenet_v2/");
 ```
 
 If you're using a model that needs an image of dimension other than 224x224, you can pass the size in the options parameter.
 
-Model MobileNetV2Mid - [299x299](https://github.com/infinitered/nsfwjs/tree/master/models/mobilenet_v2_mid)
+Model MobileNetV2Mid - [Graph](https://github.com/infinitered/nsfwjs/tree/master/models/mobilenet_v2_mid)
 
 ```js
-const model = nsfwjs.load("/path/to/model/", { size: 299 });
 /* You may need to load this model with graph type */
-const model = nsfwjs.load("/path/to/model/", { type: 'graph' });
+const model = nsfwjs.load("/path/to/mobilenet_v2_mid/", { type: 'graph' });
 ```
 
 If you're using a graph model, you cannot use the infer method, and you'll need to tell model load that you're dealing with a graph model in options.
 
-Model InceptionV3 - [Graph](https://github.com/infinitered/nsfwjs/tree/master/models/inception_v3)
+Model InceptionV3 - [299x299](https://github.com/infinitered/nsfwjs/tree/master/models/inception_v3)
 
 ```js
-const model = nsfwjs.load("/path/to/different/model/", { type: "graph" });
+const model = nsfwjs.load("/path/to/inception_v3/", { size: 299 });
 ```
 
 ### Caching
@@ -226,13 +225,13 @@ Here is how to install the default model on a website:
 
 ### Tensorflow.js in the browser
 
-The demo that powers https://nsfwjs.com/ is available in the `examples/nsfw_demo` folder.
+The demo that powers https://nsfwjs.com/ is available in the [`examples/nsfw_demo`](https://github.com/infinitered/nsfwjs/tree/master/examples/nsfw_demo) folder.
 
 To run the demo, run `yarn prep` which will copy the latest code into the demo. After that's done, you can `cd` into the demo folder and run with `yarn start`.
 
 ### Browserify
 
-A browserified version using nothing but promises and script tags is available in the `minimal_demo` folder.
+A browserified version using nothing but promises and script tags is available in the [`minimal_demo`](https://github.com/infinitered/nsfwjs/tree/master/examples/minimal_demo) folder.
 
 ```js
 <script src="/path/to/model/directory/model.min.js"></script>
