@@ -1,4 +1,5 @@
 import * as tf from "@tensorflow/tfjs";
+import { Buffer } from "buffer";
 import { NSFW_CLASSES } from "./nsfw_classes";
 
 declare global {
@@ -7,6 +8,9 @@ declare global {
       [x: string]: any;
     }
   }
+  interface Window {
+    [x: string]: any;
+  }
 }
 
 type IOHandler = tf.io.IOHandler;
@@ -14,25 +18,25 @@ type ModelJSON = tf.io.ModelJSON;
 type ModelArtifacts = tf.io.ModelArtifacts;
 type WeightDataBase64 = { [x: string]: string };
 
-export type frameResult = {
+export type FrameResult = {
   index: number;
   totalFrames: number;
-  predictions: Array<predictionType>;
+  predictions: Array<PredictionType>;
   image: HTMLCanvasElement | ImageData;
 };
 
-export type classifyConfig = {
+export type ClassifyConfig = {
   topk?: number;
   fps?: number;
-  onFrame?: (result: frameResult) => any;
+  onFrame?: (result: FrameResult) => any;
 };
 
-interface nsfwjsOptions {
+interface NSFWJSOptions {
   size?: number;
   type?: string;
 }
 
-export type predictionType = {
+export type PredictionType = {
   className: (typeof NSFW_CLASSES)[keyof typeof NSFW_CLASSES];
   probability: number;
 };
@@ -41,21 +45,18 @@ export type ModelName = "MobileNetV2" | "MobileNetV2Mid" | "InceptionV3";
 
 type ModelConfig = {
   [key in ModelName]: {
-    path: string;
     numOfWeightBundles: number;
-    options?: nsfwjsOptions;
+    options?: NSFWJSOptions;
   };
 };
 
 const availableModels: ModelConfig = {
-  MobileNetV2: { path: "mobilenet_v2", numOfWeightBundles: 1 },
+  MobileNetV2: { numOfWeightBundles: 1 },
   MobileNetV2Mid: {
-    path: "mobilenet_v2_mid",
     numOfWeightBundles: 2,
     options: { type: "graph" },
   },
   InceptionV3: {
-    path: "inception_v3",
     numOfWeightBundles: 6,
     options: { size: 299 },
   },
@@ -64,64 +65,110 @@ const availableModels: ModelConfig = {
 const DEFAULT_MODEL_NAME: ModelName = "MobileNetV2";
 const IMAGE_SIZE = 224; // default to Mobilenet v2
 
+const getGlobal = () => {
+  if (typeof globalThis !== "undefined")
+    return globalThis as typeof globalThis & NodeJS.Global & Window;
+  if (typeof global !== "undefined")
+    return global as typeof globalThis & NodeJS.Global & Window;
+  if (typeof window !== "undefined")
+    return window as typeof globalThis & NodeJS.Global & Window;
+  if (typeof self !== "undefined")
+    return self as typeof globalThis & NodeJS.Global & Window;
+  throw new Error("Unable to locate global object");
+};
+
 function isModelName(name?: string): name is ModelName {
   return !!name && name in availableModels;
 }
 
-async function loadWeights(
-  path: string,
-  numOfWeightBundles: number
-): Promise<WeightDataBase64> {
-  const promises = [...Array(numOfWeightBundles)].map(async (_, index) => {
-    const num = index + 1;
-    const bundle = `group1-shard${num}of${numOfWeightBundles}`;
-    const identifier = bundle.replace(/-/g, "_");
+const getModelJson = async (modelName: ModelName) => {
+  const globalModel = getGlobal().model;
 
-    try {
-      const weight =
-        global[identifier] ||
-        (await import(`../models/${path}/${bundle}.min.js`)).default;
-      return { [bundle]: weight };
-    } catch {
-      throw new Error(
-        `Could not load the weight data. Make sure you are importing the ${bundle}.min.js bundle.`
-      );
+  if (globalModel) {
+    // If the model is available globally (UMD via script tag), return it
+    return globalModel;
+  }
+
+  let modelJson;
+
+  if (modelName === "MobileNetV2")
+    ({ modelJson } = await import("./model_imports/mobilenet_v2"));
+  else if (modelName === "MobileNetV2Mid")
+    ({ modelJson } = await import("./model_imports/mobilenet_v2_mid"));
+  else if (modelName === "InceptionV3")
+    ({ modelJson } = await import("./model_imports/inception_v3"));
+
+  return (await modelJson()).default;
+};
+
+const getWeightData = async (
+  modelName: ModelName
+): Promise<WeightDataBase64> => {
+  const { numOfWeightBundles } = availableModels[modelName];
+  const bundles: WeightDataBase64[] = [];
+
+  for (let i = 0; i < numOfWeightBundles; i++) {
+    const bundleName = `group1-shard${i + 1}of${numOfWeightBundles}`;
+    const identifier = bundleName.replace(/-/g, "_");
+
+    const globalWeight = getGlobal()[identifier];
+    if (globalWeight) {
+      // If the weight data bundle is available globally (UMD via script tag), use it
+      bundles.push({ [bundleName]: globalWeight });
+    } else {
+      let weightBundles;
+
+      if (modelName === "MobileNetV2")
+        ({ weightBundles } = await import("./model_imports/mobilenet_v2"));
+      else if (modelName === "MobileNetV2Mid")
+        ({ weightBundles } = await import("./model_imports/mobilenet_v2_mid"));
+      else if (modelName === "InceptionV3")
+        ({ weightBundles } = await import("./model_imports/inception_v3"));
+
+      const weight = (await weightBundles[i]()).default;
+      bundles.push({ [bundleName]: weight });
     }
-  });
+  }
 
-  const data = await Promise.all(promises);
-  return Object.assign({}, ...data);
+  return Object.assign({}, ...bundles);
+};
+
+async function loadWeights(modelName: ModelName): Promise<WeightDataBase64> {
+  try {
+    const weightDataBundles = await getWeightData(modelName);
+    return weightDataBundles;
+  } catch {
+    throw new Error(
+      `Could not load the weight data. Make sure you are importing the correct shard files from the models directory. Ref: https://github.com/infinitered/nsfwjs?tab=readme-ov-file#browserify`
+    );
+  }
 }
 
 async function loadModel(modelName: ModelName | string) {
-  if (!isModelName(modelName)) return modelName;
-  const { path, numOfWeightBundles } = availableModels[modelName];
-  let modelJson;
+  if (!isModelName(modelName)) return modelName; // Custom url for the model provided
 
   try {
-    modelJson =
-      global.model || (await import(`../models/${path}/model.min.js`)).default;
+    const modelJson = await getModelJson(modelName);
+    const weightData = await loadWeights(modelName);
+    const handler = new JSONHandler(modelJson, weightData);
+    return handler;
   } catch {
     throw new Error(
-      `Could not load the model. Make sure you are importing the model.min.js bundle.`
+      `Could not load the model. Make sure you are importing the model.min.js bundle. Ref: https://github.com/infinitered/nsfwjs?tab=readme-ov-file#browserify`
     );
   }
-
-  const weightData = await loadWeights(path, numOfWeightBundles);
-  const handler = new JSONHandler(modelJson, weightData);
-  return handler;
 }
 
 export async function load(modelOrUrl?: ModelName): Promise<NSFWJS>;
 
 export async function load(
   modelOrUrl?: string,
-  options?: nsfwjsOptions
+  options?: NSFWJSOptions
 ): Promise<NSFWJS>;
 
 export async function load(
   modelOrUrl?: string,
-  options: nsfwjsOptions = { size: IMAGE_SIZE }
+  options: NSFWJSOptions = { size: IMAGE_SIZE }
 ) {
   if (tf == null) {
     throw new Error(
@@ -222,12 +269,12 @@ export class NSFWJS {
   public endpoints: string[];
   public model: tf.LayersModel | tf.GraphModel;
 
-  private options: nsfwjsOptions;
+  private options: NSFWJSOptions;
   private urlOrIOHandler: string | IOHandler;
   private intermediateModels: { [layerName: string]: tf.LayersModel } = {};
   private normalizationOffset: tf.Scalar;
 
-  constructor(modelUrlOrIOHandler: string | IOHandler, options: nsfwjsOptions) {
+  constructor(modelUrlOrIOHandler: string | IOHandler, options: NSFWJSOptions) {
     this.options = options;
     this.normalizationOffset = tf.scalar(255);
     this.urlOrIOHandler = modelUrlOrIOHandler;
@@ -352,7 +399,7 @@ export class NSFWJS {
       | HTMLCanvasElement
       | HTMLVideoElement,
     topk = 5
-  ): Promise<Array<predictionType>> {
+  ): Promise<Array<PredictionType>> {
     const logits = this.infer(img) as tf.Tensor2D;
 
     const classes = await getTopKClasses(logits, topk);
@@ -366,7 +413,7 @@ export class NSFWJS {
 async function getTopKClasses(
   logits: tf.Tensor2D,
   topK: number
-): Promise<Array<predictionType>> {
+): Promise<Array<PredictionType>> {
   const values = await logits.data();
 
   const valuesAndIndices: {
@@ -386,7 +433,7 @@ async function getTopKClasses(
     topkIndices[i] = valuesAndIndices[i].index;
   }
 
-  const topClassesAndProbs: predictionType[] = [];
+  const topClassesAndProbs: PredictionType[] = [];
   for (let i = 0; i < topkIndices.length; i++) {
     topClassesAndProbs.push({
       className: NSFW_CLASSES[topkIndices[i]],
