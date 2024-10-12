@@ -1,5 +1,5 @@
 import * as tf from "@tensorflow/tfjs";
-import { Buffer } from "buffer";
+import { Buffer } from "buffer/";
 import { NSFW_CLASSES } from "./nsfw_classes";
 
 declare global {
