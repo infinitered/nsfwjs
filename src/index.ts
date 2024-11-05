@@ -1,5 +1,6 @@
 import * as tf from "@tensorflow/tfjs";
-import { Buffer } from "buffer";
+// Remove the trailing slash below if this Bun issue gets fixed: https://github.com/oven-sh/bun/issues/8683
+import { Buffer } from "buffer/";
 import { NSFW_CLASSES } from "./nsfw_classes";
 
 declare global {
