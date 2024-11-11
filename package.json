@@ -1,6 +1,6 @@
 {
   "name": "nsfwjs",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "unpkg": "dist/browser/nsfwjs.min.js",
   "description": "Detect NSFW content client-side",
   "type": "commonjs",
