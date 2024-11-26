@@ -12,6 +12,7 @@
   },
   "scripts": {
     "lint": "tslint -p . -t verbose",
+    "prebuild": "node ./scripts/pre-build.mjs",
     "build:esm": "tsc -p ./tsconfig.esm.json && node ./scripts/add-extensions.mjs",
     "build:cjs": "tsc -p ./tsconfig.cjs.json",
     "build": "yarn build:esm && yarn build:cjs && node ./scripts/add-nested-package-json.mjs",
