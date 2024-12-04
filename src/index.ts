@@ -32,7 +32,7 @@ export type ClassifyConfig = {
   onFrame?: (result: FrameResult) => any;
 };
 
-interface NSFWJSOptions {
+export interface NSFWJSOptions {
   size?: number;
   type?: string;
 }
