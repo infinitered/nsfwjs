@@ -31,6 +31,7 @@
     "scriptbundle": "browserify ./dist/cjs/nsfwjs.js -s nsfwjs -o ./dist/browser/bundle.js",
     "minbundle": "terser dist/browser/bundle.js -c -m -o dist/browser/nsfwjs.min.js",
     "bundle": "yarn build && yarn scriptbundle && yarn minbundle",
+    "prepare": "yarn bundle",
     "shipit:precheck": "if [ \"$npm_config_user_agent\" != \"${npm_config_user_agent#*yarn}\" ]; then echo 'Use `npm run shipit` instead of yarn.' && exit 1;  fi",
     "shipit": "npm run shipit:precheck && yarn bundle && np"
   },
