@@ -331,9 +331,7 @@ You can also use [`lovell/sharp`](https://github.com/lovell/sharp) for preproces
 
 ### NSFW Filter
 
-[**NSFW Filter**](https://github.com/navendu-pottekkat/nsfw-filter) is a web extension that uses NSFWJS for filtering out NSFW images from your browser.
-
-It is currently available for Chrome and Firefox and is completely open-source.
+[**NSFW Filter**](https://github.com/navendu-pottekkat/nsfw-filter) is an open source web extension for Google Chrome that uses NSFWJS for filtering out NSFW images.
 
 Check out the project [here](https://github.com/navendu-pottekkat/nsfw-filter).
 
