@@ -1,8 +1,8 @@
 import { copyFileSync, mkdirSync, readdirSync } from "fs";
 import { join } from "path";
 
-const srcDir = "./dist/cjs/models";
-const destDir = "./src/models";
+const srcDir = "./dist/models";
+const destDir = "./models";
 
 // Get the names of all subfolders in the srcDir
 const models = readdirSync(srcDir, { withFileTypes: true })

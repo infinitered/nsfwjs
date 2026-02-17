@@ -52,16 +52,9 @@ const generateUmd = async (outputPath, filename) => {
   unlinkSync(`${outputPath}.json`);
 };
 
-const generateEsm = async (outputPath) => {
-  await runCommand(
-    `esbuild ${outputPath}.json --bundle --format=esm --minify --outfile=${outputPath}${MIN_JS_EXT} --log-level=error`
-  );
-  unlinkSync(`${outputPath}.json`);
-};
-
-const processBundle = async (filename, type) => {
+const processBundle = async (filename) => {
   const sourcePath = `${BASE_MODEL_PATH}${model}/${filename}`;
-  const outputDir = `${BASE_DIST_PATH}${type}/models/${model}`;
+  const outputDir = `${BASE_DIST_PATH}models/${model}`;
   const outputPath = `${outputDir}/${filename}`;
 
   mkdirSync(outputDir, { recursive: true });
@@ -72,18 +65,13 @@ const processBundle = async (filename, type) => {
     binToJson(sourcePath, outputPath);
   }
 
-  if (type === "cjs") {
-    await generateUmd(outputPath, filename);
-  } else if (type === "esm") {
-    await generateEsm(outputPath);
-  }
+  await generateUmd(outputPath, filename);
 };
 
 const bundleAll = async () => {
   await Promise.all(
     filenames.map(async (filename) => {
-      await processBundle(filename, "cjs");
-      await processBundle(filename, "esm");
+      await processBundle(filename);
     })
   );
 };
