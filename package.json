@@ -7,8 +7,26 @@
   "module": "dist/esm/index.js",
   "main": "dist/cjs/index.js",
   "exports": {
-    "import": "./dist/esm/index.js",
-    "require": "./dist/cjs/index.js"
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    },
+    "./core": {
+      "import": "./dist/esm/core.js",
+      "require": "./dist/cjs/core.js"
+    },
+    "./models/mobilenet_v2": {
+      "import": "./dist/esm/models/mobilenet_v2.js",
+      "require": "./dist/cjs/models/mobilenet_v2.js"
+    },
+    "./models/mobilenet_v2_mid": {
+      "import": "./dist/esm/models/mobilenet_v2_mid.js",
+      "require": "./dist/cjs/models/mobilenet_v2_mid.js"
+    },
+    "./models/inception_v3": {
+      "import": "./dist/esm/models/inception_v3.js",
+      "require": "./dist/cjs/models/inception_v3.js"
+    }
   },
   "scripts": {
     "lint": "tslint -p . -t verbose",

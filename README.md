@@ -92,6 +92,42 @@ nsfwjs
   });
 ```
 
+### Selective model bundles (tree-shaking)
+
+`nsfwjs` keeps the default behavior and includes built-in model definitions.
+For selective bundling, import from `nsfwjs/core` and pass only the models
+you want in `modelDefinitions`.
+
+```js
+import { load } from "nsfwjs/core";
+import { MobileNetV2Model } from "nsfwjs/models/mobilenet_v2";
+import { MobileNetV2MidModel } from "nsfwjs/models/mobilenet_v2_mid";
+
+const model = await load("MobileNetV2", {
+  modelDefinitions: [MobileNetV2Model, MobileNetV2MidModel],
+});
+```
+
+If you pass an empty model registry, named bundled model loads will fail:
+
+```js
+await load("MobileNetV2", { modelDefinitions: [] }); // throws
+```
+
+#### Vite + npm link note
+
+When testing with `npm link`, Vite can resolve symlinks differently from
+published installs. If model bundles fail to load locally, set:
+
+```js
+// vite.config.js / vite.config.ts
+export default {
+  resolve: {
+    preserveSymlinks: true,
+  },
+};
+```
+
 ## Library API
 
 ### `load` the model
@@ -102,7 +138,11 @@ Before you can classify any image, you'll need to load the model.
 const model = nsfwjs.load(); // Default: "MobileNetV2"
 ```
 
-You can use the optional first parameter to specify which model you want to use from the three that are bundled together. Defaults to: `"MobileNetV2"`. This supports tree-shaking on supported bundlers like Webpack, so you will only be loading the model you are using.
+You can use the optional first parameter to specify which model you want to use
+from the three built-in bundled models. Defaults to: `"MobileNetV2"`.
+
+For tree-shaken selective model bundling, use `nsfwjs/core` and pass
+`modelDefinitions` as shown above.
 
 ```js
 const model = nsfwjs.load("MobileNetV2Mid"); // "MobileNetV2" | "MobileNetV2Mid" | "InceptionV3"

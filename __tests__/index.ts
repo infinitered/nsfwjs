@@ -1,5 +1,6 @@
 import * as tf from "@tensorflow/tfjs";
 import { ModelName, load } from "../src/index";
+import { load as loadCore } from "../src/core";
 
 const timeoutMS = 10000;
 
@@ -49,6 +50,18 @@ it(
     expect(consoleInfoSpy).toBeCalledWith(
       `%cYou're using the model: '${modelOrUrl}'. See NSFWJS docs for instructions on hosting your own model (https://github.com/infinitered/nsfwjs?tab=readme-ov-file#host-your-own-model).`,
       "color: lightblue"
+    );
+  },
+  timeoutMS
+);
+
+it(
+  "NSFWJS throws when named model is not in models registry",
+  async () => {
+    await expect(
+      loadCore("MobileNetV2", { modelDefinitions: [] })
+    ).rejects.toThrow(
+      "provided models registry"
     );
   },
   timeoutMS
