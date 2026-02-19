@@ -24,12 +24,19 @@ If you're trying to access the Cloudfront hosted model and are running into an e
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+
 - [QUICK: How to use the module](#quick-how-to-use-the-module)
+  - [Selective model bundles (tree-shaking)](#selective-model-bundles-tree-shaking)
 - [Library API](#library-api)
   - [`load` the model](#load-the-model)
   - [Caching](#caching)
   - [`classify` an image](#classify-an-image)
+  - [`dispose` a loaded model](#dispose-a-loaded-model)
 - [Production](#production)
+- [Backend selection](#backend-selection)
+  - [WASM backend (optional)](#wasm-backend-optional)
+  - [WebGPU backend (optional)](#webgpu-backend-optional)
+  - [Node.js backend](#nodejs-backend)
 - [Install](#install)
   - [Host your own model](#host-your-own-model)
 - [Run the Examples](#run-the-examples)
