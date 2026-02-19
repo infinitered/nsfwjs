@@ -58,8 +58,6 @@ The library categorizes image probabilities in the following 5 classes:
 
 ## QUICK: How to use the module
 
-With `async/await` support:
-
 ```js
 import * as nsfwjs from "nsfwjs";
 
@@ -73,30 +71,9 @@ const predictions = await model.classify(img);
 console.log("Predictions: ", predictions);
 ```
 
-Without `async/await` support:
-
-```js
-import * as nsfwjs from "nsfwjs";
-
-const img = document.getElementById("img");
-
-// If you want to host models on your own or use different model from the ones available, see the section "Host your own model".
-nsfwjs
-  .load()
-  .then(function (model) {
-    // Classify the image
-    return model.classify(img);
-  })
-  .then(function (predictions) {
-    console.log("Predictions: ", predictions);
-  });
-```
-
 ### Selective model bundles (tree-shaking)
 
-`nsfwjs` keeps the default behavior and includes built-in model definitions.
-For selective bundling, import from `nsfwjs/core` and pass only the models
-you want in `modelDefinitions`.
+`nsfwjs` keeps the default behavior and includes built-in model definitions. For selective bundling, import from `nsfwjs/core` and pass only the models you want in `modelDefinitions`.
 
 ```js
 import { load } from "nsfwjs/core";
@@ -112,20 +89,6 @@ If you pass an empty model registry, named bundled model loads will fail:
 
 ```js
 await load("MobileNetV2", { modelDefinitions: [] }); // throws
-```
-
-#### Vite + npm link note
-
-When testing with `npm link`, Vite can resolve symlinks differently from
-published installs. If model bundles fail to load locally, set:
-
-```js
-// vite.config.js / vite.config.ts
-export default {
-  resolve: {
-    preserveSymlinks: true,
-  },
-};
 ```
 
 ## Library API
@@ -224,6 +187,17 @@ const predictions = await model.classify(img, 3);
 
 - Array of objects that contain `className` and `probability`. Array size is determined by the second parameter in the `classify` function.
 
+### `dispose` a loaded model
+
+If you are done with a model instance, call `dispose()` to release held tensors
+and model resources.
+
+```js
+const model = await nsfwjs.load();
+// ... classify/infer
+model.dispose();
+```
+
 ## Production
 
 Tensorflow.js offers two flags, `enableProdMode` and `enableDebugMode`. If you're going to use NSFWJS in production, be sure to enable prod mode before loading the NSFWJS model.
@@ -238,9 +212,89 @@ let model = await nsfwjs.load(`${urlToNSFWJSModel}`);
 
 **NOTE:** Consider downloading and hosting the model yourself before moving to production as explained in the [Host your own model](#host-your-own-model) section. This could potentially improve the initial load time of the model. Furthermore, consider [Caching](#caching) the model, if you are using it in the browser.
 
+## Backend selection
+
+NSFWJS uses whichever TensorFlow.js backend is active.
+
+Setting a backend explicitly is optional. If you import one or more backends and call `await tf.ready()`, TensorFlow.js will pick the best available backend.
+
+Use `tf.setBackend(...)` only when you want deterministic behavior across devices.
+
+Automatic backend selection:
+
+```js
+import * as tf from "@tensorflow/tfjs";
+import "@tensorflow/tfjs-backend-webgpu";
+import "@tensorflow/tfjs-backend-wasm";
+import * as nsfwjs from "nsfwjs";
+
+await tf.ready();
+
+const model = await nsfwjs.load();
+```
+
+Pinned backend selection:
+
+```js
+import * as tf from "@tensorflow/tfjs";
+import "@tensorflow/tfjs-backend-webgpu";
+
+await tf.setBackend("webgpu");
+await tf.ready();
+```
+
+### WASM backend (optional)
+
+```bash
+yarn add @tensorflow/tfjs-backend-wasm
+```
+
+```js
+import * as tf from "@tensorflow/tfjs";
+import {
+  setWasmPaths,
+} from "@tensorflow/tfjs-backend-wasm";
+import "@tensorflow/tfjs-backend-wasm";
+
+// If you aren't using a standard bundler, set the path to the .wasm binaries.
+setWasmPaths("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm/dist/");
+
+await tf.setBackend("wasm");
+await tf.ready();
+```
+
+### WebGPU backend (optional)
+
+```bash
+yarn add @tensorflow/tfjs-backend-webgpu
+```
+
+```js
+import * as tf from "@tensorflow/tfjs";
+import "@tensorflow/tfjs-backend-webgpu";
+
+await tf.setBackend("webgpu");
+await tf.ready();
+```
+
+Backend guidance:
+
+- `webgpu`: often fastest on supported browsers/hardware.
+- `webgl`: strong default in modern desktop/mobile browsers.
+- `wasm`: useful fallback for environments where WebGL is unavailable/restricted.
+- `cpu`: broad compatibility but typically slower.
+
+### Node.js backend
+
+For Node.js workloads, consider using `@tensorflow/tfjs-node` (or
+`@tensorflow/tfjs-node-gpu` where applicable) for better performance.
+See the [Node JS App](#node-js-app) section for examples.
+
+Always benchmark in your target browser/device set.
+
 ## Install
 
-NSFWJS is powered by TensorFlow.js as a peer dependency. If your project does not already have TFJS you'll need to add it.
+NSFWJS is powered by TensorFlow.js as a peer dependency. If your project does not already have TFJS you'll may want to add it.
 
 ```bash
 # peer dependency
@@ -257,7 +311,7 @@ The magic that powers NSFWJS is the [NSFW detection model](https://github.com/ga
 
 Here is how to install the default model on a website:
 
-1. Download the project by either downloading as zip or cloning `git clone https://github.com/infinitered/nsfwjs.git`. **_If downloading as zip does not work use cloning._**
+1. Download the project by either downloading as zip or cloning `git clone https://github.com/infinitered/nsfwjs.git`.
 2. Extract the `models` folder from the root of the project and drop it in the `public` directory of your web application to serve them as static files along side your website. (You can host it anywhere such as on a s3 bucket as long as you can access it via URL).
 3. Retrieve the URL and put it into `nsfwjs.load()`. For example: `nsfwjs.load(https://yourwebsite.com/models/mobilenet_v2/model.json)`.
 
@@ -285,6 +339,7 @@ You should host the `nsfwjs.min.js` file and all the model bundles that you want
 ### React Native
 
 The [NSFWJS React Native app](https://github.com/infinitered/nsfwjs-mobile)
+
 ![React Native Demo](./_art/nsfwjs-mobile.jpg)
 
 Loads a local copy of the model to reduce network load and utilizes TFJS-React-Native. [Blog Post](https://shift.infinite.red/nsfw-js-for-react-native-a37c9ba45fe9)

@@ -19,6 +19,7 @@ type ModelJSON = tf.io.ModelJSON;
 type ModelArtifacts = tf.io.ModelArtifacts;
 type WeightDataBase64 = { [x: string]: string };
 
+/** Result payload emitted by frame-based classify callbacks. */
 export type FrameResult = {
   index: number;
   totalFrames: number;
@@ -26,24 +27,32 @@ export type FrameResult = {
   image: HTMLCanvasElement | ImageData;
 };
 
+/** Options for frame-by-frame classification helpers. */
 export type ClassifyConfig = {
   topk?: number;
   fps?: number;
   onFrame?: (result: FrameResult) => any;
 };
 
+/** Model loading options used by both root and core entrypoints. */
 export interface NSFWJSOptions {
   size?: number;
   type?: string;
 }
 
+/** Single class probability output. */
 export type PredictionType = {
   className: (typeof NSFW_CLASSES)[keyof typeof NSFW_CLASSES];
   probability: number;
 };
 
+/** Built-in bundled model identifiers. */
 export type ModelName = "MobileNetV2" | "MobileNetV2Mid" | "InceptionV3";
 
+/**
+ * Descriptor for a bundled model and its shard loaders.
+ * Used by `load(..., { modelDefinitions })` in the `nsfwjs/core` entrypoint.
+ */
 export type ModelDefinition = {
   name: ModelName;
   numOfWeightBundles: number;
@@ -52,6 +61,7 @@ export type ModelDefinition = {
   weightBundles: Array<() => Promise<{ default: string }>>;
 };
 
+/** Advanced load options for selective model registries. */
 export interface LoadOptions extends NSFWJSOptions {
   modelDefinitions?: ModelDefinition[];
 }
@@ -197,6 +207,12 @@ export async function load(
   options?: LoadOptions
 ): Promise<NSFWJS>;
 
+/**
+ * Loads an NSFWJS model from a built-in model name or custom model URL.
+ *
+ * In `nsfwjs/core`, pass `modelDefinitions` to control which bundled model
+ * loaders are available to this call.
+ */
 export async function load(
   modelOrUrl?: string,
   options: LoadOptions = { size: IMAGE_SIZE }
@@ -304,14 +320,16 @@ class JSONHandler implements IOHandler {
   }
 }
 
+/** Loaded NSFWJS model wrapper with infer/classify/dispose helpers. */
 export class NSFWJS {
-  public endpoints: string[];
+  public endpoints: string[] = [];
   public model: tf.LayersModel | tf.GraphModel;
 
   private options: NSFWJSOptions;
   private urlOrIOHandler: string | IOHandler;
   private intermediateModels: { [layerName: string]: tf.LayersModel } = {};
   private normalizationOffset: tf.Scalar;
+  private disposed = false;
 
   constructor(modelUrlOrIOHandler: string | IOHandler, options: NSFWJSOptions) {
     this.options = options;
@@ -331,6 +349,10 @@ export class NSFWJS {
   }
 
   async load() {
+    if (this.disposed) {
+      throw new Error("This NSFWJS instance has been disposed.");
+    }
+
     const { size, type } = this.options;
     if (type === "graph") {
       this.model = await tf.loadGraphModel(this.urlOrIOHandler);
@@ -349,7 +371,7 @@ export class NSFWJS {
   }
 
   /**
-   * Infers through the model. Optionally takes an endpoint to return an
+   * Infers through the loaded model. Optionally takes an endpoint to return an
    * intermediate activation.
    *
    * @param img The image to classify. Can be a tensor or a DOM element image,
@@ -366,6 +388,10 @@ export class NSFWJS {
       | HTMLVideoElement,
     endpoint?: string
   ): tf.Tensor {
+    if (this.disposed) {
+      throw new Error("This NSFWJS instance has been disposed.");
+    }
+
     if (endpoint != null && this.endpoints.indexOf(endpoint) === -1) {
       throw new Error(
         `Unknown endpoint ${endpoint}. Available endpoints: ${this.endpoints}.`
@@ -439,6 +465,10 @@ export class NSFWJS {
       | HTMLVideoElement,
     topk = 5
   ): Promise<Array<PredictionType>> {
+    if (this.disposed) {
+      throw new Error("This NSFWJS instance has been disposed.");
+    }
+
     const logits = this.infer(img) as tf.Tensor2D;
 
     const classes = await getTopKClasses(logits, topk);
@@ -446,6 +476,28 @@ export class NSFWJS {
     logits.dispose();
 
     return classes;
+  }
+
+  /**
+   * Disposes loaded TensorFlow resources held by this instance.
+   * Safe to call multiple times.
+   */
+  dispose() {
+    if (this.disposed) {
+      return;
+    }
+
+    Object.values(this.intermediateModels).forEach((intermediateModel) => {
+      intermediateModel.dispose();
+    });
+    this.intermediateModels = {};
+
+    if (this.model) {
+      this.model.dispose();
+    }
+
+    this.normalizationOffset.dispose();
+    this.disposed = true;
   }
 }
 
