@@ -1,7 +1,8 @@
 We setup our own `nginx` server to avoid CORS issues
 
 ```sh
+yarn bundle
 docker-compose up -d
 
-firefox $PWD/data/index.html
+http://localhost/data/index.html
 ```
