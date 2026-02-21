@@ -15,21 +15,27 @@ function addExtensions(dir) {
     } else if (fullPath.endsWith(".js")) {
       let content = readFileSync(fullPath, "utf8");
 
-      // Add .js extension to static imports (from './path')
-      content = content.replace(/(from\s+['"]\.\/[^'"]+)/g, (match) => {
-        if (!match.endsWith(extension)) {
-          return `${match}${extension}`;
-        }
-        return match;
-      });
+      // Add .js extension to relative static imports (./ and ../)
+      content = content.replace(
+        /(from\s+['"])(\.{1,2}\/[^'"]+)(['"])/g,
+        (match, prefix, importPath, suffix) => {
+          if (!importPath.endsWith(extension)) {
+            return `${prefix}${importPath}${extension}${suffix}`;
+          }
+          return match;
+        },
+      );
 
-      // Add .js extension to dynamic imports (import('./path'))
-      content = content.replace(/(import\(['"]\.\/[^'"]+)/g, (match) => {
-        if (!match.endsWith(extension)) {
-          return `${match}${extension}`;
-        }
-        return match;
-      });
+      // Add .js extension to relative dynamic imports (./ and ../)
+      content = content.replace(
+        /(import\(['"])(\.{1,2}\/[^'"]+)(['"]\))/g,
+        (match, prefix, importPath, suffix) => {
+          if (!importPath.endsWith(extension)) {
+            return `${prefix}${importPath}${extension}${suffix}`;
+          }
+          return match;
+        },
+      );
 
       writeFileSync(fullPath, content);
     }
