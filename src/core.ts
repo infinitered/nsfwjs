@@ -69,7 +69,6 @@ type ModelConfig = {
   [key in ModelName]: ModelDefinition;
 };
 
-const DEFAULT_MODEL_NAME: ModelName = "MobileNetV2";
 const IMAGE_SIZE = 224; // default to Mobilenet v2
 
 const getGlobal = () => {
@@ -199,10 +198,10 @@ async function loadModel(
   }
 }
 
-export async function load(modelOrUrl?: ModelName): Promise<NSFWJS>;
+export async function load(modelOrUrl: ModelName): Promise<NSFWJS>;
 
 export async function load(
-  modelOrUrl?: string,
+  modelOrUrl: string,
   options?: LoadOptions
 ): Promise<NSFWJS>;
 
@@ -213,7 +212,7 @@ export async function load(
  * loaders are available to this call.
  */
 export async function load(
-  modelOrUrl?: string,
+  modelOrUrl: string,
   options: LoadOptions = { size: IMAGE_SIZE }
 ) {
   if (tf == null) {
@@ -225,13 +224,7 @@ export async function load(
 
   const availableModels = getModelConfig(options.modelDefinitions || []);
 
-  if (modelOrUrl === undefined) {
-    modelOrUrl = DEFAULT_MODEL_NAME;
-    console.info(
-      `%cBy not specifying 'modelOrUrl' parameter, you're using the default model: '${modelOrUrl}'. See NSFWJS docs for instructions on hosting your own model (https://github.com/infinitered/nsfwjs?tab=readme-ov-file#host-your-own-model).`,
-      "color: lightblue"
-    );
-  } else if (isModelName(modelOrUrl)) {
+  if (isModelName(modelOrUrl)) {
     console.info(
       `%cYou're using the model: '${modelOrUrl}'. See NSFWJS docs for instructions on hosting your own model (https://github.com/infinitered/nsfwjs?tab=readme-ov-file#host-your-own-model).`,
       "color: lightblue"
