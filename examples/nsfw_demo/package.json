@@ -1,41 +1,44 @@
 {
-  "name": "nsfw_demo",
-  "version": "0.1.0",
+  "name": "nsfw-demo",
   "private": true,
-  "dependencies": {
-    "@netlify/edge-functions": "^2.3.1",
-    "@tensorflow/tfjs": "^2.6.0",
-    "browserify-zlib": "^0.2.0",
-    "nsfwjs": "../../",
-    "path-browserify": "^1.0.1",
-    "react": "^16.8.1",
-    "react-dom": "^16.8.1",
-    "react-dropdown": "^1.6.4",
-    "react-dropzone": "^7.0.1",
-    "react-scripts": "5.0.0",
-    "react-spinkit": "^3.0.0",
-    "react-switch": "^4.1.0",
-    "react-webcam": "^1.1.0",
-    "seedrandom": "^3.0.1",
-    "stream-browserify": "^3.0.0",
-    "tether-drop": "^1.4.2"
-  },
+  "version": "0.0.0",
+  "packageManager": "yarn@1.22.22",
+  "type": "module",
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
-    "eject": "react-scripts eject"
+    "dev": "vite --host",
+    "build": "tsc -b && vite build",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "preview": "vite preview"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "dependencies": {
+    "@netlify/edge-functions": "^3.0.3",
+    "@tensorflow/tfjs": "^4.22.0",
+    "@tensorflow/tfjs-backend-webgpu": "^4.22.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-dropzone": "^15.0.0",
+    "react-switch": "^7.1.0",
+    "react-webcam": "^7.2.0"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
   "devDependencies": {
-    "react-app-rewired": "^2.2.1"
+    "@eslint/js": "^9.39.2",
+    "@tailwindcss/vite": "^4.2.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.4",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "eslint": "^9.39.2",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.5.0",
+    "globals": "^17.3.0",
+    "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "tailwindcss": "^4.2.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.56.0",
+    "vite": "^7.3.1"
   }
 }

@@ -1,14 +1,43 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import "tailwindcss";
+
+@theme {
+  --color-primary-light: rgb(var(--palette-primary-light));
+  --color-primary-main: rgb(var(--palette-primary-main));
+  --color-primary-dark: rgb(var(--palette-primary-dark));
+  --color-background-main: rgb(var(--palette-background-main));
+  --color-background-default: rgb(var(--palette-background-default));
+  --color-text-primary: rgb(var(--palette-text-primary));
+  --color-text-disabled: rgb(var(--palette-text-disabled));
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+:root {
+  --palette-primary-light: 255 164 0;
+  --palette-primary-main: 231 159 35;
+  --palette-primary-dark: 255 114 6;
+  --palette-background-main: 0 0 0;
+  --palette-background-default: 40 44 52;
+  --palette-text-primary: 255 255 255;
+  --palette-text-disabled: 222 221 205;
+}
+
+html {
+  font-family:
+    "Inter var",
+    Roboto,
+    Helvetica Neue,
+    Arial,
+    sans-serif;
+  font-feature-settings: "salt";
+  color: rgb(var(--palette-text-primary));
+  background-color: rgb(var(--palette-background-default));
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2rem;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow-x: clip;
 }

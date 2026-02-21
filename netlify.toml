@@ -1,7 +1,7 @@
 [build]
   base = "/"
   command = "npm run build && cd examples/nsfw_demo && npm i && npm run build"
-  publish = "examples/nsfw_demo/build"
+  publish = "examples/nsfw_demo/dist"
   edge_functions = "examples/nsfw_demo/netlify/edge-functions"
 
 [[edge_functions]]
