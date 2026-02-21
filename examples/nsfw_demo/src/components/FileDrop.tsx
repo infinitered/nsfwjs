@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Dropzone from "react-dropzone";
 import type { FileRejection } from "react-dropzone";
+import Dropzone from "react-dropzone";
 import nsfwjsLogo from "../assets/nsfwjs-logo.svg";
 import { useNSFWJS } from "../contexts/NSFWJS";
 import type { Message } from "../nsfwjs.worker";
@@ -62,7 +62,7 @@ const FileDrop = () => {
           }
         >
           <img
-            className="mx-auto h-96 w-auto object-contain"
+            className={`mx-auto h-96 object-contain ${preview ? "w-auto" : "w-238.25"}`}
             src={preview || nsfwjsLogo}
             alt="drop your file here"
             onLoad={() => {
@@ -70,7 +70,6 @@ const FileDrop = () => {
                 setImageLoaded(true);
                 setCurrentImageBlur(blur);
               }
-              // if (preview) URL.revokeObjectURL(preview);
             }}
           />
           <input {...getInputProps()} />

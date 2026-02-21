@@ -4,10 +4,22 @@ import { InceptionV3Model } from "nsfwjs/models/inception_v3";
 import { MobileNetV2Model } from "nsfwjs/models/mobilenet_v2";
 import { MobileNetV2MidModel } from "nsfwjs/models/mobilenet_v2_mid";
 
-import * as tf from "@tensorflow/tfjs";
-import "@tensorflow/tfjs-backend-webgpu";
+let tfReadyPromise: Promise<void> | null = null;
 
-tf.enableProdMode();
+const ensureTfReady = async () => {
+  if (tfReadyPromise) {
+    return tfReadyPromise;
+  }
+
+  tfReadyPromise = (async () => {
+    const tf = await import("@tensorflow/tfjs");
+    await import("@tensorflow/tfjs-backend-webgpu");
+    tf.enableProdMode();
+    await tf.ready();
+  })();
+
+  return tfReadyPromise;
+};
 
 export type Message = {
   type: "load" | "predict";
@@ -43,7 +55,7 @@ onmessage = async (event: MessageEvent<Message>) => {
   const file = event.data.file;
 
   if (type === "load" && modelName) {
-    await tf.ready(); // Make TF auto select the best available backend WebGPU -> WebGL -> WASM -> CPU
+    await ensureTfReady();
 
     let dbExists = false;
     const request = indexedDB.open(modelName);

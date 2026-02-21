@@ -53,6 +53,14 @@ export const NSFWJSProvider = ({ children }: { children: ReactNode }) => {
   }, [cameraAvailable, file, preview, webCamEnabled]);
 
   useEffect(() => {
+    return () => {
+      if (preview) {
+        URL.revokeObjectURL(preview);
+      }
+    };
+  }, [preview]);
+
+  useEffect(() => {
     if (modelLoaded && !predictions[0] && file) {
       worker?.postMessage({ type: "predict", file } as Message);
     }
