@@ -1,24 +1,24 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Snapshots 1`] = `
-Array [
-  Object {
+[
+  {
     "className": "Drawing",
     "probability": 0.6877415776252747,
   },
-  Object {
+  {
     "className": "Neutral",
     "probability": 0.31009718775749207,
   },
-  Object {
+  {
     "className": "Hentai",
     "probability": 0.00210934947244823,
   },
-  Object {
+  {
     "className": "Porn",
     "probability": 0.00003717914660228416,
   },
-  Object {
+  {
     "className": "Sexy",
     "probability": 0.000014760436897631735,
   },

@@ -34,7 +34,7 @@ it(
   async () => {
     const consoleInfoSpy = jest.spyOn(console, "info");
     await load();
-    expect(consoleInfoSpy).toBeCalledWith(
+    expect(consoleInfoSpy).toHaveBeenCalledWith(
       `%cBy not specifying 'modelOrUrl' parameter, you're using the default model: 'MobileNetV2'. See NSFWJS docs for instructions on hosting your own model (https://github.com/infinitered/nsfwjs?tab=readme-ov-file#host-your-own-model).`,
       "color: lightblue"
     );
@@ -48,7 +48,7 @@ it(
     const modelOrUrl: ModelName = "MobileNetV2";
     const consoleInfoSpy = jest.spyOn(console, "info");
     await load(modelOrUrl);
-    expect(consoleInfoSpy).toBeCalledWith(
+    expect(consoleInfoSpy).toHaveBeenCalledWith(
       `%cYou're using the model: '${modelOrUrl}'. See NSFWJS docs for instructions on hosting your own model (https://github.com/infinitered/nsfwjs?tab=readme-ov-file#host-your-own-model).`,
       "color: lightblue"
     );

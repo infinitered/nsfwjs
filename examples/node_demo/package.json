@@ -1,0 +1,17 @@
+{
+  "name": "nsfwjs-node-demo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs-node": "^4.22.0",
+    "express": "^5.2.1",
+    "jpeg-js": "^0.4.4",
+    "multer": "^2.0.2",
+    "nsfwjs": "../../"
+  }
+}

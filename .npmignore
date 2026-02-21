@@ -10,7 +10,7 @@ karma.conf.js
 dist/**/*.js.map
 .travis.yml
 .npmignore
-tslint.json
+eslint.config.js
 yarn.lock
 examples/
 _art/
