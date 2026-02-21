@@ -120,6 +120,14 @@ const model = nsfwjs.load("MobileNetV2Mid"); // "MobileNetV2" | "MobileNetV2Mid"
 
 You can also use same parameter and load the model from your website/server, as explained in the [Host your own model](#host-your-own-model) section. Doing so could reduce the bundle size for loading the model by approximately 1.33 times (33%) since you can directly use the binary files instead of the base64 that are bundled with the package. i.e. The `"MobileNetV2"` model bundled into the package is 3.5MB instead of 2.6MB for hosted binary files. This would only make a difference if you are loading the model every time (without [Caching](#caching)) on the client-side browser since on the server-side, you'd only be loading the model once at the server start.
 
+If you are hosting your own model via URL and want the smallest app bundle, import `load` from `nsfwjs/core` instead of `nsfwjs`. The core entrypoint does not include built-in model definitions by default, so bundlers do not pull those model assets into your app bundle.
+
+```js
+import { load } from "nsfwjs/core";
+
+const model = await load("/path/to/mobilenet_v2/model.json");
+```
+
 Model MobileNetV2 - [224x224](https://github.com/infinitered/nsfwjs/blob/master/models/mobilenet_v2/)
 
 ```js
@@ -315,6 +323,8 @@ For script tags include all the bundles as shown [here](#browserify). Then simpl
 ### Host your own model
 
 The magic that powers NSFWJS is the [NSFW detection model](https://github.com/gantman/nsfw_model). By default, the models are bundled into this package. But you may want to host the models on your own server to reduce bundle size by loading them as raw binary files or to host your own custom model. If you want to host your own version of [the model files](https://github.com/infinitered/nsfwjs/tree/master/models), you can do so by following the steps below. You can then pass the relative URL to your hosted files in the `load` function along with the `options` if necessary.
+
+If you are loading a hosted model URL, prefer `nsfwjs/core` so your app does not bundle built-in model definitions. See [Selective model bundles (tree-shaking)](#selective-model-bundles-tree-shaking).
 
 Here is how to install the default model on a website:
 
