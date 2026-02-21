@@ -108,11 +108,9 @@ Before you can classify any image, you'll need to load the model.
 const model = nsfwjs.load(); // Default: "MobileNetV2"
 ```
 
-You can use the optional first parameter to specify which model you want to use
-from the three built-in bundled models. Defaults to: `"MobileNetV2"`.
+You can use the optional first parameter to specify which model you want to use from the three built-in bundled models. Defaults to: `"MobileNetV2"`.
 
-For tree-shaken selective model bundling, use `nsfwjs/core` and pass
-`modelDefinitions` as shown above.
+For tree-shaken selective model bundling, use `nsfwjs/core` and pass `modelDefinitions` as shown above.
 
 ```js
 const model = nsfwjs.load("MobileNetV2Mid"); // "MobileNetV2" | "MobileNetV2Mid" | "InceptionV3"
@@ -204,8 +202,7 @@ const predictions = await model.classify(img, 3);
 
 ### `dispose` a loaded model
 
-If you are done with a model instance, call `dispose()` to release held tensors
-and model resources.
+If you are done with a model instance, call `dispose()` to release held tensors and model resources.
 
 ```js
 const model = await nsfwjs.load();
@@ -301,9 +298,7 @@ Backend guidance:
 
 ### Node.js backend
 
-For Node.js workloads, consider using `@tensorflow/tfjs-node` (or
-`@tensorflow/tfjs-node-gpu` where applicable) for better performance.
-See the [Node JS App](#node-js-app) section for examples.
+For Node.js workloads, consider using `@tensorflow/tfjs-node` (or `@tensorflow/tfjs-node-gpu` where applicable) for better performance. See the [Node JS App](#node-js-app) section for examples.
 
 Always benchmark in your target browser/device set.
 
@@ -338,7 +333,7 @@ Here is how to install the default model on a website:
 
 The demo that powers https://nsfwjs.com/ is available in the [`examples/nsfw_demo`](https://github.com/infinitered/nsfwjs/tree/master/examples/nsfw_demo) folder.
 
-To run the demo, run `yarn prep` which will copy the latest code into the demo. After that's done, you can `cd` into the demo folder and run with `yarn start`.
+To run the demo, run `yarn demo` which will copy the latest code into the demo and start the dev server.
 
 ### Browserify
 
