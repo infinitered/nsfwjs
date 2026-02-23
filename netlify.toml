@@ -5,7 +5,7 @@
   edge_functions = "examples/nsfw_demo/netlify/edge-functions"
 
 [build.environment]
-  NODE_VERSION = "20.19.0"
+NODE_VERSION = "22.13.0"
 
 [[edge_functions]]
   function = "country-block"

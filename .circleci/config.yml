@@ -3,15 +3,15 @@ version: 2.1
 jobs:
   lint:
     docker:
-      - image: cimg/node:20.9.0
+      - image: cimg/node:22.13.0
     steps:
       - checkout
       - restore_cache:
           name: Restore node modules
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}-{{ arch }}
+            - v2-node22.13-dependencies-{{ checksum "package.json" }}-{{ arch }}
             # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+            - v2-node22.13-dependencies-
       - run:
           name: Install dependencies
           command: yarn install
@@ -19,21 +19,21 @@ jobs:
           name: Save node modules
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}-{{ arch }}
+          key: v2-node22.13-dependencies-{{ checksum "package.json" }}-{{ arch }}
       - run:
           name: Lint
           command: yarn lint
   test:
     docker:
-      - image: cimg/node:20.9.0
+      - image: cimg/node:22.13.0
     steps:
       - checkout
       - restore_cache:
           name: Restore node modules
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}-{{ arch }}
+            - v2-node22.13-dependencies-{{ checksum "package.json" }}-{{ arch }}
             # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+            - v2-node22.13-dependencies-
       - run:
           name: Install dependencies
           command: yarn install
@@ -41,7 +41,7 @@ jobs:
           name: Save node modules
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}-{{ arch }}
+          key: v2-node22.13-dependencies-{{ checksum "package.json" }}-{{ arch }}
       - run:
           name: Test
           command: yarn test
