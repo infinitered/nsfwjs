@@ -180,7 +180,8 @@ Subsequent Load:
 **Troubleshooting**
 
 - On the tab where the model is being loaded, inspect element and navigate to the the "Application" tab. On the left pane under the "Storage" section, there is a subsection named "IndexedDB". Here you can view if the model is being saved.
-  
+
+For a complete browser worker implementation (including backend initialization, IndexedDB-first load, and save-on-miss caching), see [`examples/nsfw_demo/src/nsfwjs.worker.ts`](./examples/nsfw_demo/src/nsfwjs.worker.ts).
 
 ### `classify` an image
 
