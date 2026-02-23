@@ -15,8 +15,12 @@ const ensureTfReady = async () => {
     const tf = await import("@tensorflow/tfjs");
     await import("@tensorflow/tfjs-backend-webgpu");
     tf.enableProdMode();
+    await tf.setBackend("webgpu").catch(() => false);
     await tf.ready();
-  })();
+  })().catch((error) => {
+    tfReadyPromise = null;
+    throw error;
+  });
 
   return tfReadyPromise;
 };
@@ -30,6 +34,7 @@ export type Message = {
 export type ReturnMessage = {
   modelLoaded?: boolean;
   predictions?: PredictionType[];
+  error?: string;
 };
 
 interface NSFWJSOptions {
@@ -47,7 +52,8 @@ const modelOptions: ModelConfig = {
   InceptionV3: { size: 299 },
 };
 
-let model: NSFWJS;
+let model: NSFWJS | null = null;
+let loadedModelName: ModelName | null = null;
 
 onmessage = async (event: MessageEvent<Message>) => {
   const type = event.data.type;
@@ -55,61 +61,63 @@ onmessage = async (event: MessageEvent<Message>) => {
   const file = event.data.file;
 
   if (type === "load" && modelName) {
-    await ensureTfReady();
+    try {
+      if (model && loadedModelName === modelName) {
+        postMessage({ modelLoaded: true } as ReturnMessage);
+        return;
+      }
 
-    let dbExists = false;
-    const request = indexedDB.open(modelName);
+      await ensureTfReady();
 
-    dbExists = await new Promise((resolve) => {
-      request.onupgradeneeded = function (e) {
-        (e.target as IDBOpenDBRequest)?.transaction?.abort();
-        console.log("no db");
-        resolve(false);
-      };
-      request.onsuccess = function () {
-        console.log("db");
-        resolve(true);
-      };
-      request.onerror = function () {
-        indexedDB.deleteDatabase(modelName);
-        resolve(false);
-      };
-    });
+      try {
+        model = await load(`indexeddb://${modelName}`, modelOptions[modelName]);
+        console.info("Loaded from IndexedDB cache");
+      } catch {
+        model = await load(modelName, {
+          ...modelOptions[modelName],
+          modelDefinitions: [MobileNetV2Model, MobileNetV2MidModel, InceptionV3Model,],
+        });
+        await model.model.save(`indexeddb://${modelName}`);
+      }
 
-    if (dbExists) {
-      model = await load(`indexeddb://${modelName}`, modelOptions[modelName]);
-    } else {
-      model = await load(modelName, {
-        modelDefinitions: [MobileNetV2Model, MobileNetV2MidModel, InceptionV3Model],
-      });
-      indexedDB.open(modelName);
-      await model.model.save(`indexeddb://${modelName}`);
+      loadedModelName = modelName;
+      postMessage({ modelLoaded: true } as ReturnMessage);
+    } catch (error) {
+      postMessage({
+        modelLoaded: false,
+        error: error instanceof Error ? error.message : "Failed to load model",
+      } as ReturnMessage);
+    }
+  } else if (type === "predict" && file) {
+    if (!model) {
+      postMessage({ error: "Model is not loaded" } as ReturnMessage);
+      return;
     }
 
-    postMessage({ modelLoaded: !!model } as ReturnMessage);
-  } else if (type === "predict" && file && model) {
-    if (!file) return;
-
-    // Create a new OffscreenCanvas for image processing
-    const offscreenCanvas = new OffscreenCanvas(1, 1); // Initial size
+    const offscreenCanvas = new OffscreenCanvas(1, 1);
     const ctx = offscreenCanvas.getContext("2d");
 
-    if (!ctx) return;
+    if (!ctx) {
+      postMessage({ error: "2D canvas context is unavailable" } as ReturnMessage);
+      return;
+    }
 
-    // Create an image object
     const imgBitmap = await createImageBitmap(file);
 
-    // Adjust canvas size to image dimensions
     offscreenCanvas.width = imgBitmap.width;
     offscreenCanvas.height = imgBitmap.height;
 
-    // Draw the image onto the OffscreenCanvas
-    ctx.drawImage(imgBitmap, 0, 0);
-
-    // Extract ImageData from the OffscreenCanvas
-    const imageData = ctx.getImageData(0, 0, imgBitmap.width, imgBitmap.height);
-
-    const predictions = await model.classify(imageData);
-    postMessage({ predictions } as ReturnMessage);
+    try {
+      ctx.drawImage(imgBitmap, 0, 0);
+      const imageData = ctx.getImageData(0, 0, imgBitmap.width, imgBitmap.height);
+      const predictions = await model.classify(imageData);
+      postMessage({ predictions } as ReturnMessage);
+    } catch (error) {
+      postMessage({
+        error: error instanceof Error ? error.message : "Prediction failed",
+      } as ReturnMessage);
+    } finally {
+      imgBitmap.close();
+    }
   }
 };

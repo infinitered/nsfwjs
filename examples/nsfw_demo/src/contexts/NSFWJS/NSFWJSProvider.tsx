@@ -1,6 +1,6 @@
 import type { ModelName, PredictionType } from "nsfwjs";
-import { useEffect, useState } from "react";
 import type { Dispatch, ReactNode, SetStateAction } from "react";
+import { useEffect, useState } from "react";
 import { NSFWJSContext } from ".";
 import type { Message, ReturnMessage } from "../../nsfwjs.worker";
 
@@ -33,7 +33,9 @@ export const NSFWJSProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     worker.onmessage = (event: MessageEvent<ReturnMessage>) => {
-      const { modelLoaded, predictions } = event.data;
+      const { modelLoaded, predictions, error } = event.data;
+
+      if (error) window.alert(error);
 
       if (modelLoaded !== undefined) {
         setModelLoaded(modelLoaded);
