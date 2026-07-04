@@ -509,6 +509,7 @@ async function getTopKClasses(
   valuesAndIndices.sort((a, b) => {
     return b.value - a.value;
   });
+  topK = Math.min(topK, values.length);
   const topkValues = new Float32Array(topK);
   const topkIndices = new Int32Array(topK);
   for (let i = 0; i < topK; i++) {
