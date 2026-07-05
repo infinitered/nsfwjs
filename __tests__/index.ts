@@ -88,6 +88,22 @@ it(
 );
 
 it(
+  "NSFWJS classify clamps topk to number of classes",
+  async () => {
+    const model = await load();
+    const x = tf.zeros([224, 224, 3]) as tf.Tensor3D;
+    try {
+      const predictions = await model.classify(x, 10);
+      expect(predictions.length).toBe(5);
+    } finally {
+      x.dispose();
+      model.dispose();
+    }
+  },
+  timeoutMS
+);
+
+it(
   "NSFWJS dispose prevents further use",
   async () => {
     const model = await load();
