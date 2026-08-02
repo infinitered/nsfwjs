@@ -41,7 +41,7 @@
     "postbuild": "yarn bundle:models",
     "pretest": "yarn build && node ./scripts/pre-test.mjs",
     "test": "jest",
-    "posttest": "node ./scripts/post-test.mjs",
+    "posttest": "node ./scripts/post-test.mjs && node ./scripts/check-sourcemaps.mjs",
     "toc": "doctoc .",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",

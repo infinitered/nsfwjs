@@ -7,7 +7,6 @@ coverage/
 node_modules/
 karma.conf.js
 *.tgz
-dist/**/*.js.map
 .travis.yml
 .npmignore
 eslint.config.js
