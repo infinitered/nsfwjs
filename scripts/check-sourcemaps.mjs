@@ -1,12 +1,13 @@
 import { execFileSync } from "child_process";
 import { readFileSync } from "fs";
-import { dirname, join, normalize, posix } from "path";
+import { dirname, normalize, posix } from "path";
 
 // Source maps must ship in the npm package and stay usable.
 // 1. Every sourceMappingURL comment in a packed .js file must resolve to a
 //    packed .map file. A dangling reference breaks DevTools for consumers.
-// 2. Every packed .map must parse as JSON, list sources, and either embed
-//    the source text or point at a source file that is also packed.
+// 2. Every source map referenced by a packed JavaScript file must parse as
+//    JSON, list sources, and either embed the source text or point at a
+//    source file that is also packed.
 
 const npmBin = process.platform === "win32" ? "npm.cmd" : "npm";
 
