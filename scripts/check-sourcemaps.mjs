@@ -2,10 +2,11 @@ import { execFileSync } from "child_process";
 import { readFileSync } from "fs";
 import { dirname, join, normalize, posix } from "path";
 
-// Source maps must ship in the npm package.
-// Every sourceMappingURL comment in a packed .js file must resolve to a
-// packed .map file. A dangling reference breaks the debugger experience for
-// consumers, so the check fails the build when one appears.
+// Source maps must ship in the npm package and stay usable.
+// 1. Every sourceMappingURL comment in a packed .js file must resolve to a
+//    packed .map file. A dangling reference breaks DevTools for consumers.
+// 2. Every packed .map must parse as JSON, list sources, and either embed
+//    the source text or point at a source file that is also packed.
 
 const npmBin = process.platform === "win32" ? "npm.cmd" : "npm";
 
@@ -23,8 +24,13 @@ const getPackedFiles = () => {
 
 const sourceMappingUrlPattern = /\/\/# sourceMappingURL=(\S+)/g;
 
+const isRemoteSource = (source) =>
+  source.startsWith("http://") ||
+  source.startsWith("https://") ||
+  source.startsWith("data:");
+
 const checkSourceMaps = (packedFiles) => {
-  const danglingReferences = [];
+  const problems = [];
 
   packedFiles.forEach((file) => {
     if (!file.endsWith(".js")) {
@@ -41,25 +47,66 @@ const checkSourceMaps = (packedFiles) => {
       );
 
       if (!packedFiles.includes(mapPath)) {
-        danglingReferences.push(`${file} -> ${mapPath}`);
+        problems.push(`missing packed map file: ${file} -> ${mapPath}`);
+        continue;
       }
+
+      let map;
+      try {
+        map = JSON.parse(readFileSync(mapPath, "utf8"));
+      } catch (error) {
+        problems.push(`unparseable map: ${mapPath} (${error.message})`);
+        continue;
+      }
+
+      const sources = Array.isArray(map.sources) ? map.sources : [];
+      if (sources.length === 0) {
+        problems.push(`map without sources: ${mapPath}`);
+      }
+
+      const sourcesContent = map.sourcesContent;
+
+      sources.forEach((source, index) => {
+        if (isRemoteSource(source)) {
+          return;
+        }
+
+        const sourcePath = normalize(
+          posix.join(dirname(mapPath), source)
+        ).replace(/\\/g, "/");
+
+        if (packedFiles.includes(sourcePath)) {
+          return;
+        }
+
+        const hasEmbeddedSource =
+          Array.isArray(sourcesContent) &&
+          sourcesContent[index] != null &&
+          sourcesContent[index].trim() !== "";
+
+        if (!hasEmbeddedSource) {
+          problems.push(
+            `source not packed and no sourcesContent: ${mapPath} -> ${source}`
+          );
+        }
+      });
     }
   });
 
-  return danglingReferences;
+  return problems;
 };
 
 const packedFiles = getPackedFiles();
-const danglingReferences = checkSourceMaps(packedFiles);
+const problems = checkSourceMaps(packedFiles);
 
-if (danglingReferences.length > 0) {
+if (problems.length > 0) {
   console.error(
-    `Dangling sourceMappingURL references found in npm package:\n` +
-      danglingReferences.map((ref) => `  ${ref}`).join("\n")
+    `Source map problems found in npm package:\n` +
+      problems.map((problem) => `  ${problem}`).join("\n")
   );
   process.exit(1);
 }
 
 console.log(
-  `OK: ${packedFiles.length} files packed, all sourceMappingURL references resolve.`
+  `OK: ${packedFiles.length} files packed, all source maps resolve and stay usable.`
 );

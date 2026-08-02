@@ -1,5 +1,5 @@
-import type { ModelDefinition } from "../core";
-import { modelJson, weightBundles } from "../model_imports/mobilenet_v2";
+import type { ModelDefinition } from "../core.js";
+import { modelJson, weightBundles } from "../model_imports/mobilenet_v2.js";
 
 export const MobileNetV2Model: ModelDefinition = {
   name: "MobileNetV2",

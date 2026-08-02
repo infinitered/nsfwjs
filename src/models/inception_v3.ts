@@ -1,5 +1,5 @@
-import type { ModelDefinition } from "../core";
-import { modelJson, weightBundles } from "../model_imports/inception_v3";
+import type { ModelDefinition } from "../core.js";
+import { modelJson, weightBundles } from "../model_imports/inception_v3.js";
 
 export const InceptionV3Model: ModelDefinition = {
   name: "InceptionV3",

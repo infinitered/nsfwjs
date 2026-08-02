@@ -3,12 +3,12 @@ import {
   type ModelName,
   type NSFWJSOptions,
   type NSFWJS,
-} from "./core";
-import { DEFAULT_MODELS } from "./default_models";
+} from "./core.js";
+import { DEFAULT_MODELS } from "./default_models.js";
 
 const DEFAULT_MODEL_NAME: ModelName = "MobileNetV2";
 
-export { NSFWJS } from "./core";
+export { NSFWJS } from "./core.js";
 export type {
   ClassifyConfig,
   FrameResult,
@@ -16,7 +16,7 @@ export type {
   ModelName,
   NSFWJSOptions,
   PredictionType,
-} from "./core";
+} from "./core.js";
 
 export async function load(modelOrUrl?: ModelName): Promise<NSFWJS>;
 
