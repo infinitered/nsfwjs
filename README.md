@@ -3,7 +3,7 @@
   <h2 align="center">Client-side indecent content checking</h2>
 </p>
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-15-green.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-25-green.svg?style=flat-square)](#contributors)
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/infinitered/nsfwjs/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/infinitered/nsfwjs/tree/master)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/72d19dc0-d316-4f75-9904-a33d833ff628/deploy-status)](https://app.netlify.com/sites/nsfwjs/deploys)
 
@@ -508,6 +508,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://janpoonthong.github.io/portfolio/"><img src="https://avatars.githubusercontent.com/u/56725335?v=4?s=100" width="100px;" alt="jan"/><br /><sub><b>jan</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=JanPoonthong" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/roerohan"><img src="https://avatars.githubusercontent.com/u/42958812?v=4?s=100" width="100px;" alt="Rohan Mukherjee"/><br /><sub><b>Rohan Mukherjee</b></sub></a><br /><a href="#question-roerohan" title="Answering Questions">💬</a> <a href="#infra-roerohan" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-roerohan" title="Maintenance">🚧</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=roerohan" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://hazya.dev"><img src="https://avatars.githubusercontent.com/u/63403456?v=4?s=100" width="100px;" alt="Hasitha Wickramasinghe"/><br /><sub><b>Hasitha Wickramasinghe</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=haZya" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=haZya" title="Documentation">📖</a> <a href="#example-haZya" title="Examples">💡</a> <a href="#ideas-haZya" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-haZya" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=haZya" title="Tests">⚠️</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/jonmajorc"><img src="https://avatars.githubusercontent.com/u/7799266?v=4?s=100" width="100px;" alt="Jon Major Condon"/><br /><sub><b>Jon Major Condon</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=jonmajorc" title="Code">💻</a> <a href="#infra-jonmajorc" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
     </tr>
   </tbody>
 </table>
