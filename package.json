@@ -82,6 +82,10 @@
     "typescript": "5.9.3"
   },
   "packageManager": "yarn@1.22.22",
+  "engines": {
+    "node": "22.13.0",
+    "npm": ">=10 <12"
+  },
   "keywords": [
     "NSFW",
     "JavaScript",

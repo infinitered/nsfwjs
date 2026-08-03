@@ -17,7 +17,11 @@ const getPackedFiles = () => {
     ["pack", "--dry-run", "--json", "--ignore-scripts"],
     { encoding: "utf8" }
   );
-  const report = JSON.parse(stdout);
+  const jsonStart = stdout.indexOf("[");
+  if (jsonStart === -1) {
+    throw new Error(`npm pack produced no JSON report:\n${stdout}`);
+  }
+  const report = JSON.parse(stdout.slice(jsonStart));
   return report
     .flatMap((entry) => (entry.files ? entry.files : [entry]))
     .map((file) => normalize(file.path).replace(/\\/g, "/"));
