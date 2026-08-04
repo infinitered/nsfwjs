@@ -19,6 +19,7 @@ bundle.js
 .all-contributorsrc
 .editorconfig
 .gitignore
+.tool-versions
 jest.config.js
 tsconfig.cjs.json
 tsconfig.esm.json
