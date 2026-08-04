@@ -1,6 +1,6 @@
 {
   "name": "nsfwjs",
-  "version": "4.3.0",
+  "version": "4.4.0",
   "unpkg": "dist/browser/nsfwjs.min.js",
   "description": "Detect NSFW content client-side",
   "type": "module",
@@ -66,6 +66,8 @@
   "devDependencies": {
     "@tensorflow/tfjs": "^4.22.0",
     "@types/jest": "^30.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.56.0",
+    "@typescript-eslint/parser": "^8.56.0",
     "all-contributors-cli": "^6.26.1",
     "browserify": "^17.0.1",
     "buffer": "^6.0.3",
@@ -77,8 +79,6 @@
     "seedrandom": "^3.0.5",
     "terser": "^5.46.0",
     "ts-jest": "^29.4.6",
-    "@typescript-eslint/eslint-plugin": "^8.56.0",
-    "@typescript-eslint/parser": "^8.56.0",
     "typescript": "5.9.3"
   },
   "packageManager": "yarn@1.22.22",
