@@ -255,6 +255,17 @@
         "infra",
         "test"
       ]
+    },
+    {
+      "login": "jonmajorc",
+      "name": "Jon Major Condon",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7799266?v=4",
+      "profile": "https://github.com/jonmajorc",
+      "contributions": [
+        "code",
+        "infra",
+        "review"
+      ]
     }
   ],
   "contributorsPerLine": 7,
