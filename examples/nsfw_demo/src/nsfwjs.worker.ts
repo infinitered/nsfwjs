@@ -1,8 +1,5 @@
 import type { ModelName, NSFWJS, PredictionType } from "nsfwjs";
 import { load } from "nsfwjs/core";
-import { InceptionV3Model } from "nsfwjs/models/inception_v3";
-import { MobileNetV2Model } from "nsfwjs/models/mobilenet_v2";
-import { MobileNetV2MidModel } from "nsfwjs/models/mobilenet_v2_mid";
 
 let tfReadyPromise: Promise<void> | null = null;
 
@@ -52,6 +49,20 @@ const modelOptions: ModelConfig = {
   InceptionV3: { size: 299 },
 };
 
+// Raw model.json + binary shards copied into public/models by scripts/copy-models.mjs.
+// Loading them by URL avoids the ~33% base64 overhead of the bundled models.
+const modelDirs: Record<ModelName, string> = {
+  MobileNetV2: "mobilenet_v2",
+  MobileNetV2Mid: "mobilenet_v2_mid",
+  InceptionV3: "inception_v3",
+};
+
+const modelUrl = (modelName: ModelName) =>
+  new URL(
+    `${import.meta.env.BASE_URL}models/${modelDirs[modelName]}/model.json`,
+    self.location.origin
+  ).href;
+
 let model: NSFWJS | null = null;
 let loadedModelName: ModelName | null = null;
 
@@ -73,10 +84,7 @@ onmessage = async (event: MessageEvent<Message>) => {
         model = await load(`indexeddb://${modelName}`, modelOptions[modelName]);
         console.info("Loaded from IndexedDB cache");
       } catch {
-        model = await load(modelName, {
-          ...modelOptions[modelName],
-          modelDefinitions: [MobileNetV2Model, MobileNetV2MidModel, InceptionV3Model,],
-        });
+        model = await load(modelUrl(modelName), modelOptions[modelName]);
         await model.model.save(`indexeddb://${modelName}`);
       }
 
