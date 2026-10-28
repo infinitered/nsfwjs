@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Copied from ../../models by scripts/copy-models.mjs
+public/models

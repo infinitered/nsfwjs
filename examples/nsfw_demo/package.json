@@ -5,7 +5,9 @@
   "packageManager": "yarn@1.22.22",
   "type": "module",
   "scripts": {
+    "predev": "node ./scripts/copy-models.mjs",
     "dev": "vite --host",
+    "prebuild": "node ./scripts/copy-models.mjs",
     "build": "tsc -b && vite build",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
