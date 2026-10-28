@@ -2,28 +2,238 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NSFWJS – Client-side NSFW Image Detection in JavaScript</title>
     <meta
-      name="keywords"
-      content="NSFW detection, TensorflowJS, NSFWJS, NSFWJS Demo, JavaScript, NPM, Node Module"
+      name="description"
+      content="NSFWJS is a free, open-source JavaScript library that detects NSFW and nude images right in the browser or Node.js with TensorFlow.js. Images never leave the device. Try the live demo."
     />
-    <link rel="shortcut icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="canonical" href="https://nsfwjs.com/" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="author" content="Infinite Red" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="NSFWJS" />
+    <meta property="og:url" content="https://nsfwjs.com/" />
+    <meta property="og:title" content="NSFWJS – Client-side NSFW Image Detection in JavaScript" />
+    <meta
+      property="og:description"
+      content="Detect NSFW and nude images in the browser with TensorFlow.js. Free, open source, and private: images never leave the device."
+    />
+    <meta property="og:image" content="https://nsfwjs.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="NSFWJS: client-side NSFW image detection" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="NSFWJS – Client-side NSFW Image Detection in JavaScript" />
+    <meta
+      name="twitter:description"
+      content="Detect NSFW and nude images in the browser with TensorFlow.js. Free, open source, and private."
+    />
+    <meta name="twitter:image" content="https://nsfwjs.com/og-image.png" />
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
     <meta name="msapplication-TileColor" content="#ffc40d" />
     <meta name="theme-color" content="#000000" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="A simple JavaScript library to help you quickly identify unseemly images; all in the client's browser. NSFWJS isn't perfect, but it's pretty accurate... and it's getting more accurate all the time."
-    />
-    <title>NSFW JS</title>
-    <link href="/assets/fonts/inter/inter.css" rel="stylesheet" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://nsfwjs.com/#website",
+            "url": "https://nsfwjs.com/",
+            "name": "NSFWJS",
+            "publisher": { "@id": "https://infinite.red/#organization" }
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://infinite.red/#organization",
+            "name": "Infinite Red",
+            "url": "https://infinite.red/"
+          },
+          {
+            "@type": "SoftwareApplication",
+            "name": "NSFWJS",
+            "url": "https://nsfwjs.com/",
+            "description": "Open-source JavaScript library for client-side NSFW image detection with TensorFlow.js.",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "Any (web browser, Node.js)",
+            "image": "https://nsfwjs.com/og-image.png",
+            "license": "https://opensource.org/licenses/MIT",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+            "author": { "@type": "Person", "name": "Gant Laborde" },
+            "publisher": { "@id": "https://infinite.red/#organization" },
+            "sameAs": [
+              "https://github.com/infinitered/nsfwjs",
+              "https://www.npmjs.com/package/nsfwjs"
+            ]
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <header class="bg-background-main px-4">
+      <div
+        class="container mx-auto flex flex-wrap items-center justify-center gap-x-4 sm:flex-nowrap"
+      >
+        <img
+          id="logo"
+          class="h-20 w-50 object-contain sm:h-36 sm:w-64 md:w-90"
+          src="/src/assets/nsfwjs-logo.webp"
+          width="953"
+          height="382"
+          fetchpriority="high"
+          alt="NSFWJS logo"
+        />
+        <h1 class="py-3 text-xl font-bold italic max-sm:order-last max-sm:text-center sm:text-2xl">
+          Client-side NSFW image detection in JavaScript
+        </h1>
+        <div class="text-primary-main flex flex-col items-center font-bold sm:ml-auto">
+          <p
+            class="from-primary-dark to-primary-light bg-linear-to-r bg-clip-text text-base text-transparent sm:text-lg"
+          >
+            Powered&nbsp;by
+          </p>
+          <a href="https://www.tensorflow.org/js" target="_blank" rel="noreferrer">
+            <img
+              id="tflogo"
+              class="h-12 w-20 object-contain sm:h-20 sm:w-32"
+              src="/src/assets/tfjs-logo.jpg"
+              width="254"
+              height="144"
+              alt="TensorFlow.js logo"
+            />
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main id="root" class="container mx-auto flex flex-col items-center gap-8 px-4"></main>
+
+    <article class="container mx-auto max-w-3xl px-4 leading-relaxed">
+      <h2 class="mt-4 mb-3 text-2xl font-bold">What is NSFWJS?</h2>
+      <p class="mb-4">
+        NSFWJS is a free, open-source (MIT) JavaScript library that flags NSFW, nude, and
+        pornographic images. It runs a TensorFlow.js model right in the browser or in Node.js, so
+        images never have to be uploaded to a server. The demo above runs NSFWJS on your device:
+        your images stay private.
+      </p>
+
+      <h2 class="mt-8 mb-3 text-2xl font-bold">Install</h2>
+      <pre
+        class="mb-4 overflow-x-auto rounded-lg bg-black p-4 text-sm"
+      ><code>npm install nsfwjs @tensorflow/tfjs</code></pre>
+
+      <h2 class="mt-8 mb-3 text-2xl font-bold">Quick start</h2>
+      <pre
+        class="mb-4 overflow-x-auto rounded-lg bg-black p-4 text-sm"
+      ><code>import * as nsfwjs from "nsfwjs";
+
+const img = document.getElementById("img");
+const model = await nsfwjs.load();
+const predictions = await model.classify(img);
+// [{ className: "Neutral", probability: 0.93 }, ...]</code></pre>
+      <p class="mb-4">
+        Full API docs, caching, backend selection (WebGL, WebGPU, WASM, Node), and self-hosting the
+        model are in the
+        <a class="text-primary-main underline" href="https://github.com/infinitered/nsfwjs#readme"
+          >NSFWJS README on GitHub</a
+        >.
+      </p>
+
+      <h2 class="mt-8 mb-3 text-2xl font-bold">Image categories</h2>
+      <ul class="mb-4 list-disc pl-6">
+        <li><strong>Drawing</strong>: safe-for-work drawings, including anime</li>
+        <li><strong>Hentai</strong>: hentai and pornographic drawings</li>
+        <li><strong>Neutral</strong>: safe-for-work neutral images</li>
+        <li><strong>Porn</strong>: pornographic images and sexual acts</li>
+        <li><strong>Sexy</strong>: sexually explicit images that are not pornography</li>
+      </ul>
+
+      <h2 class="mt-8 mb-3 text-2xl font-bold">Models</h2>
+      <div class="mb-4 overflow-x-auto">
+        <table class="w-full text-left">
+          <thead>
+            <tr class="border-b border-gray-600">
+              <th class="py-2 pr-4">Model</th>
+              <th class="py-2 pr-4">Accuracy</th>
+              <th class="py-2">Size</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-gray-700">
+              <td class="py-2 pr-4"><code>MobileNetV2</code> (default)</td>
+              <td class="py-2 pr-4">~90%</td>
+              <td class="py-2">2.6 MB</td>
+            </tr>
+            <tr class="border-b border-gray-700">
+              <td class="py-2 pr-4"><code>MobileNetV2Mid</code></td>
+              <td class="py-2 pr-4">~93%</td>
+              <td class="py-2">4.2 MB</td>
+            </tr>
+            <tr>
+              <td class="py-2 pr-4"><code>InceptionV3</code></td>
+              <td class="py-2 pr-4">~93%</td>
+              <td class="py-2">Large</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="mt-8 mb-3 text-2xl font-bold">FAQ</h2>
+      <h3 class="mt-4 mb-1 text-lg font-semibold">Are my images uploaded anywhere?</h3>
+      <p class="mb-4">
+        No. Classification happens entirely on your device with TensorFlow.js. Nothing is sent to a
+        server.
+      </p>
+      <h3 class="mt-4 mb-1 text-lg font-semibold">Does NSFWJS work in Node.js?</h3>
+      <p class="mb-4">
+        Yes. Pair it with <code>@tensorflow/tfjs-node</code> for fast server-side classification.
+      </p>
+      <h3 class="mt-4 mb-1 text-lg font-semibold">Can I use it in a mobile app?</h3>
+      <p class="mb-4">
+        Yes. See the
+        <a class="text-primary-main underline" href="https://github.com/infinitered/nsfwjs-mobile"
+          >NSFWJS mobile demo</a
+        >
+        for React Native.
+      </p>
+      <h3 class="mt-4 mb-1 text-lg font-semibold">How accurate is it?</h3>
+      <p class="mb-4">
+        About 90% with the small model and about 93% with the mid-sized model. It isn't perfect, but
+        it gets more accurate all the time.
+      </p>
+    </article>
+
+    <footer class="bg-background-main text-center text-sm font-semibold uppercase">
+      <div class="container mx-auto flex flex-col gap-3.5 px-4 py-7">
+        <nav class="overflow-auto pb-3.5" aria-label="Project links">
+          <div
+            class="[&>a:hover]:text-primary-main inline-flex min-w-125 gap-6 lg:gap-10 xl:gap-14"
+          >
+            <a href="https://github.com/infinitered/nsfwjs">NSFW.js Github</a>
+            <a href="https://github.com/infinitered/nsfwjs/tree/master/examples/nsfw_demo"
+              >Website Github</a
+            >
+            <a href="https://github.com/gantman/nsfw_model">NSFW Model Github</a>
+            <a href="https://shift.infinite.red/avoid-nightmares-nsfw-js-ab7b176978b1">Blog Post</a>
+            <a href="https://github.com/infinitered/nsfwjs-mobile">Mobile Demo Github</a>
+          </div>
+        </nav>
+        <a class="mx-auto shrink-0 pb-3.5" href="https://infinite.red">
+          <img src="/src/assets/ir-logo.svg" alt="Infinite Red logo" width="93" height="41" />
+        </a>
+        <div>Copyright <span id="year">2026</span> Infinite Red, Inc.</div>
+      </div>
+    </footer>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

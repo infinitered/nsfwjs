@@ -1,5 +1,21 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Inter var";
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+  src: url("./assets/fonts/Inter-roman-latin.var.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter var";
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: italic;
+  src: url("./assets/fonts/Inter-italic-latin.var.woff2") format("woff2");
+}
+
 @theme {
   --color-primary-light: rgb(var(--palette-primary-light));
   --color-primary-main: rgb(var(--palette-primary-main));
@@ -32,12 +48,15 @@ html {
   background-color: rgb(var(--palette-background-default));
 }
 
-#root {
+body {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   gap: 2rem;
   min-height: 100vh;
   min-height: 100svh;
   overflow-x: clip;
+}
+
+footer {
+  margin-top: auto;
 }

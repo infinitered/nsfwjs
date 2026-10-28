@@ -1,0 +1,20 @@
+# NSFWJS
+
+> NSFWJS is a free, open-source (MIT) JavaScript library for client-side NSFW image detection. It runs a TensorFlow.js model in the browser or Node.js, so images never leave the device. Maintained by Infinite Red.
+
+Install: `npm install nsfwjs @tensorflow/tfjs`
+
+```js
+import * as nsfwjs from "nsfwjs";
+const model = await nsfwjs.load(); // "MobileNetV2" | "MobileNetV2Mid" | "InceptionV3"
+const predictions = await model.classify(imgElement);
+```
+
+Categories: Drawing, Hentai, Neutral, Porn, Sexy. Accuracy: ~90% (MobileNetV2), ~93% (MobileNetV2Mid).
+
+## Docs
+
+- [README and API reference](https://github.com/infinitered/nsfwjs#readme)
+- [npm package](https://www.npmjs.com/package/nsfwjs)
+- [Model training repo](https://github.com/gantman/nsfw_model)
+- [Live demo](https://nsfwjs.com/)

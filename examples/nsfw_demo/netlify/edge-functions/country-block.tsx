@@ -17,4 +17,6 @@ export default countryBlock;
 
 export const config: Config = {
   path: "/*",
+  // Hashed static files only load from the page, which is already blocked.
+  excludedPath: ["/assets/*"],
 };

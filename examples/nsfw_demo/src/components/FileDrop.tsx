@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { FileRejection } from "react-dropzone";
 import Dropzone from "react-dropzone";
-import nsfwjsLogo from "../assets/nsfwjs-logo.svg";
+import nsfwjsLogo from "../assets/nsfwjs-logo.webp";
 import { useNSFWJS } from "../contexts/NSFWJS";
 import type { Message } from "../nsfwjs.worker";
 
