@@ -68,7 +68,11 @@
             "image": "https://nsfwjs.com/og-image.png",
             "license": "https://opensource.org/licenses/MIT",
             "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-            "author": { "@type": "Person", "name": "Gant Laborde" },
+            "author": {
+              "@type": "Person",
+              "name": "Gant Laborde",
+              "url": "https://gantlaborde.com/"
+            },
             "publisher": { "@id": "https://infinite.red/#organization" },
             "sameAs": [
               "https://github.com/infinitered/nsfwjs",
@@ -231,6 +235,20 @@ const predictions = await model.classify(img);
             <a href="https://github.com/infinitered/nsfwjs-mobile">Mobile Demo Github</a>
           </div>
         </nav>
+        <a
+          class="hover:text-primary-main mx-auto flex items-center gap-3 pb-3.5"
+          href="https://gantlaborde.com"
+          rel="author"
+        >
+          <img
+            src="/src/assets/gant-unicorn.webp"
+            alt="Gant Laborde's unicorn logo"
+            width="64"
+            height="64"
+            loading="lazy"
+          />
+          <span>A project by Gant Laborde</span>
+        </a>
         <a class="mx-auto shrink-0 pb-3.5" href="https://infinite.red">
           <img src="/src/assets/ir-logo.svg" alt="Infinite Red logo" width="93" height="41" />
         </a>
