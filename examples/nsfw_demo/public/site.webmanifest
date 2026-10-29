@@ -1,6 +1,9 @@
 {
-  "name": "NSFW JS",
+  "name": "NSFWJS – Client-side NSFW Image Detection",
   "short_name": "NSFWJS",
+  "description": "Detect NSFW images in the browser with TensorFlow.js.",
+  "id": "/",
+  "start_url": "/",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -13,7 +16,7 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "background_color": "#282c34",
   "display": "standalone"
 }
